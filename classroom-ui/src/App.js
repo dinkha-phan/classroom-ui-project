@@ -4,6 +4,8 @@ import { BrowserRouter as Router, Switch} from "react-router-dom";
 import { IsUserRedirect, ProtectedRoute } from './routes/Routes';
 import { useLocalContext } from "./context/context";
 import Main from "./components/Main/Main";
+import SignIn from "./components/SignIn/SignIn";
+import SignUp from "./components/SignUp/SignUp";
 
 const createdClasses = [{className:"class 1"},{className:"class 2"}];
 const joinedClasses = [{className:"class 3"},{className:"class 4"}];
@@ -20,7 +22,16 @@ function App() {
                         path="/signin"
                         exact
                     >
-                        <Login />
+                        <SignIn />
+                    </IsUserRedirect>
+
+                    <IsUserRedirect
+                        user={loggedInMail}
+                        loggedInPath="/"
+                        path="/signup"
+                        exact
+                    >
+                        <SignUp/>
                     </IsUserRedirect>
 
                     <ProtectedRoute user={loggedInMail} path="/" exact>

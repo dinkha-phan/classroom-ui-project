@@ -55,8 +55,8 @@ export default function SignUp() {
     fetch(recipeUrl, requestMetadata)
         .then(res => res.json())
         .then((result)=>{
-          if(result == 'success')    
-          window.location.assign("http://localhost:3000/login")
+          if(result === 'success')    
+          window.location.assign("http://localhost:3000/signin")
         });
   };
 
@@ -123,7 +123,7 @@ export default function SignUp() {
             </Button>
             <Grid container justifyContent="flex-end">
               <Grid item>
-                <Link href="/login" variant="body2">
+                <Link href="/signin" variant="body2">
                   Already have an account? Sign in
                 </Link>
               </Grid>
