@@ -3,10 +3,11 @@ import { Drawer, Login,JoinedClasses } from "./components";
 import { BrowserRouter as Router, Switch} from "react-router-dom";
 import { IsUserRedirect, ProtectedRoute } from './routes/Routes';
 import { useLocalContext } from "./context/context";
+import Main from "./components/Main/Main";
 
 const createdClasses = [{className:"class 1"},{className:"class 2"}];
 const joinedClasses = [{className:"class 3"},{className:"class 4"}];
-
+const classData = {className:"class Testing"};
 function App() {
     const { loggedInMail} = useLocalContext();
     return (
@@ -33,6 +34,7 @@ function App() {
                                 <JoinedClasses classData={item} />
                             ))}
                         </ol> }
+                        <Main classData={classData}/>
                     </ProtectedRoute>
                 </Switch>
             </Router>
