@@ -10,14 +10,15 @@ import {
 import { Add, Apps } from "@material-ui/icons";
 import { useStyles } from "./style";
 import { useState } from "react";
-import { CreateClass } from "..";
+import { CreateClass, JoinClass } from "..";
 import { useLocalContext } from "../../context/context";
 
 
 const Header = ({ children }) => {
     const classes = useStyles()
     const [anchorEl, setAnchorEl] = useState(null);
-    const { setCreateClassDialog } = useLocalContext();
+    const { setCreateClassDialog, setJoinClassDialog, loggedInUser } = useLocalContext();
+    console.log(loggedInUser);
 
     const handleClick = (event) => setAnchorEl(event.currentTarget);
 
@@ -29,7 +30,8 @@ const Header = ({ children }) => {
     }
 
     const handleJoin = () => {
-
+        handleClose();
+        setJoinClassDialog(true);
     }
 
 
@@ -70,6 +72,7 @@ const Header = ({ children }) => {
                 </Toolbar>
             </AppBar>
             <CreateClass />
+            <JoinClass/>
         </div>
     )
 }

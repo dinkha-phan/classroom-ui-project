@@ -20,7 +20,7 @@ function CreateClass() {
         setShowForm(true);
     }
 
-    const handleOnCoseDialog = () => {
+    const handleOnCloseDialog = () => {
         setShowForm(false);
         setCreateClassDialog(false);
         setChecked(false);
@@ -29,7 +29,7 @@ function CreateClass() {
     return (
         <div>
             <Dialog
-                onClose={() => handleOnCoseDialog()}
+                onClose={() => handleOnCloseDialog()}
                 aria-labelledby="customized-dialog-title"
                 open={createClassDialog || showForm}
                 maxWidth={showForm ? "lg" : "xs"}

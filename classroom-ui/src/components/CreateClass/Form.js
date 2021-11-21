@@ -14,7 +14,12 @@ const Form = () => {
     const [Subject, setSubject] = useState("");
     const addClass = (e) => {
         e.preventDefault();
-        //const id = uuidV4();
+        console.log(className);
+        console.log(Section);
+        console.log(Room);
+        console.log(Subject);
+
+        // https://github.com/kimlimjustin/Classroom/blob/master/client/src/Components/login.component.js
     }
     return (
         <div className="form">
