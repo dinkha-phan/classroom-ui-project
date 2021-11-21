@@ -1,8 +1,11 @@
 import React from "react";
-import { Drawer, Login } from "./components";
+import { Drawer, Login,JoinedClasses } from "./components";
 import { BrowserRouter as Router, Switch} from "react-router-dom";
 import { IsUserRedirect, ProtectedRoute } from './routes/Routes';
 import { useLocalContext } from "./context/context";
+
+const createdClasses = [{className:"class 1"},{className:"class 2"}];
+const joinedClasses = [{className:"class 3"},{className:"class 4"}];
 
 function App() {
     const { loggedInMail} = useLocalContext();
@@ -21,7 +24,7 @@ function App() {
 
                     <ProtectedRoute user={loggedInMail} path="/" exact>
                         <Drawer />
-                        {/* <ol className="joined">
+                        { <ol className="joined">
                             {createdClasses.map((item) => (
                                 <JoinedClasses classData={item} />
                             ))}
@@ -29,7 +32,7 @@ function App() {
                             {joinedClasses.map((item) => (
                                 <JoinedClasses classData={item} />
                             ))}
-                        </ol> */}
+                        </ol> }
                     </ProtectedRoute>
                 </Switch>
             </Router>
