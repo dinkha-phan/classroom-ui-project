@@ -65,7 +65,7 @@ export function ConxtextProvider({ children }) {
         createClassDialog, setCreateClassDialog,
         joinClassDialog, setJoinClassDialog,
         login, logout,
-        loggedInMail, loggedInUser,
+        loggedInMail, loggedInUser, setLoggedInMail, setLoggedInUser
     }
 
     return (
