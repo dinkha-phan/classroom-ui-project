@@ -52,7 +52,6 @@ export default function SignIn() {
             .then((result) => {
                 console.log(result);
                 console.log(result.user);
-                
                 setLoggedInUser(result.user);
                 setLoggedInMail(result.user.email);
 
