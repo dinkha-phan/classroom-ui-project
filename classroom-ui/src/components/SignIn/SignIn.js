@@ -10,8 +10,9 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import GoogleButton from 'react-google-button'
+import GoogleLogin from 'react-google-login';
 import { useLocalContext } from '../../context/context';
+import axios from 'axios';
 function Copyright(props) {
     return (
         <Typography variant="body2" color="text.secondary" align="center" {...props}>
@@ -62,7 +63,18 @@ export default function SignIn() {
             });
 
     };
-
+    const responseSucessGoogle = (response) =>{
+        console.log(response);
+        axios({
+            method: "POST",
+            url: "http://localhost:3001/login/google",
+            data: {tokenId: response.tokenId}
+        }).then(response => {
+            console.log("Google login success", response);
+        })
+    }
+    const responseErrorGoogle = (response) =>{
+    }
     return (
         <ThemeProvider theme={theme}>
             <Container component="main" maxWidth="xs">
@@ -111,9 +123,13 @@ export default function SignIn() {
                             Sign In
                         </Button>
                         <Grid container>
-                            <GoogleButton
-                                onClick={() => { window.location.assign('https://classrom-api-ntk.herokuapp.com/login/oath/google') }}
-                            />
+                        <GoogleLogin
+                            clientId="241758761089-mhhbbvca0eh6nh60sko4td8tp0iqe6r7.apps.googleusercontent.com"
+                            buttonText="Login with Google"
+                            onSuccess={responseSucessGoogle}
+                            onFailure={responseErrorGoogle}
+                            cookiePolicy={'single_host_origin'}
+                        />,
                             <Grid item>
                                 <Link href="/signup" variant="body2">
                                     {"Don't have an account? Sign Up"}
