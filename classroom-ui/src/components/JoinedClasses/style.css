@@ -92,3 +92,12 @@ ol {
 .joined__bottom > * {
   margin-right: 20px;
 }
+.main_list_header_start{
+  display: flex;
+  justify-content:space-between ;
+}
+.right{
+  justify-content: flex-end;
+  color: "#123456";
+  cursor: "pointer";
+}

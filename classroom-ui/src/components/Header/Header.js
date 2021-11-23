@@ -17,13 +17,16 @@ import { useLocalContext } from "../../context/context";
 const Header = ({ children }) => {
     const classes = useStyles()
     const [anchorEl, setAnchorEl] = useState(null);
+    const [anchorElAvatar, setAnchorElAvatar] = useState(null);
     const { setCreateClassDialog, setJoinClassDialog, loggedInUser,personJoinedClass ,
         tabValue, settabValue} = useLocalContext();
     console.log(loggedInUser);
 
     const handleClick = (event) => setAnchorEl(event.currentTarget);
+    const handleClickAvatar = (event) => setAnchorElAvatar(event.currentTarget);
 
     const handleClose = () => { setAnchorEl(null); }
+    const handleCloseAvatar = () => { setAnchorElAvatar(null); }
 
     const handleCreate = () => {
         handleClose();
@@ -39,7 +42,13 @@ const Header = ({ children }) => {
         settabValue(newValue);
     };
 
-
+    const handleProfile = () => {
+        
+    }
+    const handleLogout = () => {
+        
+    }
+    
     return (
         <div className={classes.root}>
             <AppBar className={classes.appBar}>
@@ -86,10 +95,21 @@ const Header = ({ children }) => {
                             <MenuItem onClick={handleJoin}>Join Class</MenuItem>
                             <MenuItem onClick={handleCreate}>Create Class</MenuItem>
                         </Menu>
+                        
+                        <Avatar onClick={handleClickAvatar} className={classes.icon} />
+                        <Menu
+                            id="simple-menu"
+                            anchorEl={anchorElAvatar}
+                            keepMounted
+                            open={Boolean(anchorElAvatar)}
+                            onClose={handleCloseAvatar}
+                            transformOrigin={{ horizontal: 'right', vertical: 'top' }} // left of add button
+                        >
+                            <MenuItem onClick={handleProfile}>Profile</MenuItem>
+                            <MenuItem onClick={handleLogout}>Log out</MenuItem>
+                        </Menu>
 
-                        <div>
-                            <Avatar className={classes.icon} />
-                        </div>
+
                     </div>
                 </Toolbar>
             </AppBar>

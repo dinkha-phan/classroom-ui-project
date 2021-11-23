@@ -70,56 +70,29 @@ function App() {
                     {listCreatedClasses.map((item, index) => (
                         <Route key={index} exact path={`/teacher/${item.ClassID}`}>
                             <Drawer />
-                            <Main classData={item} />
+                            {tabValue === "1" ? <Main classData={item} /> : <People />}
                         </Route>
                     ))}
                     {listJoinedClasses.map((item, index) => (
                         <Route key={index} exact path={`/student/${item.ClassID}`}>
-                            {/* <Drawer />
-                            <Main classData={item} /> */}
-                            <h1>abcd</h1>
-                            {/* {alert(`/student/${item.ClassID}`)} */}
+                            <Drawer />
+                            {tabValue === "1" ? <Main classData={item} /> : <People />}
                         </Route>
                     ))}
 
                     <ProtectedRoute user={loggedInMail} path="/" exact>
-
-                        {setPersonJoinedClass("") && <></>}
-
                         {/* List Class */}
-                        {
-                            (personJoinedClass === "") &&
-                            <>
-                                <Drawer />
-                                {<ol className="joined">
-                                    {listCreatedClasses.length !== 0 && listCreatedClasses.map((item) => (
-                                        <JoinedClasses classData={item} />
-                                    ))}
+                        <Drawer />
+                        <ol className="joined">
+                            {listCreatedClasses.length !== 0 && listCreatedClasses.map((item) => (
+                                <JoinedClasses classData={item} />
+                            ))}
 
-                                    {listJoinedClasses.length !== 0 && listJoinedClasses.map((item) => (
-                                        <JoinedClasses classData={item} />
-                                    ))}
-                                </ol>}
-                            </>
-                        }
+                            {listJoinedClasses.length !== 0 && listJoinedClasses.map((item) => (
+                                <JoinedClasses classData={item} />
+                            ))}
+                        </ol>
 
-                        {/* Class student detail */}
-                        {
-                            (personJoinedClass === "Student") &&
-                            <>
-                                <Drawer />
-                                {tabValue === "1" ? <Main classData={classData} /> : <People />}
-                            </>
-                        }
-
-                        {/* Class teacher detail */}
-                        {
-                            (personJoinedClass === "Teacher") &&
-                            <>
-                                <Drawer />
-                                {tabValue === "1" ? <Main classData={classData} /> : <People />}
-                            </>
-                        }
                     </ProtectedRoute>
                 </Switch>
             </Router>

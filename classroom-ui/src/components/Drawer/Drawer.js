@@ -12,15 +12,17 @@ import { Header } from "..";
 import { IconButton } from "@material-ui/core";
 import { Menu } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
-
+import { Link } from "react-router-dom";
+import { useLocalContext } from "../../context/context";
+import HomeIcon from '@mui/icons-material/Home';
 const useStyles = makeStyles({
     list: {
-      width: 250,
+        width: 250,
     },
     fullList: {
-      width: "auto",
+        width: "auto",
     },
-  });
+});
 
 export default function SwipeableTemporaryDrawer() {
     const classes = useStyles();
@@ -31,6 +33,10 @@ export default function SwipeableTemporaryDrawer() {
             right: false, */
     });
 
+    const { setPersonJoinedClass } = useLocalContext();
+    const handleClickHome = () => {
+        setPersonJoinedClass("");
+    }
     // anchor in{top, left, right, bottom}
     const toggleDrawer = (anchor, open) => (event) => {
         if (
@@ -52,14 +58,14 @@ export default function SwipeableTemporaryDrawer() {
             onKeyDown={toggleDrawer(anchor, false)}
         >
             <List>
-                {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-                    <ListItem button key={text}>
+                <Link className="joined__title" to="/" onClick={handleClickHome}>
+                    <ListItem button>
                         <ListItemIcon>
-                            {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                            <HomeIcon />
                         </ListItemIcon>
-                        <ListItemText primary={text} />
+                        <ListItemText secondary="Home" />
                     </ListItem>
-                ))}
+                </Link>
             </List>
             <Divider />
             <List>
@@ -90,7 +96,7 @@ export default function SwipeableTemporaryDrawer() {
                             <Menu />
                         </IconButton>
                     </Header>
-                    
+
                     {/* Test btn left drawer */}
                     <div style={{ marginTop: 80 }}></div>
                     {/* <Button onClick={toggleDrawer(anchor, true)} >{anchor} </Button> */}
