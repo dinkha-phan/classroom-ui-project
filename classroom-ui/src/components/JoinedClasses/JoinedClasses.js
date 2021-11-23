@@ -7,6 +7,8 @@ import { useLocalContext } from "../../context/context";
 import { useStyles } from "./style";
 import { useState } from "react";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import { getAccessToken, getUrlRemoveUserFromClass } from "../../services/app.service";
+import axios from "axios";
 
 // ClassID: "bbb2eed3-65c7-4677-8c07-63f3a749b741"
 // Code: "bbb2eed3-65c7-4677-8c07-63f3a749b741"
@@ -21,7 +23,7 @@ const JoinedClasses = ({ classData }) => {
     const classes = useStyles()
     const [anchorEl2, setAnchorEl2] = useState(null);
 
-    const { personJoinedClass,setPersonJoinedClass, settabValue } = useLocalContext();
+    const { personJoinedClass, setPersonJoinedClass, settabValue, loggedInUser } = useLocalContext();
     const handleClick = (role) => {
         if (role === "student") setPersonJoinedClass("Student");
         else setPersonJoinedClass("Teacher");
@@ -29,6 +31,31 @@ const JoinedClasses = ({ classData }) => {
     };
     const handleClickAdd = (event) => setAnchorEl2(event.currentTarget);
     const handleClose = () => { setAnchorEl2(null); }
+
+    const handleDelete = () => {
+        console.log('Delete');
+        const token = getAccessToken();
+
+        const config = {
+            headers: { Authorization: `Bearer ${token}` }
+        };
+
+        const url = getUrlRemoveUserFromClass(loggedInUser.id, classData.ClassID) ;
+        axios.delete(
+            url,
+            config
+        ).then(res => {
+            console.log(res.data);
+            if (res.data.msg === 'success'){
+                window.location.href='/'
+            }
+        }).catch(e => {
+            console.log(e)
+        });  
+
+        console.log(config, url);
+    }
+
     return (
         <li className="joined__list">
             <div className="joined__wrapper">
@@ -52,16 +79,24 @@ const JoinedClasses = ({ classData }) => {
                                     onClose={handleClose}
                                     transformOrigin={{ horizontal: 'right', vertical: 'top' }} // left of add button
                                 >
-                                    <MenuItem
-                                    //  onClick={handleJoin}
-                                    >
-                                        Sao chép đường liên kết mời</MenuItem>
-                                    <MenuItem
-                                    // onClick={handleCreate}
-                                    >Chỉnh sửa</MenuItem>
-                                    {classData.Role === "teacher" &&
+                                    {
+                                        classData.Role === "teacher" &&
                                         <MenuItem
-                                        // onClick={handleDelete}
+                                        //  onClick={handleJoin}
+                                        >
+                                            Sao chép đường liên kết mời
+                                        </MenuItem>
+                                    }
+                                    {
+                                        classData.Role === "teacher" &&
+                                        <MenuItem
+                                        // onClick={handleCreate}
+                                        >Chỉnh sửa
+                                        </MenuItem>
+                                    }
+                                    {classData.Role === "student" &&
+                                        <MenuItem
+                                            onClick={handleDelete}
                                         >Hủy đăng ký</MenuItem>
                                     }
                                 </Menu>

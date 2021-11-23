@@ -12,6 +12,7 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import GoogleButton from 'react-google-button'
 import { useLocalContext } from '../../context/context';
+import { setAccessToken } from '../../services/app.service';
 function Copyright(props) {
     return (
         <Typography variant="body2" color="text.secondary" align="center" {...props}>
@@ -57,8 +58,7 @@ export default function SignIn() {
                 setLoggedInMail(result.user.email);
 
                 //TODO: save access token to local storage 
-                               
-
+                setAccessToken(result.token);
             });
 
     };
