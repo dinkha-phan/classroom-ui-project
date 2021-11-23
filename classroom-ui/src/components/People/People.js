@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useState, useContext, useEffect, createContext } from "react";
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import Divider from '@mui/material/Divider';
@@ -10,19 +11,24 @@ import IconButton from '@mui/material/IconButton';
 import "./style.css";
 import { useLocalContext } from "../../context/context"
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
+import {InvitePeople} from ".."
 export default function AlignItemsList() {
 
 
     const listStudents = [{ name: "Phan Dinh Kha" }, { name: "Nguyen Tien Dat" }, { name: "Tran Bao Nguyen" }];
     const listTeachers = [{ name: "Phan Dinh Kha" }, { name: "Nguyen Tien Dat" }, { name: "Tran Bao Nguyen" }];
-    const { personJoinedClass } = useLocalContext();
-
-
+    const { personJoinedClass,
+        showInvitePeople, setShowInvitePeople } = useLocalContext();
+    const [label, setLabel] = useState("");
     const handleOnclickAddTeacher = ()=>{
         console.log("AddTeacher");
+        setLabel("Invite Teacher");
+        setShowInvitePeople(true);
     }
     const handleOnclickAddStudent = ()=>{
         console.log("AddStudent");
+        setLabel("Invite Student");
+        setShowInvitePeople(true);
     }
     return (
         <>
@@ -95,6 +101,7 @@ export default function AlignItemsList() {
                         </List>
                     ))}
                 </List>
+                {showInvitePeople && <InvitePeople Label={label}/>}
             </div>
         </>
     );

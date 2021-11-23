@@ -15,7 +15,9 @@ export function ConxtextProvider({ children }) {
     const [tabValue, settabValue] = useState("1");
     const [listJoinedClasses, setListJoinedClasses] = useState([]);
     const [listCreatedClasses, setListCreatedClasses] = useState([]);
-
+    const [showProfile, setShowProfile] = useState(false);
+    const [showInvitePeople, setShowInvitePeople] = useState(false);
+    
     const login = () => {
         // login
         // get Access Token -> send to API server
@@ -73,7 +75,9 @@ export function ConxtextProvider({ children }) {
         personJoinedClass, setPersonJoinedClass,
         tabValue, settabValue,
         setListJoinedClasses, setListCreatedClasses,
-        listJoinedClasses, listCreatedClasses
+        listJoinedClasses, listCreatedClasses,
+        showProfile, setShowProfile,
+        showInvitePeople, setShowInvitePeople
     }
 
     return (
