@@ -6,18 +6,50 @@ import {
     Button
 } from '@material-ui/core';
 
+import { getAccessToken, getUrlCreateClasseForUser } from '../../services/app.service';
+import { useLocalContext } from '../../context/context';
+import axios from 'axios';
+
 
 const Form = () => {
     const [className, setClassName] = useState("");
     const [Section, setSection] = useState("");
     const [Room, setRoom] = useState("");
     const [Subject, setSubject] = useState("");
+
+    const { loggedInUser } = useLocalContext();
     const addClass = (e) => {
         e.preventDefault();
-        console.log(className);
-        console.log(Section);
-        console.log(Room);
-        console.log(Subject);
+        const token = getAccessToken();
+
+        const config = {
+            headers: { Authorization: `Bearer ${token}` }
+        };
+
+        const url = getUrlCreateClasseForUser(loggedInUser.id);
+
+        const bodyParameters = {
+            role: "teacher",
+            name: className,
+            part: Section,
+            title: Subject,
+            room: Room
+        };
+
+        console.log(config, bodyParameters, url);
+
+        axios.post(
+            url,
+            bodyParameters,
+            config
+        ).then(res => {
+            if (res.data === true){
+                window.location.href='/'
+            }
+        }).catch(e => {
+            console.log(e)
+        });
+
 
         // https://github.com/kimlimjustin/Classroom/blob/master/client/src/Components/login.component.js
     }

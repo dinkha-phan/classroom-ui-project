@@ -12,12 +12,14 @@ import {
 import { Add, Apps } from "@material-ui/icons";
 import { useStyles } from "./style";
 import { useState } from "react";
-import { CreateClass, JoinClass } from "..";
+import { CreateClass, JoinClass,EditProfile } from "..";
 import { useLocalContext } from "../../context/context";
 const Header = ({ children }) => {
     const classes = useStyles()
     const [anchorEl, setAnchorEl] = useState(null);
     const [anchorElAvatar, setAnchorElAvatar] = useState(null);
+    const { setShowProfile } = useLocalContext();
+
     const { setCreateClassDialog, setJoinClassDialog, loggedInUser,personJoinedClass ,
         tabValue, settabValue} = useLocalContext();
     console.log(loggedInUser);
@@ -43,10 +45,13 @@ const Header = ({ children }) => {
     };
 
     const handleProfile = () => {
-        
+        setAnchorElAvatar(null);
+        setShowProfile(true);
+        console.log("Click Profile")
     }
     const handleLogout = () => {
-        
+        setAnchorElAvatar(null);
+        console.log("handle Logout Here");
     }
     
     return (
@@ -114,6 +119,7 @@ const Header = ({ children }) => {
                 </Toolbar>
             </AppBar>
             <CreateClass />
+            <EditProfile/>
             <JoinClass />
         </div>
     )

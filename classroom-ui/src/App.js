@@ -4,23 +4,40 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { IsUserRedirect, ProtectedRoute } from './routes/Routes';
 import { useLocalContext } from "./context/context";
 import axios from "axios";
+import { getAccessToken, getUrlCreateClasseForUser, getUrlGetCreatedClasses, getUrlGetJoinedClasses, parseJwt } from "./services/app.service";
+
 
 
 const classData = { className: "class Testing" };
 function App() {
-    const { loggedInMail,
+    const { 
         setPersonJoinedClass, personJoinedClass,
         tabValue, settabValue,
         setListJoinedClasses, listJoinedClasses,
-        setListCreatedClasses, listCreatedClasses } = useLocalContext();
+        setListCreatedClasses, listCreatedClasses,
+        setLoggedInUser, setLoggedInMail,
+        loggedInUser, loggedInMail} = useLocalContext();
 
 
     useEffect(() => {
-        if (loggedInMail) {
-            const urlGetJoinedClasses = 'http://127.0.0.1:3000/users/18120127/class-user?role=student';
-            const urlGetCreatesClasses = 'http://127.0.0.1:3000/users/18120116/class-user?role=teacher';
+        if (!loggedInMail) {
+            // load data of user using token store at local storage
+            const token = getAccessToken();
+            if (token) {
+                const dataUser = parseJwt(token);
+                console.log(dataUser);
+                setLoggedInUser(dataUser);
+                setLoggedInMail(dataUser.email);
+            }
+        }
 
-            // get AT and set it to header 
+
+        if (loggedInMail) {
+            const urlGetJoinedClasses = getUrlGetJoinedClasses(loggedInUser.id);
+            const urlGetCreatesClasses = getUrlGetCreatedClasses(loggedInUser.id)
+
+            // get AT and set it to header
+             
             axios.get(urlGetJoinedClasses)
                 .then(res => {
                     console.log(res.data);
@@ -36,9 +53,6 @@ function App() {
                     setListCreatedClasses(data);
                 })
                 .catch(error => console.log(error));
-
-
-
         }
         // return () => { }
     }, [loggedInMail])

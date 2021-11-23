@@ -13,6 +13,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import GoogleLogin from 'react-google-login';
 import { useLocalContext } from '../../context/context';
 import axios from 'axios';
+import { setAccessToken } from '../../services/app.service';
 function Copyright(props) {
     return (
         <Typography variant="body2" color="text.secondary" align="center" {...props}>
@@ -53,13 +54,11 @@ export default function SignIn() {
             .then((result) => {
                 console.log(result);
                 console.log(result.user);
-                
                 setLoggedInUser(result.user);
                 setLoggedInMail(result.user.email);
 
                 //TODO: save access token to local storage 
-                               
-
+                setAccessToken(result.token);
             });
 
     };

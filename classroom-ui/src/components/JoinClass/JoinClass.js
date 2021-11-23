@@ -4,6 +4,8 @@ import { Dialog, Slide, Button, Avatar, TextField } from '@material-ui/core'
 import "./style.css"
 import { Close } from '@material-ui/icons'
 import { useState } from 'react'
+import { getAccessToken, getUrlAddUserToClass } from '../../services/app.service'
+import axios from 'axios'
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -12,8 +14,9 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 const JoinClass = () => {
     const { joinClassDialog, setJoinClassDialog, loggedInUser } = useLocalContext();
     const [classCode, setClassCode] = useState("");
-    const [email, setemail] = useState("");
-    const [error, setError] = useState();
+    // const [email, setemail] = useState("");
+    const [error, setError] = useState(false);
+    const [errorMsg, setErrorMsg] = useState('');
 
 
 
@@ -21,11 +24,44 @@ const JoinClass = () => {
         setJoinClassDialog(false);
     }
 
-    const handleSubmit = () => {
+    const handleSubmit = (e) => {
         //TODO
-        console.log('Email: ', email);
+        // console.log('Email: ', email);
+        e.preventDefault();
         console.log('Class Code: ', classCode);
-        setError('');
+        const token = getAccessToken();
+
+        const config = {
+            headers: { Authorization: `Bearer ${token}` }
+        };
+
+        const url = getUrlAddUserToClass(loggedInUser.id);
+
+        const bodyParameters = {
+            role: "student",
+            classCode: classCode,            
+        };
+
+        console.log(config, bodyParameters, url);
+
+        axios.post(
+            url,
+            bodyParameters,
+            config
+        ).then(res => {
+            console.log(res.data);
+            if (res.data.error && res.data.error !== ''){
+                setError(true);
+                setErrorMsg(res.data.error);
+                return;
+            }
+            if (res.data === true){
+                window.location.href='/'
+            }
+        }).catch(e => {
+            console.log(e)
+        });  
+
     }
 
     return (
@@ -101,15 +137,15 @@ const JoinClass = () => {
                                 value={classCode}
                                 onChange={(e) => setClassCode(e.target.value)}
                                 error={error}
-                                helperText={error && "No class was found"}
+                                helperText={error && errorMsg}
                             />
-                            <TextField
+                            {/* <TextField
                                 id="outlined-basic"
                                 label="Owner's email"
                                 variant="outlined"
                                 value={email}
                                 onChange={(e) => setemail(e.target.value)}
-                            />
+                            /> */}
                         </div>
                     </div>
                 </div>
