@@ -10,6 +10,7 @@ const Main = ({ classData }) => {
   const [image, setImage] = useState(null);
 
   const handleChange = (e) => {
+    setShowInput(false);
     if (e.target.files[0]) {
       setImage(e.target.files[0]);
     }

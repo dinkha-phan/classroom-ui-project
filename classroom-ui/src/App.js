@@ -1,22 +1,54 @@
-import React from "react";
-import { Drawer, JoinedClasses,Main,SignIn,SignUp,People } from "./components";
-import { BrowserRouter as Router, Switch } from "react-router-dom";
+import { React, useEffect } from "react";
+import { Drawer, JoinedClasses, Main, SignIn, SignUp, People } from "./components";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { IsUserRedirect, ProtectedRoute } from './routes/Routes';
 import { useLocalContext } from "./context/context";
+import axios from "axios";
 
 
-const createdClasses = [{ className: "class 1" }, { className: "class 2" }];
-const joinedClasses = [{ className: "class 3" }, { className: "class 4" }];
 const classData = { className: "class Testing" };
 function App() {
-    const { loggedInMail } = useLocalContext();
-    const { setPersonJoinedClass, personJoinedClass,
-        tabValue, settabValue } = useLocalContext();
+    const { loggedInMail,
+        setPersonJoinedClass, personJoinedClass,
+        tabValue, settabValue,
+        setListJoinedClasses, listJoinedClasses,
+        setListCreatedClasses, listCreatedClasses } = useLocalContext();
+
+
+    useEffect(() => {
+        if (loggedInMail) {
+            const urlGetJoinedClasses = 'http://127.0.0.1:3000/users/18120127/class-user?role=student';
+            const urlGetCreatesClasses = 'http://127.0.0.1:3000/users/18120116/class-user?role=teacher';
+
+            // get AT and set it to header 
+            axios.get(urlGetJoinedClasses)
+                .then(res => {
+                    console.log(res.data);
+                    const data = res.data;
+                    setListJoinedClasses(data);
+                })
+                .catch(error => console.log(error));
+
+            axios.get(urlGetCreatesClasses)
+                .then(res => {
+                    console.log(res.data);
+                    const data = res.data;
+                    setListCreatedClasses(data);
+                })
+                .catch(error => console.log(error));
+
+
+
+        }
+        // return () => { }
+    }, [loggedInMail])
 
     return (
         <div>
             <Router>
                 <Switch>
+
+
                     <IsUserRedirect
                         user={loggedInMail}
                         loggedInPath="/"
@@ -35,9 +67,24 @@ function App() {
                         <SignUp />
                     </IsUserRedirect>
 
+                    {listCreatedClasses.map((item, index) => (
+                        <Route key={index} exact path={`/teacher/${item.ClassID}`}>
+                            <Drawer />
+                            <Main classData={item} />
+                        </Route>
+                    ))}
+                    {listJoinedClasses.map((item, index) => (
+                        <Route key={index} exact path={`/student/${item.ClassID}`}>
+                            {/* <Drawer />
+                            <Main classData={item} /> */}
+                            <h1>abcd</h1>
+                            {/* {alert(`/student/${item.ClassID}`)} */}
+                        </Route>
+                    ))}
+
                     <ProtectedRoute user={loggedInMail} path="/" exact>
 
-                        {setPersonJoinedClass("Teacher") && <></>}
+                        {setPersonJoinedClass("") && <></>}
 
                         {/* List Class */}
                         {
@@ -45,11 +92,11 @@ function App() {
                             <>
                                 <Drawer />
                                 {<ol className="joined">
-                                    {createdClasses.map((item) => (
+                                    {listCreatedClasses.length !== 0 && listCreatedClasses.map((item) => (
                                         <JoinedClasses classData={item} />
                                     ))}
 
-                                    {joinedClasses.map((item) => (
+                                    {listJoinedClasses.length !== 0 && listJoinedClasses.map((item) => (
                                         <JoinedClasses classData={item} />
                                     ))}
                                 </ol>}
@@ -61,7 +108,7 @@ function App() {
                             (personJoinedClass === "Student") &&
                             <>
                                 <Drawer />
-                                { tabValue==="1" ? <Main classData={classData} /> : <People/>}
+                                {tabValue === "1" ? <Main classData={classData} /> : <People />}
                             </>
                         }
 
@@ -70,7 +117,7 @@ function App() {
                             (personJoinedClass === "Teacher") &&
                             <>
                                 <Drawer />
-                                { tabValue==="1" ? <Main classData={classData} /> : <People/>}
+                                {tabValue === "1" ? <Main classData={classData} /> : <People />}
                             </>
                         }
                     </ProtectedRoute>

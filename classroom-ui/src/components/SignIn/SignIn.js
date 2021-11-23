@@ -52,11 +52,12 @@ export default function SignIn() {
             .then((result) => {
                 console.log(result);
                 console.log(result.user);
-                // window.location('http://localhost:3000/');
                 
                 setLoggedInUser(result.user);
                 setLoggedInMail(result.user.email);
-                // window.location.href = "http://localhost:3000/";
+
+                //TODO: save access token to local storage 
+                               
 
             });
 
