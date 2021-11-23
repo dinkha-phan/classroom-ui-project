@@ -67,7 +67,7 @@ export default function SignIn() {
         console.log(response);
         axios({
             method: "POST",
-            url: "http://localhost:3001/login/google",
+            url: "https://class-api-ndk.herokuapp.com/login/google",
             data: {tokenId: response.tokenId}
         }).then(response => {
             console.log("Google login success", response);
