@@ -32,6 +32,11 @@ export const useStyles = makeStyles((theme) => ({
         justifyContent: "space-between",
         alignItems: "center",
     },
+    header__wrapper__center:{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+    },
     icon: {
         marginRight: "15px",
         color: "#5f6368",

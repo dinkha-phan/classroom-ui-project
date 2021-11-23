@@ -11,8 +11,8 @@ export function ConxtextProvider({ children }) {
     const [joinClassDialog, setJoinClassDialog] = useState(false);
     const [loggedInUser, setLoggedInUser] = useState(null);
     const [loggedInMail, setLoggedInMail] = useState(null);
-
-
+    const [personJoinedClass, setPersonJoinedClass] = useState("");
+    const [tabValue, settabValue] = useState("1");
 
     const login = () => {
         // login
@@ -65,7 +65,9 @@ export function ConxtextProvider({ children }) {
         createClassDialog, setCreateClassDialog,
         joinClassDialog, setJoinClassDialog,
         login, logout,
-        loggedInMail, loggedInUser, setLoggedInMail, setLoggedInUser
+        loggedInMail, loggedInUser, setLoggedInMail, setLoggedInUser,
+        personJoinedClass, setPersonJoinedClass,
+        tabValue, settabValue
     }
 
     return (

@@ -1,17 +1,18 @@
 import React from "react";
-import { Drawer, Login,JoinedClasses } from "./components";
-import { BrowserRouter as Router, Switch} from "react-router-dom";
+import { Drawer, JoinedClasses,Main,SignIn,SignUp,People } from "./components";
+import { BrowserRouter as Router, Switch } from "react-router-dom";
 import { IsUserRedirect, ProtectedRoute } from './routes/Routes';
 import { useLocalContext } from "./context/context";
-import Main from "./components/Main/Main";
-import SignIn from "./components/SignIn/SignIn";
-import SignUp from "./components/SignUp/SignUp";
 
-const createdClasses = [{className:"class 1"},{className:"class 2"}];
-const joinedClasses = [{className:"class 3"},{className:"class 4"}];
-const classData = {className:"class Testing"};
+
+const createdClasses = [{ className: "class 1" }, { className: "class 2" }];
+const joinedClasses = [{ className: "class 3" }, { className: "class 4" }];
+const classData = { className: "class Testing" };
 function App() {
-    const { loggedInMail} = useLocalContext();
+    const { loggedInMail } = useLocalContext();
+    const { setPersonJoinedClass, personJoinedClass,
+        tabValue, settabValue } = useLocalContext();
+
     return (
         <div>
             <Router>
@@ -31,21 +32,47 @@ function App() {
                         path="/signup"
                         exact
                     >
-                        <SignUp/>
+                        <SignUp />
                     </IsUserRedirect>
 
                     <ProtectedRoute user={loggedInMail} path="/" exact>
-                        <Drawer />
-                        { <ol className="joined">
-                            {createdClasses.map((item) => (
-                                <JoinedClasses classData={item} />
-                            ))}
 
-                            {joinedClasses.map((item) => (
-                                <JoinedClasses classData={item} />
-                            ))}
-                        </ol> }
-                        <Main classData={classData}/>
+                        {setPersonJoinedClass("Teacher") && <></>}
+
+                        {/* List Class */}
+                        {
+                            (personJoinedClass === "") &&
+                            <>
+                                <Drawer />
+                                {<ol className="joined">
+                                    {createdClasses.map((item) => (
+                                        <JoinedClasses classData={item} />
+                                    ))}
+
+                                    {joinedClasses.map((item) => (
+                                        <JoinedClasses classData={item} />
+                                    ))}
+                                </ol>}
+                            </>
+                        }
+
+                        {/* Class student detail */}
+                        {
+                            (personJoinedClass === "Student") &&
+                            <>
+                                <Drawer />
+                                { tabValue==="1" ? <Main classData={classData} /> : <People/>}
+                            </>
+                        }
+
+                        {/* Class teacher detail */}
+                        {
+                            (personJoinedClass === "Teacher") &&
+                            <>
+                                <Drawer />
+                                { tabValue==="1" ? <Main classData={classData} /> : <People/>}
+                            </>
+                        }
                     </ProtectedRoute>
                 </Switch>
             </Router>

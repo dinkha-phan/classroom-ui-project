@@ -6,18 +6,19 @@ import {
     MenuItem,
     Toolbar,
     Typography,
+    Tab,
+    Tabs
 } from "@material-ui/core";
 import { Add, Apps } from "@material-ui/icons";
 import { useStyles } from "./style";
 import { useState } from "react";
 import { CreateClass, JoinClass } from "..";
 import { useLocalContext } from "../../context/context";
-
-
 const Header = ({ children }) => {
     const classes = useStyles()
     const [anchorEl, setAnchorEl] = useState(null);
-    const { setCreateClassDialog, setJoinClassDialog, loggedInUser } = useLocalContext();
+    const { setCreateClassDialog, setJoinClassDialog, loggedInUser,personJoinedClass ,
+        tabValue, settabValue} = useLocalContext();
     console.log(loggedInUser);
 
     const handleClick = (event) => setAnchorEl(event.currentTarget);
@@ -34,6 +35,9 @@ const Header = ({ children }) => {
         setJoinClassDialog(true);
     }
 
+    const handleChange = (event, newValue) => {
+        settabValue(newValue);
+    };
 
 
     return (
@@ -46,8 +50,26 @@ const Header = ({ children }) => {
                         <Typography variant="h6" className={classes.title}>
                             Classroom
                         </Typography>
-                    </div>
 
+                    </div>
+                    <div className={classes.header__wrapper__center}>
+                        {
+                            (personJoinedClass!=="") &&
+                        <Tabs
+                            value={tabValue}
+                            onChange={handleChange}
+                            aria-label="wrapped label tabs example"
+                        >
+                            <Tab
+                                value="1"
+                                label="Bản tin"
+                                wrapped
+                            />
+                            <Tab value="2" label="Mọi người" />
+                            
+                        </Tabs>
+                        }
+                    </div>
                     <div className={classes.header__wrapper__right}>
                         <Add onClick={handleClick} className={classes.icon} />
 
@@ -72,7 +94,7 @@ const Header = ({ children }) => {
                 </Toolbar>
             </AppBar>
             <CreateClass />
-            <JoinClass/>
+            <JoinClass />
         </div>
     )
 }

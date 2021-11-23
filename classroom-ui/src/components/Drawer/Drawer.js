@@ -94,7 +94,7 @@ export default function SwipeableTemporaryDrawer() {
                     
                     {/* Test btn left drawer */}
                     <div style={{ marginTop: 80 }}></div>
-                    <Button onClick={toggleDrawer(anchor, true)} >{anchor} </Button>
+                    {/* <Button onClick={toggleDrawer(anchor, true)} >{anchor} </Button> */}
 
                     <SwipeableDrawer
                         anchor={anchor}

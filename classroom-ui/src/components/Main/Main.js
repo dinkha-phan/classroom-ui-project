@@ -1,10 +1,9 @@
 import { Avatar, Button, TextField } from "@material-ui/core";
 import React, { useState } from "react";
 import "./style.css";
-import { useLocalContext } from "../../context/context";
 // import { Announcment } from "..";
 const Main = ({ classData }) => {
-  const { loggedInMail } = useLocalContext();
+  // const { loggedInMail } = useLocalContext();
 
   const [showInput, setShowInput] = useState(false);
   const [inputValue, setInput] = useState("");
