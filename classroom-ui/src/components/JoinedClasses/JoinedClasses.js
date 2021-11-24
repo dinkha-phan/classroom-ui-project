@@ -103,7 +103,7 @@ const JoinedClasses = ({ classData }) => {
                             </div>
                         </div>
 
-                        <p className="joined__owner"> Auther class </p>
+                        <p className="joined__owner"> {classData.AuthorName}</p>
                     </div>
                 </div>
                 <Avatar

@@ -13,7 +13,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import GoogleLogin from 'react-google-login';
 import { useLocalContext } from '../../context/context';
 import axios from 'axios';
-import { setAccessToken } from '../../services/app.service';
+import { parseJwt, setAccessToken, setRefreshToken, urlSignIn } from '../../services/app.service';
 function Copyright(props) {
     return (
         <Typography variant="body2" color="text.secondary" align="center" {...props}>
@@ -36,7 +36,7 @@ export default function SignIn() {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
         // eslint-disable-next-line no-console
-        const recipeUrl = 'https://classrom-api-ntk.herokuapp.com/login';
+        const recipeUrl = urlSignIn;
         const postBody = {
             username: data.get('email'),
             password: data.get('password'),
@@ -53,11 +53,18 @@ export default function SignIn() {
             .then(res => res.json())
             .then((result) => {
                 console.log(result);
-                console.log(result.user);
-                setLoggedInUser(result.user);
-                setLoggedInMail(result.user.email);
+                
+                
+                const token = result.token;
+                const userData = parseJwt(token);
 
-                //TODO: save access token to local storage 
+                console.log(token, userData);
+
+                setLoggedInUser(userData);
+                setLoggedInMail(userData.email);
+
+                //TODO: save AT and RT to local storage 
+                setRefreshToken(result.refreshToken);
                 setAccessToken(result.token);
             });
 
@@ -74,6 +81,8 @@ export default function SignIn() {
     }
     const responseErrorGoogle = (response) =>{
     }
+
+
     return (
         <ThemeProvider theme={theme}>
             <Container component="main" maxWidth="xs">

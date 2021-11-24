@@ -150,7 +150,7 @@ export default function AlignItemsList({ classData }) {
                         </List>
                     ))}
                 </List>
-                {showInvitePeople && <InvitePeople Label={label} />}
+                {showInvitePeople && <InvitePeople Label={label} classID ={classData.ClassID} />}
             </div>
         </>
     );

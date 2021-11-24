@@ -1,4 +1,5 @@
 import { useState, useContext, useEffect, createContext } from "react";
+import { removeAccessToken } from "../services/app.service";
 
 const AddContext = createContext();
 
@@ -17,7 +18,7 @@ export function ConxtextProvider({ children }) {
     const [listCreatedClasses, setListCreatedClasses] = useState([]);
     const [showProfile, setShowProfile] = useState(false);
     const [showInvitePeople, setShowInvitePeople] = useState(false);
-    
+
     const login = () => {
         // login
         // get Access Token -> send to API server
@@ -35,6 +36,10 @@ export function ConxtextProvider({ children }) {
 
     const logout = () => {
         // remove Access Token -> redirect to login/register
+        removeAccessToken();
+        setLoggedInUser(null);
+        setLoggedInMail(null);
+        window.location.href ='/'
     }
 
 
@@ -65,7 +70,7 @@ export function ConxtextProvider({ children }) {
     }, []);
 
 
-    
+
 
     const value = {
         createClassDialog, setCreateClassDialog,

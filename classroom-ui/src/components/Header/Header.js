@@ -21,7 +21,7 @@ const Header = ({ children }) => {
     const { setShowProfile } = useLocalContext();
 
     const { setCreateClassDialog, setJoinClassDialog, loggedInUser,personJoinedClass ,
-        tabValue, settabValue} = useLocalContext();
+        tabValue, settabValue, logout} = useLocalContext();
     console.log(loggedInUser);
 
     const handleClick = (event) => setAnchorEl(event.currentTarget);
@@ -52,6 +52,8 @@ const Header = ({ children }) => {
     const handleLogout = () => {
         setAnchorElAvatar(null);
         console.log("handle Logout Here");
+        logout();
+        
     }
     
     return (

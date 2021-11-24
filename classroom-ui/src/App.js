@@ -4,40 +4,53 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { IsUserRedirect, ProtectedRoute } from './routes/Routes';
 import { useLocalContext } from "./context/context";
 import axios from "axios";
-import { getAccessToken, getUrlCreateClasseForUser, getUrlGetCreatedClasses, getUrlGetJoinedClasses, parseJwt } from "./services/app.service";
+import { getAccessToken, getUrlCreateClasseForUser, getUrlGetCreatedClasses, getUrlGetJoinedClasses, getUrlGetUserByEmail, parseJwt } from "./services/app.service";
 
 
 
 
 function App() {
-    const { 
+    const {
         setPersonJoinedClass, personJoinedClass,
         tabValue, settabValue,
         setListJoinedClasses, listJoinedClasses,
         setListCreatedClasses, listCreatedClasses,
         setLoggedInUser, setLoggedInMail,
-        loggedInUser, loggedInMail} = useLocalContext();
+        loggedInUser, loggedInMail } = useLocalContext();
 
 
     useEffect(() => {
         if (!loggedInMail) {
             // load data of user using token store at local storage
             const token = getAccessToken();
+
             if (token) {
-                const dataUser = parseJwt(token);
+                let dataUser = parseJwt(token);
+
                 console.log(dataUser);
                 setLoggedInUser(dataUser);
                 setLoggedInMail(dataUser.email);
+
+                const urlGetUserDetail = getUrlGetUserByEmail(dataUser.email);
+
+                axios.get(urlGetUserDetail)
+                    .then(res => {
+                        // console.log(res, 'asasaskdjhaskj');
+                        dataUser.fullName = res.data[0].FullName;
+                        setLoggedInUser(dataUser);
+                    })
+                    .catch(error => console.log(error));
             }
         }
 
 
         if (loggedInMail) {
             const urlGetJoinedClasses = getUrlGetJoinedClasses(loggedInUser.id);
-            const urlGetCreatesClasses = getUrlGetCreatedClasses(loggedInUser.id)
+            const urlGetCreatesClasses = getUrlGetCreatedClasses(loggedInUser.id);
+
 
             // get AT and set it to header
-             
+
             axios.get(urlGetJoinedClasses)
                 .then(res => {
                     console.log(res.data);
@@ -84,15 +97,16 @@ function App() {
                     {listCreatedClasses.map((item, index) => (
                         <Route key={index} exact path={`/teacher/${item.ClassID}`}>
                             <Drawer />
-                            {tabValue === "1" ? <Main classData={item} /> : <People classData={item}/>}
+                            {tabValue === "1" ? <Main classData={item} /> : <People classData={item} />}
                         </Route>
                     ))}
                     {listJoinedClasses.map((item, index) => (
                         <Route key={index} exact path={`/student/${item.ClassID}`}>
                             <Drawer />
-                            {tabValue === "1" ? <Main classData={item} /> : <People classData={item}/>}
+                            {tabValue === "1" ? <Main classData={item} /> : <People classData={item} />}
                         </Route>
                     ))}
+
 
                     <ProtectedRoute user={loggedInMail} path="/" exact>
                         {/* List Class */}

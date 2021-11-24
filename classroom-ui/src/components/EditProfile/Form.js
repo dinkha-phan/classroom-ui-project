@@ -1,26 +1,60 @@
 import React from 'react'
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
     TextField,
     DialogActions,
     Button
 } from '@material-ui/core';
 import { useLocalContext } from "../../context/context";
+import { getAccessToken, getUrlUpdateUser } from '../../services/app.service';
+import axios from 'axios';
 
 const Form = () => {
-    const { setShowProfile,loggedInUser } = useLocalContext();
+    const { setShowProfile, loggedInUser } = useLocalContext();
     const [email, setEmail] = useState(loggedInUser.email);
-    const [fullName, setFullName] = useState("");
-    const [dateOfBirth, setDateOfBirth] = useState("");
+    const [userID, setUserID] = useState(loggedInUser.id);
+    const [fullName, setFullName] = useState(loggedInUser.fullName);
+
     const handleClickSave = (e) => {
         e.preventDefault();
         console.log("############ Edit Profile -> Save ###############");
-        console.log("id:",loggedInUser.id);
-        console.log("email:",email);
-        console.log("fullName:",fullName);
-        console.log("dateOfBirth:",dateOfBirth);
+        // console.log("id:", loggedInUser.id);
+        // console.log("email:", email);
+        // console.log("fullName:", fullName);
+        // console.log("userID:", userID);
+
+        const token = getAccessToken();
+
+        const config = {
+            headers: { Authorization: `Bearer ${token}` }
+        };
+
+        const url = getUrlUpdateUser(loggedInUser.id);
+
+        const bodyParameters = {
+            fullName: fullName,
+        };
+
+        console.log(config, bodyParameters, url);
+
+        axios.put(
+            url,
+            bodyParameters,
+            config
+        ).then(res => {
+            console.log(res.data);
+            window.location.reload();
+
+        }).catch(e => {
+            console.log(e)
+        });
     }
-    const handleClickCancel = () =>{
+
+    useEffect(() => {
+                
+    }, [])
+
+    const handleClickCancel = () => {
         setShowProfile(false);
     }
     return (
@@ -38,20 +72,21 @@ const Form = () => {
                     onChange={(e) => setEmail(e.target.value)}
                 />
                 <TextField
+                    id="UserID"
+                    disabled
+                    label="User ID"
+                    className="form__input"
+                    variant="filled"
+                    value={userID}
+                    onChange={(e) => setUserID(e.target.value)}
+                />
+                <TextField
                     id="FullName"
                     label="Full name"
                     className="form__input"
                     variant="filled"
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
-                />
-                <TextField
-                    id="DateOfBirth"
-                    label="Date of birth"
-                    className="form__input"
-                    variant="filled"
-                    value={dateOfBirth}
-                    onChange={(e) => setDateOfBirth(e.target.value)}
                 />
             </div>
             <DialogActions>

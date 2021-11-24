@@ -40,12 +40,13 @@ const Main = ({ classData }) => {
                             <div className="main__section main__overflow">
                                 {classData.section}
                             </div>
+
                             <div className="main__wrapper2">
                                 <em className="main__code">{classData.Name}</em>
                                 <div className="main__id">{classData.Part}</div>
                                 <div className="main__id">{classData.Tilte}</div>
                                 <div className="main__id">{classData.Room}</div>
-                                <div className="main__id">Author: {classData.Auther}</div>
+                                <div className="main__id">Author: {classData.AuthorName}</div>
                             </div>
                         </div>
                     </div>

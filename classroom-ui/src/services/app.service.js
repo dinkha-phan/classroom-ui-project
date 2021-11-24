@@ -1,8 +1,11 @@
 const urlAPI = 'https://classrom-api-ntk.herokuapp.com';
 const urlLocalAPI = 'http://127.0.0.1:3000';
 
-const urlSignIn = 'https://classrom-api-ntk.herokuapp.com/login';
-const urlSignUp = 'https://classrom-api-ntk.herokuapp.com/signup';
+// const urlSignIn = 'https://classrom-api-ntk.herokuapp.com/login';
+const urlSignIn = urlLocalAPI + '/login';
+
+// const urlSignUp = 'https://classrom-api-ntk.herokuapp.com/signup';
+const urlSignUp = urlLocalAPI + '/signup';
 
 function getUrlGetJoinedClasses(userID) {
     return urlLocalAPI + '/users/' + userID + '/class-user?role=student'
@@ -32,6 +35,21 @@ function getUrlGetPeopleInClass(classID) {
     return urlLocalAPI + '/classes/' + classID + '/class-user/';
 };
 
+function getUrlInvitePeople(classID) {
+    return urlLocalAPI + '/join-class/invitations';
+};
+
+function getUrlUpdateUser(userID) {
+    return urlLocalAPI + '/users/' + userID;
+};
+
+function getUrlGetUserByEmail(email) {
+    // http://127.0.0.1:3000/users?email=b@c.com&typeSearch=single
+    return urlLocalAPI + '/users/?email=' + email + '&typeSearch=single';
+};
+
+
+// ===================================================
 
 function getAccessToken() {
     return window.localStorage.getItem('token');
@@ -40,6 +58,27 @@ function getAccessToken() {
 function setAccessToken(strToken) {
     window.localStorage.setItem('token', strToken);
 }
+
+
+function removeAccessToken() {
+    window.localStorage.removeItem('token');
+}
+
+function setRefreshToken(strToken) {
+    window.localStorage.setItem('refreshToken', strToken);
+}
+
+function getRefreshToken(strToken) {
+    window.localStorage.getItem('refreshToken');
+}
+
+function removeRefreshToken() {
+    window.localStorage.removeItem('refreshToken');
+}
+
+
+
+
 
 function parseJwt(token) {
     var base64Url = token.split('.')[1];
@@ -68,8 +107,18 @@ export {
 
     getUrlGetDetailClass,
     getUrlGetPeopleInClass,
+    getUrlInvitePeople,
+
+    getUrlUpdateUser,
+    getUrlGetUserByEmail,
 
     getAccessToken,
     setAccessToken,
+    removeAccessToken,
     parseJwt,
+
+
+    setRefreshToken,
+    getRefreshToken,
+    removeRefreshToken,
 }

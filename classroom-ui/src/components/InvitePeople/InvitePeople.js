@@ -10,7 +10,7 @@ import {
 import './style.css';
 import Form from "./Form";
 
-function InvitePeople({Label}) {
+function InvitePeople({Label, classID}) {
     const { showInvitePeople, setShowInvitePeople } = useLocalContext();
     const handleOnCloseDialog = () => {
         setShowInvitePeople(false);
@@ -25,7 +25,7 @@ function InvitePeople({Label}) {
                 maxWidth={showInvitePeople ? "lg" : "xs"}
                 className="form__dialog"
             >
-                {showInvitePeople ? <Form Label={Label}/>:<></> }
+                {showInvitePeople ? <Form Label={Label} classID={classID}/>:<></> }
             </Dialog>
         </div>
     )

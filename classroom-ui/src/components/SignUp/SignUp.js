@@ -10,6 +10,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { urlSignUp } from '../../services/app.service';
 
 function Copyright(props) {
   return (
@@ -35,11 +36,13 @@ export default function SignUp() {
       email: data.get('email'),
       password: data.get('password'),
     });
-    const recipeUrl = 'https://classrom-api-ntk.herokuapp.com/signup';
+    const recipeUrl = urlSignUp;
+    
     const postBody = {
         email: data.get('email'),
         password: data.get('password'),
         id: data.get('userId'),
+        fullName: data.get('fullName')
     };
     console.log(postBody);
     const requestMetadata = {
@@ -54,7 +57,7 @@ export default function SignUp() {
         .then(res => res.json())
         .then((result)=>{
           if(result === 'success')    
-          window.location.assign("http://localhost:3000/signin")
+          window.location.assign("/")
         });
   };
 
@@ -88,7 +91,16 @@ export default function SignUp() {
                   autoFocus
                 />
               </Grid>
-
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  id="fullName"
+                  label="Full Name"
+                  name="fullName"
+                  autoComplete="fullName"
+                />
+              </Grid>
               <Grid item xs={12}>
                 <TextField
                   required

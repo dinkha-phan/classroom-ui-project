@@ -12,7 +12,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 const JoinClass = () => {
-    const { joinClassDialog, setJoinClassDialog, loggedInUser } = useLocalContext();
+    const { joinClassDialog, setJoinClassDialog, loggedInUser, logout } = useLocalContext();
     const [classCode, setClassCode] = useState("");
     // const [email, setemail] = useState("");
     const [error, setError] = useState(false);
@@ -61,7 +61,7 @@ const JoinClass = () => {
         }).catch(e => {
             console.log(e)
         });
-
+        
     }
 
     return (
@@ -96,21 +96,22 @@ const JoinClass = () => {
 
                     <div className="joinClass__form">
                         <p className="joinClass__formText">
-                            You're currently signed in as {loggedInUser?.FullName}
+                            You're currently signed in as {loggedInUser?.fullName}
                         </p>
                         <div className="joinClass__loginInfo">
                             <div className="joinClass__classLeft">
                                 <Avatar /* src={loggedInUser?.photoURL}  */ />
                                 <div className="joinClass__loginText">
                                     <div className="joinClass__loginName">
-                                        {loggedInUser?.FullName}
+                                        {loggedInUser?.fullName}
                                     </div>
                                     <div className="joinClass__loginEmail">
-                                        {loggedInUser?.Email}
+                                        {loggedInUser?.email}
                                     </div>
                                 </div>
                             </div>
-                            <Button variant="outlined" color="primary">
+                            
+                            <Button variant="outlined" color="primary" onClick={logout}>
                                 Logout
                             </Button>
                         </div>
