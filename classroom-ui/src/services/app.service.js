@@ -1,56 +1,56 @@
-const urlAPI = 'https://classrom-api-ntk.herokuapp.com';
+const urlAPI = 'https://class-api-ndk.herokuapp.com';
 const urlLocalAPI = 'http://127.0.0.1:3000';
 
 // const urlSignIn = 'https://classrom-api-ntk.herokuapp.com/login';
-const urlSignIn = urlLocalAPI + '/login';
+const urlSignIn = urlAPI + '/login';
 
 // const urlSignUp = 'https://classrom-api-ntk.herokuapp.com/signup';
-const urlSignUp = urlLocalAPI + '/signup';
+const urlSignUp = urlAPI + '/signup';
 
 function getUrlGetJoinedClasses(userID) {
-    return urlLocalAPI + '/users/' + userID + '/class-user?role=student'
+    return urlAPI + '/users/' + userID + '/class-user?role=student'
 };
 
 function getUrlGetCreatedClasses(userID) {
-    return urlLocalAPI + '/users/' + userID + '/class-user?role=teacher'
+    return urlAPI + '/users/' + userID + '/class-user?role=teacher'
 };
 
 function getUrlCreateClasseForUser(userID) {
-    return urlLocalAPI + '/users/' + userID + '/class-user'
+    return urlAPI + '/users/' + userID + '/class-user'
 };
 
 function getUrlAddUserToClass(userID) {
-    return urlLocalAPI + '/users/' + userID + '/class-user'
+    return urlAPI + '/users/' + userID + '/class-user'
 };
 
 function getUrlRemoveUserFromClass(userID, classID) {
-    return urlLocalAPI + '/users/' + userID + '/class-user/' + classID;
+    return urlAPI + '/users/' + userID + '/class-user/' + classID;
 };
 
 function getUrlGetDetailClass(userID, classID) {
-    return urlLocalAPI + '/classes/' + classID;
+    return urlAPI + '/classes/' + classID;
 };
 
 function getUrlGetPeopleInClass(classID) {
-    return urlLocalAPI + '/classes/' + classID + '/class-user/';
+    return urlAPI + '/classes/' + classID + '/class-user/';
 };
 
 function getUrlInvitePeople(classID) {
-    return urlLocalAPI + '/join-class/invitations';
+    return urlAPI + '/join-class/invitations';
 };
 
 function getUrlUpdateUser(userID) {
-    return urlLocalAPI + '/users/' + userID;
+    return urlAPI + '/users/' + userID;
 };
 
 function getUrlGetUserByEmail(email) {
     // http://127.0.0.1:3000/users?email=b@c.com&typeSearch=single
-    return urlLocalAPI + '/users/?email=' + email + '&typeSearch=single';
+    return urlAPI + '/users/?email=' + email + '&typeSearch=single';
 };
 
 function getUrlConfirmJoinClass(classID) {
     // http://127.0.0.1:3000/users?email=b@c.com&typeSearch=single
-    return urlLocalAPI + '/join-class/confirm/' + classID;
+    return urlAPI + '/join-class/confirm/' + classID;
 };
 
 
@@ -97,8 +97,8 @@ function parseJwt(token) {
 };
 
 export {
-    urlAPI,
     urlLocalAPI,
+    urlAPI,
 
     urlSignIn,
     urlSignUp,
