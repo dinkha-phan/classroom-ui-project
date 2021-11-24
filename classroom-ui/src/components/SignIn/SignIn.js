@@ -71,7 +71,7 @@ export default function SignIn() {
     };
     const responseSucessGoogle = (response) =>{
         console.log(response);
-        axios({
+        axios.post({
             method: "POST",
             url: "https://class-api-ndk.herokuapp.com/login/google",
             data: {tokenId: response.tokenId}

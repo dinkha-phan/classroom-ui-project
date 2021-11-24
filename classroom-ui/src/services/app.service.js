@@ -48,6 +48,12 @@ function getUrlGetUserByEmail(email) {
     return urlLocalAPI + '/users/?email=' + email + '&typeSearch=single';
 };
 
+function getUrlConfirmJoinClass(classID) {
+    // http://127.0.0.1:3000/users?email=b@c.com&typeSearch=single
+    return urlLocalAPI + '/join-class/confirm/' + classID;
+};
+
+
 
 // ===================================================
 
@@ -108,6 +114,7 @@ export {
     getUrlGetDetailClass,
     getUrlGetPeopleInClass,
     getUrlInvitePeople,
+    getUrlConfirmJoinClass,
 
     getUrlUpdateUser,
     getUrlGetUserByEmail,

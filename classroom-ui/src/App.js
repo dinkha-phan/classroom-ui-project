@@ -1,10 +1,10 @@
 import { React, useEffect } from "react";
 import { Drawer, JoinedClasses, Main, SignIn, SignUp, People } from "./components";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route, useParams } from "react-router-dom";
 import { IsUserRedirect, ProtectedRoute } from './routes/Routes';
 import { useLocalContext } from "./context/context";
 import axios from "axios";
-import { getAccessToken, getUrlCreateClasseForUser, getUrlGetCreatedClasses, getUrlGetJoinedClasses, getUrlGetUserByEmail, parseJwt } from "./services/app.service";
+import { getAccessToken, getUrlConfirmJoinClass, getUrlCreateClasseForUser, getUrlGetCreatedClasses, getUrlGetJoinedClasses, getUrlGetUserByEmail, parseJwt, urlLocalAPI } from "./services/app.service";
 
 
 
@@ -107,9 +107,10 @@ function App() {
                         </Route>
                     ))}
 
+                    <Route path="/join-class/confirm/:id" children={<Child />} />
 
+                    {/* List Class */}
                     <ProtectedRoute user={loggedInMail} path="/" exact>
-                        {/* List Class */}
                         <Drawer />
                         <ol className="joined">
                             {listCreatedClasses.length !== 0 && listCreatedClasses.map((item) => (
@@ -122,6 +123,7 @@ function App() {
                         </ol>
 
                     </ProtectedRoute>
+
                 </Switch>
             </Router>
         </div>
@@ -130,6 +132,67 @@ function App() {
 
 export default App;
 
+
+function Child() {
+    const {
+        setLoggedInUser, setLoggedInMail,
+        loggedInUser, loggedInMail } = useLocalContext();
+
+    // We can use the `useParams` hook here to access
+    // the dynamic pieces of the URL.
+    useEffect(() => {
+        if (!loggedInMail) {
+            // load data of user using token store at local storage
+            const token = getAccessToken();
+
+            if (token) {
+                let dataUser = parseJwt(getAccessToken());
+
+                console.log(dataUser);
+                setLoggedInUser(dataUser);
+                setLoggedInMail(dataUser.email);
+
+                const token = getAccessToken();
+
+                const config = {
+                    headers: { Authorization: `Bearer ${token}` }
+                };
+
+                const url = getUrlConfirmJoinClass(dataUser.email);
+
+                const bodyParameters = {
+                    "email": dataUser.email
+                };
+
+                console.log(config, bodyParameters, url);
+
+                axios.post(
+                    url,
+                    bodyParameters,
+                    config
+                ).then(res => {
+                    console.log(res.data);
+                    // window.location.href = 'http://127.0.0.1:3001/'
+
+                }).catch(e => {
+                    console.log(e)
+                });
+
+            }
+            else {
+                window.location.href = 'http://127.0.0.1:3001/';
+            }
+        }
+
+    }, [])
+    let { id } = useParams();
+
+    return (
+        <div>
+            <h3>ID: {id}</h3>
+        </div>
+    );
+}
 // https://v5.reactrouter.com/web/guides/quick-start
 // https://v5.reactrouter.com/web/example/auth-workflow
 
