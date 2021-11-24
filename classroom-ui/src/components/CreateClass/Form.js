@@ -43,7 +43,8 @@ const Form = () => {
             bodyParameters,
             config
         ).then(res => {
-            if (res.data === true){
+            console.log(res.data);
+            if (res.data.msg === 'success'){
                 window.location.href='/'
             }
         }).catch(e => {
