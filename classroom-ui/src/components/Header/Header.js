@@ -76,7 +76,7 @@ const Header = ({ children }) => {
                         >
                             <Tab
                                 value="1"
-                                label="Bản tin"
+                                label="Bảng tin"
                                 wrapped
                             />
                             <Tab value="2" label="Mọi người" />

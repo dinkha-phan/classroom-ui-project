@@ -24,8 +24,13 @@ function getUrlRemoveUserFromClass(userID, classID) {
     return urlLocalAPI + '/users/' + userID + '/class-user/' + classID;
 };
 
+function getUrlGetDetailClass(userID, classID) {
+    return urlLocalAPI + '/classes/' + classID;
+};
 
-
+function getUrlGetPeopleInClass(classID) {
+    return urlLocalAPI + '/classes/' + classID + '/class-user/';
+};
 
 
 function getAccessToken() {
@@ -61,7 +66,8 @@ export {
 
     getUrlRemoveUserFromClass,
 
-
+    getUrlGetDetailClass,
+    getUrlGetPeopleInClass,
 
     getAccessToken,
     setAccessToken,

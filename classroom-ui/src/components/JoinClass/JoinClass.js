@@ -39,7 +39,7 @@ const JoinClass = () => {
 
         const bodyParameters = {
             role: "student",
-            classCode: classCode,            
+            classCode: classCode,
         };
 
         console.log(config, bodyParameters, url);
@@ -50,17 +50,17 @@ const JoinClass = () => {
             config
         ).then(res => {
             console.log(res.data);
-            if (res.data.error && res.data.error !== ''){
+            if (res.data.error && res.data.error !== '') {
                 setError(true);
                 setErrorMsg(res.data.error);
                 return;
             }
-            if (res.data === true){
-                window.location.href='/'
-            }
+
+            window.location.href = '/'
+
         }).catch(e => {
             console.log(e)
-        });  
+        });
 
     }
 

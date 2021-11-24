@@ -8,7 +8,7 @@ import { getAccessToken, getUrlCreateClasseForUser, getUrlGetCreatedClasses, get
 
 
 
-const classData = { className: "class Testing" };
+
 function App() {
     const { 
         setPersonJoinedClass, personJoinedClass,
@@ -84,13 +84,13 @@ function App() {
                     {listCreatedClasses.map((item, index) => (
                         <Route key={index} exact path={`/teacher/${item.ClassID}`}>
                             <Drawer />
-                            {tabValue === "1" ? <Main classData={item} /> : <People />}
+                            {tabValue === "1" ? <Main classData={item} /> : <People classData={item}/>}
                         </Route>
                     ))}
                     {listJoinedClasses.map((item, index) => (
                         <Route key={index} exact path={`/student/${item.ClassID}`}>
                             <Drawer />
-                            {tabValue === "1" ? <Main classData={item} /> : <People />}
+                            {tabValue === "1" ? <Main classData={item} /> : <People classData={item}/>}
                         </Route>
                     ))}
 

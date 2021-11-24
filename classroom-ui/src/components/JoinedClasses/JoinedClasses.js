@@ -40,21 +40,21 @@ const JoinedClasses = ({ classData }) => {
             headers: { Authorization: `Bearer ${token}` }
         };
 
-        const url = getUrlRemoveUserFromClass(loggedInUser.id, classData.ClassID) ;
+        const url = getUrlRemoveUserFromClass(loggedInUser.id, classData.ClassID);
+        console.log(config, url);
+
         axios.delete(
             url,
             config
         ).then(res => {
             console.log(res.data);
-            if (res.data.msg === 'success'){
-                window.location.href='/'
-            }
+            window.location.href = '/';
         }).catch(e => {
             console.log(e)
-        });  
-
-        console.log(config, url);
+        });
     }
+
+
 
     return (
         <li className="joined__list">
