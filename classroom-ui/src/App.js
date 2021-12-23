@@ -74,8 +74,6 @@ function App() {
         <div>
             <Router>
                 <Switch>
-
-
                     <IsUserRedirect
                         user={loggedInMail}
                         loggedInPath="/"
@@ -180,7 +178,7 @@ function Child() {
 
             }
             else {
-                window.location.href = 'http://127.0.0.1:3001/';
+                window.location.href = 'http://localhost:3001/';
             }
         }
 

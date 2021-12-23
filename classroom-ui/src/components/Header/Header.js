@@ -82,6 +82,7 @@ const Header = ({ children }) => {
                                 wrapped
                             />
                             <Tab value="2" label="Mọi người" />
+                            <Tab value="3" label="Số điểm" />
                             
                         </Tabs>
                         }

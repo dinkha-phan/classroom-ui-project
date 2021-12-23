@@ -18,6 +18,7 @@ export function ConxtextProvider({ children }) {
     const [listCreatedClasses, setListCreatedClasses] = useState([]);
     const [showProfile, setShowProfile] = useState(false);
     const [showInvitePeople, setShowInvitePeople] = useState(false);
+    const [showGradeBoard, setShowGradeBoard] = useState(false);
 
     const login = () => {
         // login

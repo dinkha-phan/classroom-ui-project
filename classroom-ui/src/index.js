@@ -3,11 +3,11 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import { ConxtextProvider } from './context/context';
-
+import Drag from './components/GradeStruct/drag'
 
 ReactDOM.render(
     <ConxtextProvider>
-        <App />
+        <Drag />
     </ConxtextProvider>
     ,
     document.getElementById('root')
