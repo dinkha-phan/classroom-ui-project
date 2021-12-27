@@ -1,4 +1,4 @@
-import React, { Component, useState } from "react";
+import React, { Component, useState, useEffect } from "react";
 import ReactDOM from "react-dom";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import TextField from '@mui/material/TextField';
@@ -7,6 +7,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import Box from '@mui/material/Box';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import axios from "axios";
 // fake data generator
 const getItems = count =>
   Array.from({ length: count }, (v, k) => k).map(k => ({
@@ -46,9 +47,17 @@ const getListStyle = isDraggingOver => ({
   width: "fit-content"
 });
 
-function Drag() {
-  const [items, setItems] = useState(getItems(10));
-
+const Drag = ({classData}) => {
+  const [items, setItems] = useState([]);
+  useEffect(() =>{
+    const url = 'http://localhost:3000/grade-struct/class/' + classData.ClassID;
+    axios.get(url).then((reponse) =>{
+      setItems(reponse.data);
+    })
+    .catch((error)=>{
+      console.log(error);
+    })
+  }, [])
 
   const onDragEnd = (result) => {
     // dropped outside the list
@@ -61,11 +70,34 @@ function Drag() {
       result.source.index,
       result.destination.index
     );
+    var a =  result.source.index;
+    var b = result.destination.index;
+    if (a > b){
+      let tmp = a;
+      a= b;
+      b =tmp;
+    }
+    for(let i in Range( a, b+1)){
+      const url = 'http://localhost:3000/grade-struct/class/' + classData.ClassID + 'rank/' + i;
+      const postData = {
+        Name: itemss[i].Name,
+        Grade: itemss[i].Grade
+      }
+
+      axios.put(url, postData).then((response) =>{
+        console.log(response);
+      }).catch((error) =>{
+        console.log(error);
+      })
+    }
     setItems(itemss);
 
 
   }
-
+  const handleCreate = ()=>{
+    let itemss = items;
+     // length = items.length(); 
+  }
   // Normally you would want to split things out into separate components.
   // But in this example everything is just done in one place for simplicity
 
@@ -192,7 +224,7 @@ function Drag() {
             />
           </div>
           <div style={{display: "flex",justifyContent: "flex-end", flexFlow: "column wrap-reverse", height: "match-parent", alignItems: "right", width: "100%" }}>
-            <Button variant="outlined" sx={{width:"10ch"}}
+            <Button onClick= {handleCreate} variant="outlined" sx={{width:"10ch"}}
               style={{ maxWidth: '30px',minWidth: '30px',height: "100%", padding: '0 0 0 0', width: "10px", backgroundColor: '#00b300', alignItems: "center", display: 'flex', alignItems: 'center', }}>
               <AddCircleOutlineIcon sx={{ color: "white" }} />
             </Button>
