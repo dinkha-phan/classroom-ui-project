@@ -77,9 +77,9 @@ const Main = ({ classData }) => {
 
                             <div className="main__wrapper2">
                                 <em className="main__code">{classData.Name}</em>
-                                <div className="main__id">{classData.Part}</div>
-                                <div className="main__id">{classData.Tilte}</div>
-                                <div className="main__id">{classData.Room}</div>
+                                <div className="main__id">Part: {classData.Part}</div>
+                                <div className="main__id">Subject: {classData.Title}</div>
+                                <div className="main__id">Room: {classData.Room}</div>
                                 <div className="main__id">Author: {classData.AuthorName}</div>
                             </div>
                         </div>
@@ -94,13 +94,13 @@ const Main = ({ classData }) => {
                         <div style={{ backgroundColor: "#fff" }}>
                             <div style={{ padding: 15 }}>
                                 <p style={{ color: "#000", fontSize: 10 }}>
-                                    <b>Mã Lớp:</b> {classData.ClassID}
+                                    <b>Class code:</b> {classData.ClassID}
                                 </p>
                                 <p style={{ color: "#000", fontSize: 10 }}>
-                                    <b>Chủ đề:</b> {classData.Part}<br></br>
+                                    <b>Subject:</b> {classData.Part}<br></br>
                                 </p>
                                 <p style={{ color: "#000", fontSize: 10 }}>
-                                    <b>Phòng:</b> {classData.Room}
+                                    <b>Room:</b> {classData.Room}
                                 </p>
                             </div>
                         </div>

@@ -333,7 +333,7 @@ const Drag = ({ classData }) => {
                             defaultValue={item.Name}
                             variant="filled"
                             size="small"
-                            style={{ paddingTop: 20 }}
+                            style={{ marginTop: 20 }}
                             opacity="100%"
                             onChange={(e) => onChaneTextField({ Name: e.target.value, index })}
                           />
@@ -344,7 +344,7 @@ const Drag = ({ classData }) => {
                             id="filled-size-normal"
                             defaultValue={item.Grade}
                             variant="filled"
-                            style={{ paddingBottom: 20 }}
+                            style={{ marginBottom: 20 }}
                             onChange={(e) => onChaneTextField({ Grade: e.target.value, index })}
                           />
                         </div>
@@ -414,7 +414,7 @@ const Drag = ({ classData }) => {
               id="filled-size-small"
               variant="filled"
               size="small"
-              style={{ paddingTop: 20 }}
+              style={{ marginTop: 20 }}
               onChange={(e) => { setNewName(e.target.value) }}
             />
             <TextField
@@ -422,7 +422,7 @@ const Drag = ({ classData }) => {
               label="Grade Detail"
               id="filled-size-normal"
               variant="filled"
-              style={{ paddingBottom: 20 }}
+              style={{ marginBottom: 20 }}
               onChange={(e) => { setNewGrade(e.target.value) }}
             />
           </div>
