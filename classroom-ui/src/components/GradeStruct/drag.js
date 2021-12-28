@@ -252,11 +252,12 @@ const Drag = ({ classData }) => {
   }
 
   const handleCreate = () => {
-    setItems([...items, {
+    let itemss = items;
+    itemss.push({
       ClassID: classData.ClassID, Rank: items.length + 1,
       Name: newName, Grade: newGrade
-    }]);
-    let itemss = items;
+    });
+    setItems(itemss);
     let rank = itemss.length + 1;
     const url = 'http://localhost:3000/grade-struct/class/' + classData.ClassID
       + '/rank/' + rank;
