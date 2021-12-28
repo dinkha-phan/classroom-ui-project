@@ -53,16 +53,15 @@ function createData(listStudent) {
     let listtemp = []
     //let example = listStudent.assignmentGrade;
     //console.log("list Student duoc truyen vao trong createData nè: ", example);
-    for (let i = 0; i < listStudent.length; i++){
+    for (let i = 0; i < listStudent.length; i++) {
         let tempStu = {};
         tempStu.name = listStudent[i].username;
         tempStu.listGrade = [];
-        for(let j = 0; j<listStudent[i].assignmentGrade.length; j++){
+        for (let j = 0; j < listStudent[i].assignmentGrade.length; j++) {
             tempStu.listGrade.push(listStudent[i].assignmentGrade[j].gradeAssignment)
         }
         listtemp.push(tempStu);
     }
-    console.log("List temp trong create data: ", listtemp);
     return listtemp;
 }
 
@@ -137,7 +136,7 @@ function EnhancedTableHead(props) {
         onRequestSort(event, property);
     };
     console.log("List Header: ", listHeader);
-    
+
     let headCells = [
         {
             id: 'name',
@@ -155,7 +154,6 @@ function EnhancedTableHead(props) {
         temp.pointStructure = item.point + ' điểm';
         headCells.push(temp);
     });
-    console.log(listHeader);
     return (
         <TableHead>
             <TableRow>
@@ -183,7 +181,7 @@ function EnhancedTableHead(props) {
                             onClick={createSortHandler(headCell.id)}
                         >
                             {headCell.label}
-                            <br/>
+                            <br />
                             {headCell.pointStructure}
                             {orderBy === headCell.id ? (
                                 <Box component="span" sx={visuallyHidden}>
@@ -254,7 +252,7 @@ const EnhancedTableToolbar = (props) => {
                     </IconButton>
                 </Tooltip>
             ) : (
-                <div style={{position: "absolute",right:"5px"}} >
+                <div style={{ position: "absolute", right: "5px" }} >
                     <Tooltip title="Download">
                         <IconButton>
                             <FileDownloadIcon />
@@ -275,7 +273,7 @@ EnhancedTableToolbar.propTypes = {
     numSelected: PropTypes.number.isRequired,
 };
 
-export default function Scores({idclass, isTeacher, class_name, grade_board}) {
+export default function Scores({ idclass, isTeacher, class_name, grade_board }) {
     const [order, setOrder] = React.useState('asc');
     const [orderBy, setOrderBy] = React.useState('name');
     const [selected, setSelected] = React.useState([]);
@@ -343,14 +341,14 @@ export default function Scores({idclass, isTeacher, class_name, grade_board}) {
     return (
         <Box sx={{ width: '100%' }}>
             <Paper sx={{ width: '100%', mb: 2 }}>
-                <EnhancedTableToolbar numSelected={selected.length} selected={selected} classname = {class_name} />
+                <EnhancedTableToolbar numSelected={selected.length} selected={selected} classname={class_name} />
                 <TableContainer>
                     <Table
                         sx={{ minWidth: 750 }}
                         aria-labelledby="tableTitle"
                         size={dense ? 'small' : 'medium'}
                     >
-                        
+
                         <EnhancedTableHead
                             numSelected={selected.length}
                             order={order}
@@ -358,7 +356,7 @@ export default function Scores({idclass, isTeacher, class_name, grade_board}) {
                             onSelectAllClick={handleSelectAllClick}
                             onRequestSort={handleRequestSort}
                             rowCount={rows.length}
-                            listHeader = {grade_board.listAssignment}
+                            listHeader={grade_board.listAssignment}
                         />
                         <TableBody>
                             {/* if you don't need to support IE11, you can replace the `stableSort` call with:
@@ -372,14 +370,14 @@ export default function Scores({idclass, isTeacher, class_name, grade_board}) {
                                     let squareDiv = [];
                                     console.log("row ne: ", row.listGrade);
                                     listTableCell.push(<TableCell
-                                                            component="th"
-                                                            id={labelId}
-                                                            scope="row"
-                                                            padding="none"
-                                                        >
-                                                            {row.name}
-                                                        </TableCell>);
-                                    for (let i = 0; i < row.listGrade.length; i++){
+                                        component="th"
+                                        id={labelId}
+                                        scope="row"
+                                        padding="none"
+                                    >
+                                        {row.name}
+                                    </TableCell>);
+                                    for (let i = 0; i < row.listGrade.length; i++) {
                                         let point = row.listGrade[i];
                                         listTableCell.push(<TableCell align="left">{point}</TableCell>);
                                     }
@@ -419,10 +417,10 @@ export default function Scores({idclass, isTeacher, class_name, grade_board}) {
                         </TableBody>
                     </Table>
                 </TableContainer>
-                
+
                 <TablePagination
-                    
-                    rowsPerPageOptions={[10, 20,30]}
+
+                    rowsPerPageOptions={[10, 20, 30]}
                     component="div"
                     count={rows.length}
                     rowsPerPage={rowsPerPage}
@@ -430,7 +428,7 @@ export default function Scores({idclass, isTeacher, class_name, grade_board}) {
                     onPageChange={handleChangePage}
                     onRowsPerPageChange={handleChangeRowsPerPage}
                 />
-            
+
             </Paper>
             {/* <FormControlLabel
                 control={<Switch checked={dense} onChange={handleChangeDense} />}

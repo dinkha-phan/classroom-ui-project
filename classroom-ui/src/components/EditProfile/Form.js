@@ -18,10 +18,6 @@ const Form = () => {
     const handleClickSave = (e) => {
         e.preventDefault();
         console.log("############ Edit Profile -> Save ###############");
-        // console.log("id:", loggedInUser.id);
-        // console.log("email:", email);
-        // console.log("fullName:", fullName);
-        // console.log("userID:", userID);
 
         const token = getAccessToken();
 
@@ -51,7 +47,7 @@ const Form = () => {
     }
 
     useEffect(() => {
-                
+
     }, [])
 
     const handleClickCancel = () => {

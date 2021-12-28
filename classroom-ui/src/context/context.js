@@ -19,6 +19,8 @@ export function ConxtextProvider({ children }) {
     const [showProfile, setShowProfile] = useState(false);
     const [showInvitePeople, setShowInvitePeople] = useState(false);
     const [showGradeBoard, setShowGradeBoard] = useState(false);
+    const [gradeStruct, setGradeStruct] = useState([]);
+    const [classData, setClassData] = useState(null);
 
     const login = () => {
         // login
@@ -40,7 +42,7 @@ export function ConxtextProvider({ children }) {
         removeAccessToken();
         setLoggedInUser(null);
         setLoggedInMail(null);
-        window.location.href ='/'
+        window.location.href = '/'
     }
 
 
@@ -83,7 +85,9 @@ export function ConxtextProvider({ children }) {
         setListJoinedClasses, setListCreatedClasses,
         listJoinedClasses, listCreatedClasses,
         showProfile, setShowProfile,
-        showInvitePeople, setShowInvitePeople
+        showInvitePeople, setShowInvitePeople,
+        gradeStruct, setGradeStruct,
+        classData, setClassData,
     }
 
     return (

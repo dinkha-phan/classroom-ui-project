@@ -12,7 +12,7 @@ import {
 import { Add, Apps } from "@material-ui/icons";
 import { useStyles } from "./style";
 import { useState } from "react";
-import { CreateClass, JoinClass,EditProfile } from "..";
+import { CreateClass, JoinClass, EditProfile } from "..";
 import { useLocalContext } from "../../context/context";
 const Header = ({ children }) => {
     const classes = useStyles()
@@ -20,8 +20,8 @@ const Header = ({ children }) => {
     const [anchorElAvatar, setAnchorElAvatar] = useState(null);
     const { setShowProfile } = useLocalContext();
 
-    const { setCreateClassDialog, setJoinClassDialog, loggedInUser,personJoinedClass ,
-        tabValue, settabValue, logout} = useLocalContext();
+    const { setCreateClassDialog, setJoinClassDialog, loggedInUser, personJoinedClass,
+        tabValue, settabValue, logout } = useLocalContext();
     console.log(loggedInUser);
 
     const handleClick = (event) => setAnchorEl(event.currentTarget);
@@ -53,9 +53,9 @@ const Header = ({ children }) => {
         setAnchorElAvatar(null);
         console.log("handle Logout Here");
         logout();
-        
+
     }
-    
+
     return (
         <div className={classes.root}>
             <AppBar className={classes.appBar}>
@@ -70,21 +70,25 @@ const Header = ({ children }) => {
                     </div>
                     <div className={classes.header__wrapper__center}>
                         {
-                            (personJoinedClass!=="") &&
-                        <Tabs
-                            value={tabValue}
-                            onChange={handleChange}
-                            aria-label="wrapped label tabs example"
-                        >
-                            <Tab
-                                value="1"
-                                label="Bảng tin"
-                                wrapped
-                            />
-                            <Tab value="2" label="Mọi người" />
-                            <Tab value="3" label="Số điểm" />
-                            
-                        </Tabs>
+                            (personJoinedClass !== "") &&
+                            <Tabs
+                                value={tabValue}
+                                onChange={handleChange}
+                                aria-label="wrapped label tabs example"
+                                textColor="primary"
+                                indicatorColor="primary"
+
+                            >
+                                <Tab
+                                    value="1"
+                                    label="Bảng tin"
+
+                                    wrapped
+                                />
+                                <Tab value="2" label="Mọi người" />
+                                <Tab value="3" label="Số điểm" />
+
+                            </Tabs>
                         }
                     </div>
                     <div className={classes.header__wrapper__right}>
@@ -93,7 +97,7 @@ const Header = ({ children }) => {
                         <Apps className={classes.icon} />
 
                         <Menu
-                            id="simple-menu"
+                            // id="simple-menu"
                             anchorEl={anchorEl}
                             keepMounted
                             open={Boolean(anchorEl)}
@@ -103,10 +107,10 @@ const Header = ({ children }) => {
                             <MenuItem onClick={handleJoin}>Join Class</MenuItem>
                             <MenuItem onClick={handleCreate}>Create Class</MenuItem>
                         </Menu>
-                        
+
                         <Avatar onClick={handleClickAvatar} className={classes.icon} />
                         <Menu
-                            id="simple-menu"
+                            // id="simple-menu"
                             anchorEl={anchorElAvatar}
                             keepMounted
                             open={Boolean(anchorElAvatar)}
@@ -122,7 +126,7 @@ const Header = ({ children }) => {
                 </Toolbar>
             </AppBar>
             <CreateClass />
-            <EditProfile/>
+            <EditProfile />
             <JoinClass />
         </div>
     )

@@ -7,8 +7,9 @@ import Drag from './components/GradeStruct/drag'
 import CardView from './components/CardView/CardView'
 ReactDOM.render(
     <ConxtextProvider>
-        <Drag />
-        <CardView/>
+        {/* <Drag /> */}
+        {/* <CardView/> */}
+        <App />
     </ConxtextProvider>
     ,
     document.getElementById('root')

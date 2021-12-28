@@ -27,7 +27,6 @@ const Form = ({ Label, classID }) => {
             headers: { Authorization: `Bearer ${token}` }
         };
 
-        // console.log(Label, classID)
         let role = 'student';
         if (Label === 'Invite Teacher') {
             role = 'teacher';
@@ -50,7 +49,7 @@ const Form = ({ Label, classID }) => {
         axios.post(
             url,
             bodyParameters,
-            config 
+            config
         ).then(res => {
             console.log(res.data);
             setShowInvitePeople(false);
