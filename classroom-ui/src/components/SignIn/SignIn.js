@@ -53,8 +53,8 @@ export default function SignIn() {
             .then(res => res.json())
             .then((result) => {
                 console.log(result);
-                
-                
+
+
                 const token = result.token;
                 const userData = parseJwt(token);
 
@@ -69,16 +69,16 @@ export default function SignIn() {
             });
 
     };
-    const responseSucessGoogle = (response) =>{
+    const responseSucessGoogle = (response) => {
         console.log(response);
         axios.post({
             url: "http://localhost:3000/login/google",
-            data: {tokenId: response.tokenId}
+            data: { tokenId: response.tokenId }
         }).then(response => {
             console.log("Google login success", response);
         })
     }
-    const responseErrorGoogle = (response) =>{
+    const responseErrorGoogle = (response) => {
         console.log(response);
     }
 
@@ -130,24 +130,28 @@ export default function SignIn() {
                         >
                             Sign In
                         </Button>
-                        <Grid container>
-                        <GoogleLogin
-                            clientId="241758761089-mhhbbvca0eh6nh60sko4td8tp0iqe6r7.apps.googleusercontent.com"
-                            buttonText="Login with Google"
-                            onSuccess={responseSucessGoogle}
-                            onFailure={responseErrorGoogle}
-                            cookiePolicy={'single_host_origin'}
-                        />,
-                            <Grid item>
-                                <Link href="/signup" variant="body2">
-                                    {"Don't have an account? Sign Up"}
-                                </Link>
-                            </Grid>
-                        </Grid>
+                        <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", textAlign: "center" }}>
+                            <div style={{ display: "flex", justifyContent: "space-around", marginBottom: 15 }}>
+                                <GoogleLogin
+                                    clientId="241758761089-mhhbbvca0eh6nh60sko4td8tp0iqe6r7.apps.googleusercontent.com"
+                                    buttonText="Login with Google"
+                                    onSuccess={responseSucessGoogle}
+                                    onFailure={responseErrorGoogle}
+                                    cookiePolicy={'single_host_origin'}
+                                    // sx={{ textAlign: "center" }}
+                                    style={{ alignItems: "center", textAlign: "center" }}
+                                />
+                            </div>
+
+                            <Link href="/signup" variant="body2">
+                                {"Don't have an account? Sign Up"}
+                            </Link>
+                        </div>
+
                     </Box>
                 </Box>
-                <Copyright sx={{ mt: 8, mb: 4 }} />
+                <Copyright sx={{ mt: 2, mb: 4 }} />
             </Container>
-        </ThemeProvider>
+        </ThemeProvider >
     );
 }
