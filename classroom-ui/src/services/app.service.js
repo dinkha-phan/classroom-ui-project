@@ -34,7 +34,9 @@ function getUrlGetDetailClass(userID, classID) {
 function getUrlGetPeopleInClass(classID) {
     return urlLocalAPI + '/classes/' + classID + '/class-user/';
 };
-
+function getUrlAddStudentToClass(classID, studentID) {
+    return urlLocalAPI + '/classes/' + classID + '/student/' + studentID;
+};
 function getUrlInvitePeople(classID) {
     return urlLocalAPI + '/join-class/invitations';
 };
@@ -105,7 +107,7 @@ export {
 
     getUrlGetJoinedClasses,
     getUrlGetCreatedClasses,
-
+    getUrlAddStudentToClass,
     getUrlCreateClasseForUser,
     getUrlAddUserToClass,
 
