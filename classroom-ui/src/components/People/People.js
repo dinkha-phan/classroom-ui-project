@@ -12,7 +12,7 @@ import "./style.css";
 import { useLocalContext } from "../../context/context"
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import { InvitePeople } from ".."
-import { getAccessToken, getUrlGetPeopleInClass, getUrlAddStudentToClass} from '../../services/app.service';
+import { getAccessToken, getUrlGetPeopleInClass, getUrlAddStudentToClass } from '../../services/app.service';
 import axios from 'axios';
 import { CSVLink, CSVDownload } from "react-csv";
 import CSVReader from 'react-csv-reader';
@@ -42,9 +42,9 @@ export default function AlignItemsList({ classData }) {
     }
     const handleForce = (data, fileInfo) => {
         const token = getAccessToken();
-        var tmpCSVData= csvData;
+        var tmpCSVData = csvData;
         var tmpListStudents = listStudents;
-        for(let i =0; i < data.length; ++i){
+        for (let i = 0; i < data.length; ++i) {
             const config = {
                 headers: { Authorization: `Bearer ${token}` }
             };
@@ -55,9 +55,9 @@ export default function AlignItemsList({ classData }) {
                 url,
                 config
             ).then((response) => {
-                if(response.data === 'Success'){
-                    tmpCSVData.push({StudenID: data[i].StudenID, Fullname: data[i].Fullname});
-                    tmpListStudents.push({StudenID: data[i].StudenID, FullName: data[i].Fullname});
+                if (response.data === 'Success') {
+                    tmpCSVData.push({ StudenID: data[i].StudenID, Fullname: data[i].Fullname });
+                    tmpListStudents.push({ StudenID: data[i].StudenID, FullName: data[i].Fullname });
                 }
             }).catch((error) => {
                 console.log(error);
@@ -65,12 +65,14 @@ export default function AlignItemsList({ classData }) {
         }
         setListStdents(tmpListStudents);
         setCsvData(tmpCSVData);
+        console.log(tmpListStudents);
+        console.log(tmpCSVData);
     };
     const papaparseOptions = {
         header: true,
         dynamicTyping: true,
         skipEmptyLines: true,
-      };
+    };
     useEffect(() => {
         if (classData.Role === "student")
             setPersonJoinedClass("Student");
@@ -102,11 +104,11 @@ export default function AlignItemsList({ classData }) {
             for (let i in dataUsers) {
                 if (dataUsers[i].Role === 'teacher')
                     tempListTeachers.push(dataUsers[i]);
-                if (dataUsers[i].Role === 'student'){
+                if (dataUsers[i].Role === 'student') {
                     tempListStudents.push(dataUsers[i]);
-                    tempCSVdata.push({StudenID: dataUsers[i].UserID, Fullname: dataUsers[i].FullName});
+                    tempCSVdata.push({ StudenID: dataUsers[i].UserID, Fullname: dataUsers[i].FullName });
                 }
-                    
+
 
             }
             setListStdents(tempListStudents);
@@ -119,6 +121,15 @@ export default function AlignItemsList({ classData }) {
 
     return (
         <>
+            <CSVReader
+                cssClass="react-csv-input"
+                onFileLoaded={handleForce}
+                parserOptions={papaparseOptions}
+                inputId="ObiWan"
+                inputName="ObiWan"
+                inputStyle={{ color: 'red' }}
+            />
+            <CSVLink data={csvData}>Download me</CSVLink>
             <div className="main">
                 <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}
                     subheader={
@@ -187,7 +198,7 @@ export default function AlignItemsList({ classData }) {
                         </List>
                     ))}
                 </List>
-                {showInvitePeople && <InvitePeople Label={label} classID ={classData.ClassID} />}
+                {showInvitePeople && <InvitePeople Label={label} classID={classData.ClassID} />}
             </div>
         </>
     );

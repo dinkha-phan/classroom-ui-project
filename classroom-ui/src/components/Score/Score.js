@@ -7,7 +7,7 @@ import axios from 'axios';
 import { CSVLink, CSVDownload } from "react-csv";
 import CSVReader from 'react-csv-reader';
 import { EditText } from 'react-edit-text';
-
+import DownloadIcon from '@mui/icons-material/Download';
 import PropTypes from 'prop-types';
 import { alpha } from '@mui/material/styles';
 import Box from '@mui/material/Box';
@@ -30,6 +30,7 @@ import Switch from '@mui/material/Switch';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
+import Button from '@mui/material/Button';
 
 
 function createData(name, calories, fat, carbs, protein) {
@@ -42,21 +43,21 @@ function createData(name, calories, fat, carbs, protein) {
     };
 }
 
-const rows = [
-    createData('Cupcake', 305, 3.7, 67, 4.3),
-    createData('Donut', 452, 25.0, 51, 4.9),
-    createData('Eclair', 262, 16.0, 24, 6.0),
-    createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-    createData('Gingerbread', 356, 16.0, 49, 3.9),
-    createData('Honeycomb', 408, 3.2, 87, 6.5),
-    createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-    createData('Jelly Bean', 375, 0.0, 94, 0.0),
-    createData('KitKat', 518, 26.0, 65, 7.0),
-    createData('Lollipop', 392, 0.2, 98, 0.0),
-    createData('Marshmallow', 318, 0, 81, 2.0),
-    createData('Nougat', 360, 19.0, 9, 37.0),
-    createData('Oreo', 437, 18.0, 63, 4.0),
-];
+// const rows = [
+//     createData('Cupcake', 305, 3.7, 67, 4.3),
+//     createData('Donut', 452, 25.0, 51, 4.9),
+//     createData('Eclair', 262, 16.0, 24, 6.0),
+//     createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
+//     createData('Gingerbread', 356, 16.0, 49, 3.9),
+//     createData('Honeycomb', 408, 3.2, 87, 6.5),
+//     createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
+//     createData('Jelly Bean', 375, 0.0, 94, 0.0),
+//     createData('KitKat', 518, 26.0, 65, 7.0),
+//     createData('Lollipop', 392, 0.2, 98, 0.0),
+//     createData('Marshmallow', 318, 0, 81, 2.0),
+//     createData('Nougat', 360, 19.0, 9, 37.0),
+//     createData('Oreo', 437, 18.0, 63, 4.0),
+// ];
 
 
 function descendingComparator(a, b, orderBy) {
@@ -99,25 +100,25 @@ const headCells = [
     {
         id: 'calories',
         numeric: true,
-        disablePadding: false,
+        disablePadding: true,
         label: 'Calories',
     },
     {
         id: 'fat',
         numeric: true,
-        disablePadding: false,
+        disablePadding: true,
         label: 'Fat (g)',
     },
     {
         id: 'carbs',
         numeric: true,
-        disablePadding: false,
+        disablePadding: true,
         label: 'Carbs (g)',
     },
     {
         id: 'protein',
         numeric: true,
-        disablePadding: false,
+        disablePadding: true,
         label: 'Protein (g)',
     },
 ];
@@ -235,10 +236,34 @@ EnhancedTableToolbar.propTypes = {
 };
 
 
-
+const getScoreBoard = () => {
+    const exampleData = [
+        {
+            StudenID: "18120116",
+            FullName: "Đạt",
+            CTDL: "8",
+            Web: "9",
+            Mobile: "8",
+        }
+        ,
+        {
+            StudenID: "18120141",
+            FullName: "Nguyên",
+            CTDL: "9",
+            Web: "9",
+            Mobile: "9",
+        }
+    ];
+    return [...exampleData, ...exampleData, ...exampleData, ...exampleData, ...exampleData, ...exampleData, ...exampleData, ...exampleData, ...exampleData, ...exampleData, ...exampleData, ...exampleData, ...exampleData, ...exampleData, ...exampleData, ...exampleData,];
+}
+const getlistHeadLabel = () => {
+    const examplelistHeadLabel = ["StudenID", "FullName", "CTDL", "Web", "Mobile"];
+    return examplelistHeadLabel;
+}
 
 
 export default function Score({ classData }) {
+    const { setPersonJoinedClass, settabValue } = useLocalContext();
 
     const [listStudents, setListStdents] = useState([]);
     const [csvData, setCsvData] = useState([]);
@@ -249,7 +274,8 @@ export default function Score({ classData }) {
     const [dense, setDense] = React.useState(false);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
     // const listStudents = [{ name: "Phan Dinh Kha" }, { name: "Nguyen Tien Dat" }, { name: "Tran Bao Nguyen" }];
-    const { setPersonJoinedClass, settabValue } = useLocalContext();
+    const rows = getScoreBoard();
+    const listHeadLabel = getlistHeadLabel();
     const handleForce = (data, fileInfo) => {
         // console.log(data, fileInfo);
         const token = getAccessToken();
@@ -344,118 +370,209 @@ export default function Score({ classData }) {
     // Avoid a layout jump when reaching the last page with empty rows.
     const emptyRows =
         page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+    // return (
+    //     <>
+
+
+    //         <Box sx={{ width: '100%' }}>
+    //             <Paper sx={{ width: '100%', mb: 2 }}>
+    //                 <EnhancedTableToolbar numSelected={selected.length} />
+    //                 <TableContainer>
+    //                     <Table
+    //                         sx={{ minWidth: 750 }}
+    //                         aria-labelledby="tableTitle"
+    //                         size={dense ? 'small' : 'medium'}
+    //                     >
+    //                         <EnhancedTableHead
+    //                             numSelected={selected.length}
+    //                             order={order}
+    //                             orderBy={orderBy}
+    //                             onSelectAllClick={handleSelectAllClick}
+    //                             onRequestSort={handleRequestSort}
+    //                             rowCount={rows.length}
+    //                         />
+    //                         <TableBody>
+    //                             {/* if you don't need to support IE11, you can replace the `stableSort` call with:
+    //              rows.slice().sort(getComparator(order, orderBy)) */}
+    //                             {stableSort(rows, getComparator(order, orderBy))
+    //                                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+    //                                 .map((row, index) => {
+    //                                     const isItemSelected = isSelected(row.name);
+    //                                     const labelId = `enhanced-table-checkbox-${index}`;
+    //                                     console.log("row, index", row, index);
+    //                                     return (
+    //                                         <TableRow
+    //                                             hover
+    //                                             onClick={(event) => handleClick(event, row.name)}
+    //                                             role="checkbox"
+    //                                             aria-checked={isItemSelected}
+    //                                             tabIndex={-1}
+    //                                             key={row.name}
+    //                                             selected={isItemSelected}
+    //                                             padding="none"
+    //                                         >
+    //                                             <TableCell padding="none">
+    //                                                 <Checkbox
+    //                                                     color="primary"
+    //                                                     checked={isItemSelected}
+    //                                                     inputProps={{
+    //                                                         'aria-labelledby': labelId,
+    //                                                     }}
+    //                                                 />
+    //                                             </TableCell>
+    //                                             <TableCell
+    //                                                 component="th"
+    //                                                 id={labelId}
+    //                                                 scope="row"
+    //                                                 padding="none"
+    //                                             >                              {row.name}
+    //                                             </TableCell>
+    //                                             <TableCell align="center"
+    //                                                 padding="none"
+    //                                             >
+    //                                                 <div style={{
+    //                                                     display: "flex", justifyContent: "center",
+    //                                                     alignItems: "center",
+    //                                                     height: "100%",
+    //                                                     margin: 0,
+    //                                                     padding: 0
+    //                                                 }}>
+    //                                                     <EditText style={{
+    //                                                         display: "flex",
+    //                                                         textAlign: "center",
+    //                                                         alignItems: "center",
+    //                                                         justifyContent: "center",
+    //                                                         paddingTop: 6,
+    //                                                         paddingBottom: 6,
+    //                                                         margin: 0,
+    //                                                         borderWidth: 0,
+    //                                                         width: "100px",
+    //                                                     }}
+    //                                                         defaultValue={row.calories}
+    //                                                         onSave={(e) => handleSave(e, index, row)} />
+    //                                                 </div>
+    //                                             </TableCell>
+    //                                             <TableCell align="center" padding="none">{row.fat}</TableCell>
+    //                                             <TableCell align="center" padding="none">{row.carbs}</TableCell>
+    //                                             <TableCell align="center" padding="none">{row.protein}</TableCell>
+    //                                         </TableRow>
+    //                                     );
+    //                                 })}
+    //                             {emptyRows > 0 && (
+    //                                 <TableRow
+    //                                     style={{
+    //                                         height: (dense ? 33 : 53) * emptyRows,
+    //                                     }}
+    //                                 >
+    //                                     <TableCell colSpan={6} />
+    //                                 </TableRow>
+    //                             )}
+    //                         </TableBody>
+    //                     </Table>
+    //                 </TableContainer>
+    //                 <TablePagination
+    //                     rowsPerPageOptions={[5, 10, 25]}
+    //                     component="div"
+    //                     count={rows.length}
+    //                     rowsPerPage={rowsPerPage}
+    //                     page={page}
+    //                     onPageChange={handleChangePage}
+    //                     onRowsPerPageChange={handleChangeRowsPerPage}
+    //                 />
+    //             </Paper>
+    //             <FormControlLabel
+    //                 control={<Switch checked={dense} onChange={handleChangeDense} />}
+    //                 label="Dense padding"
+    //             />
+    //         </Box>
+
+    //     </>
+    // );
     return (
         <>
-            <CSVReader
-                cssClass="react-csv-input"
-                onFileLoaded={handleForce}
-                parserOptions={papaparseOptions}
-                inputId="ObiWan"
-                inputName="ObiWan"
-                inputStyle={{ color: 'red' }}
-            />
-            <CSVLink data={csvData}>Download me</CSVLink>
 
-            <Box sx={{ width: '100%' }}>
-                <Paper sx={{ width: '100%', mb: 2 }}>
-                    <EnhancedTableToolbar numSelected={selected.length} />
-                    <TableContainer>
-                        <Table
-                            sx={{ minWidth: 750 }}
-                            aria-labelledby="tableTitle"
-                            size={dense ? 'small' : 'medium'}
-                        >
-                            <EnhancedTableHead
-                                numSelected={selected.length}
-                                order={order}
-                                orderBy={orderBy}
-                                onSelectAllClick={handleSelectAllClick}
-                                onRequestSort={handleRequestSort}
-                                rowCount={rows.length}
-                            />
-                            <TableBody>
-                                {/* if you don't need to support IE11, you can replace the `stableSort` call with:
-                 rows.slice().sort(getComparator(order, orderBy)) */}
-                                {stableSort(rows, getComparator(order, orderBy))
-                                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                                    .map((row, index) => {
-                                        const isItemSelected = isSelected(row.name);
-                                        const labelId = `enhanced-table-checkbox-${index}`;
+            <div style={{
+                display: "flex", flexDirection: "column",
+                justifyContent: "center", alignItems: "center", width: "100%",
+            }}>
 
-                                        return (
-                                            <TableRow
-                                                hover
-                                                onClick={(event) => handleClick(event, row.name)}
-                                                role="checkbox"
-                                                aria-checked={isItemSelected}
-                                                tabIndex={-1}
-                                                key={row.name}
-                                                selected={isItemSelected}
-                                            >
-                                                <TableCell padding="none">
-                                                    <Checkbox
-                                                        color="primary"
-                                                        checked={isItemSelected}
-                                                        inputProps={{
-                                                            'aria-labelledby': labelId,
-                                                        }}
-                                                    />
-                                                </TableCell>
-                                                <TableCell
-                                                    component="th"
-                                                    id={labelId}
-                                                    scope="row"
-                                                    padding="none"
-                                                >                              {row.name}
-                                                </TableCell>
-                                                <TableCell align="center"
-                                                    style={{ border: "solid" }}
-                                                >
-                                                    <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-                                                        <EditText style={{
-                                                            textAlign: "center",
-                                                            padding: 0,
-                                                            margin: 0,
-                                                            width: "100px",
-                                                        }}
-                                                            defaultValue={row.calories}
-                                                            onSave={(e) => handleSave(e, index, row)} />
-                                                    </div>
-                                                </TableCell>
-                                                <TableCell align="center">{row.fat}</TableCell>
-                                                <TableCell align="center">{row.carbs}</TableCell>
-                                                <TableCell align="center">{row.protein}</TableCell>
-                                            </TableRow>
-                                        );
-                                    })}
-                                {emptyRows > 0 && (
-                                    <TableRow
-                                        style={{
-                                            height: (dense ? 33 : 53) * emptyRows,
-                                        }}
-                                    >
-                                        <TableCell colSpan={6} />
-                                    </TableRow>
-                                )}
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
-                    <TablePagination
-                        rowsPerPageOptions={[5, 10, 25]}
-                        component="div"
-                        count={rows.length}
-                        rowsPerPage={rowsPerPage}
-                        page={page}
-                        onPageChange={handleChangePage}
-                        onRowsPerPageChange={handleChangeRowsPerPage}
+                <div style={{ display: "flex", flexDirection: "row", width: "90%", justifyContent: "space-between", marginBottom: 20 }}>
+                    <CSVReader
+                        cssClass="react-csv-input"
+                        onFileLoaded={handleForce}
+                        parserOptions={papaparseOptions}
+                        inputId="ObiWan"
+                        inputName="ObiWan"
+                        inputStyle={{ color: 'red' }}
                     />
-                </Paper>
-                <FormControlLabel
-                    control={<Switch checked={dense} onChange={handleChangeDense} />}
-                    label="Dense padding"
-                />
-            </Box>
+                    <CSVLink data={csvData} style={{ textDecoration: "none" }}>
+                        <Button variant="contained" startIcon={<DownloadIcon />}>
+                            <p style={{ textDecoration: "none" }}>Download</p>
+                        </Button>
+                    </CSVLink>
+                </div>
 
+                <TableContainer component={Paper} style={{ width: "90%", boxShadow: "0px 1px 5px grey" }}>
+                    <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
+                        <TableHead>
+                            <TableRow>
+                                {listHeadLabel.map((value, index) => {
+                                    return <TableCell align="center">{value}</TableCell>;
+                                })}
+                                {/* <TableCell>StudentID</TableCell>
+                            <TableCell>Full Name</TableCell>
+                            <TableCell align="right">Calories</TableCell>
+                            <TableCell align="right">Fat&nbsp;(g)</TableCell>
+                            <TableCell align="right">Carbs&nbsp;(g)</TableCell>
+                            <TableCell align="right">Protein&nbsp;(g)</TableCell> */}
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {rows.map((row) => (
+                                <TableRow
+                                    key={row.StudenID}
+                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                >
+                                    {listHeadLabel.map((value, index) => {
+                                        return <TableCell align="center">
+
+                                            <div style={{
+                                                display: "flex", justifyContent: "center",
+                                                alignItems: "center",
+                                                height: "100%",
+                                                margin: 0,
+                                                padding: 0
+                                            }}>
+                                                <EditText style={{
+                                                    display: "flex",
+                                                    textAlign: "center",
+                                                    alignItems: "center",
+                                                    justifyContent: "center",
+                                                    paddingTop: 6,
+                                                    paddingBottom: 6,
+                                                    margin: 0,
+                                                    borderWidth: 0,
+                                                    width: "100px",
+                                                }}
+                                                    readonly={index === 0}
+                                                    defaultValue={row[value]}
+                                                    onSave={(e) => handleSave(e, index, row)} />
+                                            </div>
+                                        </TableCell>;
+                                    })}
+                                    {/* <TableCell component="th" scope="row">
+                                    {row.name}
+                                </TableCell>
+                                <TableCell align="right">{row.calories}</TableCell>
+                                <TableCell align="right">{row.fat}</TableCell>
+                                <TableCell align="right">{row.carbs}</TableCell>
+                                <TableCell align="right">{row.protein}</TableCell> */}
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+            </div>
         </>
     );
 }
