@@ -1,0 +1,29 @@
+.main{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+.main_name{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.main_list_header_start{
+    /* border-style: solid; */
+    /* border-width: 0.5px; */
+    /* border-color: blue; */
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    display: flex;
+    /* align-items: flex-start; */
+    justify-content:space-between ;
+
+}
+.main_list_header_end{
+    /* border-style: solid; */
+    align-items: center;
+    display: flex;
+
+}

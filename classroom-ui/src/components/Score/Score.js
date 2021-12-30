@@ -1,29 +1,15 @@
 import * as React from 'react';
-
-import Button from '@mui/material/Button';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemAvatar from '@mui/material/ListItemAvatar';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import Avatar from '@mui/material/Avatar';
-import IconButton from '@mui/material/IconButton';
-import FormGroup from '@mui/material/FormGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import Grid from '@mui/material/Grid';
-import Typography from '@mui/material/Typography';
-import FolderIcon from '@mui/icons-material/Folder';
-import DeleteIcon from '@mui/icons-material/Delete';
 import { useState, useEffect } from "react";
-import { DOMAIN_API, DOMAIN_FE } from '../../../config/const';
-import DownloadButton from '../../DownloadButton/DownloadButton';
-import StudentListImport from '../../ImportFile/StudentListImport/StudentListImport';
-import GradeAssignmentImport from '../../ImportFile/GradeAssignmentImport/GradeAssignmentImport';
+import "./style.css";
+import { useLocalContext } from "../../context/context"
+import { getAccessToken, getUrlAddStudentToClass } from '../../services/app.service';
+import axios from 'axios';
+import { CSVLink, CSVDownload } from "react-csv";
+import CSVReader from 'react-csv-reader';
+import { EditText } from 'react-edit-text';
 
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
-import { styled, alpha } from '@mui/material/styles';
 import PropTypes from 'prop-types';
+import { alpha } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -34,36 +20,43 @@ import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import TableSortLabel from '@mui/material/TableSortLabel';
 import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
+import Checkbox from '@mui/material/Checkbox';
+import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
+import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
+import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
-import EditIcon from '@mui/icons-material/Edit';
-
-import DownloadForOfflineIcon from '@mui/icons-material/DownloadForOffline';
-import FileUploadIcon from '@mui/icons-material/FileUpload';
-import FileDownloadIcon from '@mui/icons-material/FileDownload';
 
 
-/*<DownloadButton purpose='grade_assignment'/>
-  <GradeAssignmentImport setStudents={setStudents} students_ids={students.map(student=>student.id_uni)} id_class={idclass} id_assignment={4}/>*/
-
-function createData(listStudent) {
-    let listtemp = []
-    //let example = listStudent.assignmentGrade;
-    //console.log("list Student duoc truyen vao trong createData nè: ", example);
-    for (let i = 0; i < listStudent.length; i++) {
-        let tempStu = {};
-        tempStu.name = listStudent[i].username;
-        tempStu.listGrade = [];
-        for (let j = 0; j < listStudent[i].assignmentGrade.length; j++) {
-            tempStu.listGrade.push(listStudent[i].assignmentGrade[j].gradeAssignment)
-        }
-        listtemp.push(tempStu);
-    }
-    return listtemp;
+function createData(name, calories, fat, carbs, protein) {
+    return {
+        name,
+        calories,
+        fat,
+        carbs,
+        protein,
+    };
 }
+
+const rows = [
+    createData('Cupcake', 305, 3.7, 67, 4.3),
+    createData('Donut', 452, 25.0, 51, 4.9),
+    createData('Eclair', 262, 16.0, 24, 6.0),
+    createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
+    createData('Gingerbread', 356, 16.0, 49, 3.9),
+    createData('Honeycomb', 408, 3.2, 87, 6.5),
+    createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
+    createData('Jelly Bean', 375, 0.0, 94, 0.0),
+    createData('KitKat', 518, 26.0, 65, 7.0),
+    createData('Lollipop', 392, 0.2, 98, 0.0),
+    createData('Marshmallow', 318, 0, 81, 2.0),
+    createData('Nougat', 360, 19.0, 9, 37.0),
+    createData('Oreo', 437, 18.0, 63, 4.0),
+];
 
 
 function descendingComparator(a, b, orderBy) {
@@ -101,63 +94,47 @@ const headCells = [
         id: 'name',
         numeric: false,
         disablePadding: true,
-        label: 'Name',
+        label: 'Dessert (100g serving)',
     },
     {
-        id: 'thuyettrinh',
+        id: 'calories',
         numeric: true,
         disablePadding: false,
-        label: 'Thuyết trình',
+        label: 'Calories',
     },
     {
-        id: 'baitap',
+        id: 'fat',
         numeric: true,
         disablePadding: false,
-        label: 'Bài tập',
+        label: 'Fat (g)',
     },
     {
-        id: 'giuaky',
+        id: 'carbs',
         numeric: true,
         disablePadding: false,
-        label: 'Giữa kỳ',
+        label: 'Carbs (g)',
     },
     {
-        id: 'cuoiky',
+        id: 'protein',
         numeric: true,
         disablePadding: false,
-        label: 'Cuối kỳ',
+        label: 'Protein (g)',
     },
 ];
-
+const handleSave = (e, index, row) => {
+    console.log("edit", e, index, row);
+}
 function EnhancedTableHead(props) {
-    const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort, listHeader } =
+    const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } =
         props;
     const createSortHandler = (property) => (event) => {
         onRequestSort(event, property);
     };
-    console.log("List Header: ", listHeader);
 
-    let headCells = [
-        {
-            id: 'name',
-            numeric: false,
-            disablePadding: true,
-            label: 'Tên học sinh',
-        },
-    ];
-    listHeader.map((item) => {
-        let temp = {};
-        temp.id = item.name;
-        temp.numeric = false;
-        temp.disablePadding = true;
-        temp.label = item.name;
-        temp.pointStructure = item.point + ' điểm';
-        headCells.push(temp);
-    });
     return (
         <TableHead>
             <TableRow>
-                <TableCell padding="checkbox">
+                <TableCell padding="none">
                     <Checkbox
                         color="primary"
                         indeterminate={numSelected > 0 && numSelected < rowCount}
@@ -171,7 +148,7 @@ function EnhancedTableHead(props) {
                 {headCells.map((headCell) => (
                     <TableCell
                         key={headCell.id}
-                        align={headCell.numeric ? 'right' : 'left'}
+                        align={headCell.numeric ? 'center' : 'left'}
                         padding={headCell.disablePadding ? 'none' : 'normal'}
                         sortDirection={orderBy === headCell.id ? order : false}
                     >
@@ -181,8 +158,6 @@ function EnhancedTableHead(props) {
                             onClick={createSortHandler(headCell.id)}
                         >
                             {headCell.label}
-                            <br />
-                            {headCell.pointStructure}
                             {orderBy === headCell.id ? (
                                 <Box component="span" sx={visuallyHidden}>
                                     {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
@@ -203,18 +178,10 @@ EnhancedTableHead.propTypes = {
     order: PropTypes.oneOf(['asc', 'desc']).isRequired,
     orderBy: PropTypes.string.isRequired,
     rowCount: PropTypes.number.isRequired,
-    listHeader: PropTypes.array.isRequired,
 };
-
-
-
 const EnhancedTableToolbar = (props) => {
-    const { numSelected, selected, classname } = props;
-    const handleClickEdit = (event, a) => {
-        //const a = selected;
-        console.log("@@@@@@", a)
-        //alert(a)
-    };
+    const { numSelected } = props;
+
     return (
         <Toolbar
             sx={{
@@ -233,7 +200,7 @@ const EnhancedTableToolbar = (props) => {
                     variant="subtitle1"
                     component="div"
                 >
-                    {numSelected} học viên được chọn
+                    {numSelected} selected
                 </Typography>
             ) : (
                 <Typography
@@ -242,28 +209,22 @@ const EnhancedTableToolbar = (props) => {
                     id="tableTitle"
                     component="div"
                 >
-                    Lớp {classname}
+                    Nutrition
                 </Typography>
             )}
+
             {numSelected > 0 ? (
-                <Tooltip title="Chỉnh sửa">
-                    <IconButton >
-                        <EditIcon onClick={(event) => handleClickEdit(event, selected)} />
+                <Tooltip title="Delete">
+                    <IconButton>
+                        <DeleteIcon />
                     </IconButton>
                 </Tooltip>
             ) : (
-                <div style={{ position: "absolute", right: "5px" }} >
-                    <Tooltip title="Download">
-                        <IconButton>
-                            <FileDownloadIcon />
-                        </IconButton>
-                    </Tooltip>
-                    <Tooltip title="Upload">
-                        <IconButton>
-                            <FileUploadIcon />
-                        </IconButton>
-                    </Tooltip>
-                </div>
+                <Tooltip title="Filter list">
+                    <IconButton>
+                        <FilterListIcon />
+                    </IconButton>
+                </Tooltip>
             )}
         </Toolbar>
     );
@@ -273,25 +234,73 @@ EnhancedTableToolbar.propTypes = {
     numSelected: PropTypes.number.isRequired,
 };
 
-export default function Scores({ idclass, isTeacher, class_name, grade_board }) {
+
+
+
+
+export default function Score({ classData }) {
+
+    const [listStudents, setListStdents] = useState([]);
+    const [csvData, setCsvData] = useState([]);
     const [order, setOrder] = React.useState('asc');
-    const [orderBy, setOrderBy] = React.useState('name');
+    const [orderBy, setOrderBy] = React.useState('calories');
     const [selected, setSelected] = React.useState([]);
     const [page, setPage] = React.useState(0);
     const [dense, setDense] = React.useState(false);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
-    const [gradeboard, setGradeBoard] = React.useState(grade_board);
-    const rows = createData(gradeboard.listStudentGrade);
+    // const listStudents = [{ name: "Phan Dinh Kha" }, { name: "Nguyen Tien Dat" }, { name: "Tran Bao Nguyen" }];
+    const { setPersonJoinedClass, settabValue } = useLocalContext();
+    const handleForce = (data, fileInfo) => {
+        // console.log(data, fileInfo);
+        const token = getAccessToken();
+        var tmpCSVData = csvData;
+        var tmpListStudents = listStudents;
+        for (let i = 0; i < data.length; ++i) {
+            const config = {
+                headers: { Authorization: `Bearer ${token}` }
+            };
+            const url = getUrlAddStudentToClass(classData.ClassID, data[i].StudenID);
+            console.log(config, url);
+
+            axios.put(
+                url,
+                config
+            ).then((response) => {
+                if (response.data === 'Success') {
+                    tmpCSVData.push({ StudenID: data[i].StudenID, Fullname: data[i].Fullname });
+                    tmpListStudents.push({ StudenID: data[i].StudenID, FullName: data[i].Fullname });
+                }
+            }).catch((error) => {
+                console.log(error);
+            })
+        }
+        setListStdents(tmpListStudents);
+        setCsvData(tmpCSVData);
+    };
+    const papaparseOptions = {
+        header: true,
+        dynamicTyping: true,
+        skipEmptyLines: true,
+    };
+    useEffect(() => {
+        if (classData.Role === "student")
+            setPersonJoinedClass("Student");
+        else
+            setPersonJoinedClass("Teacher");
+        settabValue("3");
+    }, []);
+
+
     const handleRequestSort = (event, property) => {
         const isAsc = orderBy === property && order === 'asc';
         setOrder(isAsc ? 'desc' : 'asc');
         setOrderBy(property);
     };
-    console.log(rows);
+
     const handleSelectAllClick = (event) => {
         if (event.target.checked) {
             const newSelecteds = rows.map((n) => n.name);
-            setSelected(newSelecteds);
+            // setSelected(newSelecteds);
             return;
         }
         setSelected([]);
@@ -314,10 +323,8 @@ export default function Scores({ idclass, isTeacher, class_name, grade_board }) 
             );
         }
 
-        setSelected(newSelected);
+        // setSelected(newSelected);
     };
-
-
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -337,103 +344,118 @@ export default function Scores({ idclass, isTeacher, class_name, grade_board }) 
     // Avoid a layout jump when reaching the last page with empty rows.
     const emptyRows =
         page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
-
     return (
-        <Box sx={{ width: '100%' }}>
-            <Paper sx={{ width: '100%', mb: 2 }}>
-                <EnhancedTableToolbar numSelected={selected.length} selected={selected} classname={class_name} />
-                <TableContainer>
-                    <Table
-                        sx={{ minWidth: 750 }}
-                        aria-labelledby="tableTitle"
-                        size={dense ? 'small' : 'medium'}
-                    >
+        <>
+            <CSVReader
+                cssClass="react-csv-input"
+                onFileLoaded={handleForce}
+                parserOptions={papaparseOptions}
+                inputId="ObiWan"
+                inputName="ObiWan"
+                inputStyle={{ color: 'red' }}
+            />
+            <CSVLink data={csvData}>Download me</CSVLink>
 
-                        <EnhancedTableHead
-                            numSelected={selected.length}
-                            order={order}
-                            orderBy={orderBy}
-                            onSelectAllClick={handleSelectAllClick}
-                            onRequestSort={handleRequestSort}
-                            rowCount={rows.length}
-                            listHeader={grade_board.listAssignment}
-                        />
-                        <TableBody>
-                            {/* if you don't need to support IE11, you can replace the `stableSort` call with:
+            <Box sx={{ width: '100%' }}>
+                <Paper sx={{ width: '100%', mb: 2 }}>
+                    <EnhancedTableToolbar numSelected={selected.length} />
+                    <TableContainer>
+                        <Table
+                            sx={{ minWidth: 750 }}
+                            aria-labelledby="tableTitle"
+                            size={dense ? 'small' : 'medium'}
+                        >
+                            <EnhancedTableHead
+                                numSelected={selected.length}
+                                order={order}
+                                orderBy={orderBy}
+                                onSelectAllClick={handleSelectAllClick}
+                                onRequestSort={handleRequestSort}
+                                rowCount={rows.length}
+                            />
+                            <TableBody>
+                                {/* if you don't need to support IE11, you can replace the `stableSort` call with:
                  rows.slice().sort(getComparator(order, orderBy)) */}
-                            {stableSort(rows, getComparator(order, orderBy))
-                                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                                .map((row, index) => {
-                                    const isItemSelected = isSelected(row.name);
-                                    const labelId = `enhanced-table-checkbox-${index}`;
-                                    let listTableCell = [];
-                                    let squareDiv = [];
-                                    console.log("row ne: ", row.listGrade);
-                                    listTableCell.push(<TableCell
-                                        component="th"
-                                        id={labelId}
-                                        scope="row"
-                                        padding="none"
+                                {stableSort(rows, getComparator(order, orderBy))
+                                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                                    .map((row, index) => {
+                                        const isItemSelected = isSelected(row.name);
+                                        const labelId = `enhanced-table-checkbox-${index}`;
+
+                                        return (
+                                            <TableRow
+                                                hover
+                                                onClick={(event) => handleClick(event, row.name)}
+                                                role="checkbox"
+                                                aria-checked={isItemSelected}
+                                                tabIndex={-1}
+                                                key={row.name}
+                                                selected={isItemSelected}
+                                            >
+                                                <TableCell padding="none">
+                                                    <Checkbox
+                                                        color="primary"
+                                                        checked={isItemSelected}
+                                                        inputProps={{
+                                                            'aria-labelledby': labelId,
+                                                        }}
+                                                    />
+                                                </TableCell>
+                                                <TableCell
+                                                    component="th"
+                                                    id={labelId}
+                                                    scope="row"
+                                                    padding="none"
+                                                >                              {row.name}
+                                                </TableCell>
+                                                <TableCell align="center"
+                                                    style={{ border: "solid" }}
+                                                >
+                                                    <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+                                                        <EditText style={{
+                                                            textAlign: "center",
+                                                            padding: 0,
+                                                            margin: 0,
+                                                            width: "100px",
+                                                        }}
+                                                            defaultValue={row.calories}
+                                                            onSave={(e) => handleSave(e, index, row)} />
+                                                    </div>
+                                                </TableCell>
+                                                <TableCell align="center">{row.fat}</TableCell>
+                                                <TableCell align="center">{row.carbs}</TableCell>
+                                                <TableCell align="center">{row.protein}</TableCell>
+                                            </TableRow>
+                                        );
+                                    })}
+                                {emptyRows > 0 && (
+                                    <TableRow
+                                        style={{
+                                            height: (dense ? 33 : 53) * emptyRows,
+                                        }}
                                     >
-                                        {row.name}
-                                    </TableCell>);
-                                    for (let i = 0; i < row.listGrade.length; i++) {
-                                        let point = row.listGrade[i];
-                                        listTableCell.push(<TableCell align="left">{point}</TableCell>);
-                                    }
-                                    console.log("List table cell: ", listTableCell);
-                                    return (
-                                        <TableRow
-                                            hover
-                                            onClick={(event) => handleClick(event, row.name)}
-                                            role="checkbox"
-                                            aria-checked={isItemSelected}
-                                            tabIndex={-1}
-                                            key={row.name}
-                                            selected={isItemSelected}
-                                        >
-                                            <TableCell padding="checkbox">
-                                                <Checkbox
-                                                    color="primary"
-                                                    checked={isItemSelected}
-                                                    inputProps={{
-                                                        'aria-labelledby': labelId,
-                                                    }}
-                                                />
-                                            </TableCell>
-                                            {listTableCell}
-                                        </TableRow>
-                                    );
-                                })}
-                            {emptyRows > 0 && (
-                                <TableRow
-                                    style={{
-                                        height: (dense ? 33 : 53) * emptyRows,
-                                    }}
-                                >
-                                    <TableCell colSpan={6} />
-                                </TableRow>
-                            )}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
-
-                <TablePagination
-
-                    rowsPerPageOptions={[10, 20, 30]}
-                    component="div"
-                    count={rows.length}
-                    rowsPerPage={rowsPerPage}
-                    page={page}
-                    onPageChange={handleChangePage}
-                    onRowsPerPageChange={handleChangeRowsPerPage}
+                                        <TableCell colSpan={6} />
+                                    </TableRow>
+                                )}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                    <TablePagination
+                        rowsPerPageOptions={[5, 10, 25]}
+                        component="div"
+                        count={rows.length}
+                        rowsPerPage={rowsPerPage}
+                        page={page}
+                        onPageChange={handleChangePage}
+                        onRowsPerPageChange={handleChangeRowsPerPage}
+                    />
+                </Paper>
+                <FormControlLabel
+                    control={<Switch checked={dense} onChange={handleChangeDense} />}
+                    label="Dense padding"
                 />
+            </Box>
 
-            </Paper>
-            {/* <FormControlLabel
-                control={<Switch checked={dense} onChange={handleChangeDense} />}
-                label="Dense padding"
-            /> */}
-        </Box>
+        </>
     );
 }

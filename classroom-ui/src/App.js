@@ -1,5 +1,5 @@
 import { React, useEffect } from "react";
-import { Drawer, JoinedClasses, Main, SignIn, SignUp, People, Drag } from "./components";
+import { Drawer, JoinedClasses, Main, SignIn, SignUp, People, Drag,Score } from "./components";
 import { BrowserRouter as Router, Switch, Route, useParams } from "react-router-dom";
 import { IsUserRedirect, ProtectedRoute } from './routes/Routes';
 import { useLocalContext } from "./context/context";
@@ -94,13 +94,18 @@ function App() {
                     {listCreatedClasses.map((item, index) => (
                         <Route key={index} exact path={`/teacher/${item.ClassID}`}>
                             <Drawer />
-                            {tabValue === "1" ? <Main classData={item} /> : <People classData={item} />}
+                            {tabValue === "1" && <Main classData={item} />}
+                            {tabValue === "2" && <People classData={item} />}
+                            {tabValue === "3" && <Score classData={item} />}
+                            
                         </Route>
                     ))}
                     {listJoinedClasses.map((item, index) => (
                         <Route key={index} exact path={`/student/${item.ClassID}`}>
                             <Drawer />
-                            {tabValue === "1" ? <Main classData={item} /> : <People classData={item} />}
+                            {tabValue === "1" && <Main classData={item} />}
+                            {tabValue === "2" && <People classData={item} />}
+                            {tabValue === "3" && <Score classData={item} />}
                         </Route>
                     ))}
 

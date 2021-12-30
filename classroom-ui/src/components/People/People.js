@@ -139,14 +139,6 @@ export default function AlignItemsList({ classData }) {
                         </>
                     }
                 >
-                    <CSVReader
-                        cssClass="react-csv-input"
-                        onFileLoaded={handleForce}
-                        parserOptions={papaparseOptions}
-                        inputId="ObiWan"
-                        inputName="ObiWan"
-                        inputStyle={{color: 'red'}}
-                    />
                     {listTeachers.map((item) => (
                         <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
                             <ListItem alignItems="center" justify-content="center">
@@ -181,7 +173,6 @@ export default function AlignItemsList({ classData }) {
                         </>
                     }
                 >
-                    <CSVLink data={csvData}>Download me</CSVLink>;
                     {listStudents.map((item) => (
                         <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
                             <ListItem alignItems="center" justify-content="center">
