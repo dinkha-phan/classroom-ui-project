@@ -111,6 +111,8 @@ export default function AlignItemsList({ classData }) {
 
 
             }
+            console.log(tempListStudents);
+            console.log(tempListTeachers);
             setListStdents(tempListStudents);
             setListTeachers(tempListTeachers);
             setCsvData(tempCSVdata);

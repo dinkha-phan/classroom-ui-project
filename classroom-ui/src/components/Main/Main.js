@@ -11,12 +11,16 @@ import InfoRoundedIcon from '@mui/icons-material/InfoRounded';
 import IconButton from '@mui/material/IconButton';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import axios from "axios";
+import Checkbox from '@mui/material/Checkbox';
 
 import "./style.css";
+import { green } from "@mui/material/colors";
 // import { Announcment } from "..";
 const getListGrade = () => {
     return [{ gradeTitle: "CTDL", gradeDetail: "2" }, { gradeTitle: "CTDL", gradeDetail: "3" }, { gradeTitle: "CTDL", gradeDetail: "4" }];
 }
+const checkBoxValues = [false];
+const previousCheckBoxValues = [false];
 const Main = ({ classData }) => {
     const { gradeStruct, setGradeStruct } = useLocalContext();
 
@@ -24,10 +28,12 @@ const Main = ({ classData }) => {
     const [inputValue, setInput] = useState("");
     const [image, setImage] = useState(null);
     const [showInfo, setshowInfo] = useState(false);
-    const [listGrade, setListGrade] = useState([...getListGrade()]);
     const [anchorEl, setAnchorEl] = useState(null);
     const [items, setItems] = useState([]);
+    const [showEditCheckBox, setShowEditCheckBox] = useState(false);
 
+
+    // const []
     const { loggedInUser, setPersonJoinedClass, settabValue } = useLocalContext();
     const handleChange = (e) => {
         setShowInput(false);
@@ -35,7 +41,74 @@ const Main = ({ classData }) => {
             setImage(e.target.files[0]);
         }
     };
+    const onCheckBoxChange = (event, data, index) => {
+        // data.IsShowed = event.target.checked;
+        // console.log(event.target.checked, data);
+        checkBoxValues[data.Rank] = event.target.checked;
+    }
+    const resetCheckValue = () => {
+        const newItems = [...items];
+        newItems.map((e) => {
+            e.IsShowed = previousCheckBoxValues[e.Rank];
+        })
+        setItems(newItems);
+    }
+    const onClickEditShowGrade = () => {
+        if (showEditCheckBox) {
+            resetCheckValue();
+        }
+        else {
+            items.map((e) => {
+                console.log(e);
+                previousCheckBoxValues[e.Rank] = e.IsShowed || false;
+                checkBoxValues[e.Rank] = e.IsShowed || false;
+            })
+            console.log("previousCheckBoxValues", previousCheckBoxValues);
+            console.log("checkBoxValues", checkBoxValues);
+        }
+        setShowEditCheckBox(!showEditCheckBox)
+    }
+    const updateGradeStruct = (data) => {
+        const { Rank, Grade, ClassID, Name, IsShowed } = data;
 
+        const url = 'http://localhost:3000/grade-struct/class/'
+            + ClassID + '/rank/' + String(parseInt(Rank));
+
+        console.log(data);
+        console.log(url);
+
+        const postData = {
+            Name: Name,
+            Grade: Grade,
+            IsShowed: IsShowed,
+        }
+
+        axios.put(url, postData).then((response) => {
+            console.log(response);
+        }).catch((error) => {
+            console.log(error);
+        })
+    }
+    const onClickSave = () => {
+        console.log("previousCheckBoxValues", previousCheckBoxValues);
+        console.log("checkBoxValues", checkBoxValues);
+        items.map((e) => {
+            if (e.IsShowed !== checkBoxValues[e.Rank]) {
+                e.IsShowed = checkBoxValues[e.Rank];
+                updateGradeStruct(e);
+            }
+        })
+        setItems(items);
+        console.log(items);
+        setShowEditCheckBox(!showEditCheckBox);
+    }
+    const onClickCancel = () => {
+        console.log("previousCheckBoxValues", previousCheckBoxValues);
+        console.log("checkBoxValues", checkBoxValues);
+        resetCheckValue();
+        console.log(items);
+        setShowEditCheckBox(!showEditCheckBox);
+    }
     useEffect(() => {
         if (classData.Role === "student")
             setPersonJoinedClass("Student");
@@ -115,38 +188,72 @@ const Main = ({ classData }) => {
                         // height: "15vh",
                     }}>
                         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                            <div>
-                                <p style={{ fontSize: 14, display: "inline", margin: 0, padding: 0 }}>Grade Structure</p>
-                            </div>
 
-                            <div style={{
-                                alignItems: "center", display: "flex",
-                                justifyContent: "space-between",
-                                alignItems: "center",
-                            }}>
-                                <IconButton size="small" sx={{ color: "#000" }} onClick={(event) => setAnchorEl(event.currentTarget)}>
+                        </div>
+
+                        <div style={{ display: "flex", flexDirection: "column", alignContent: "flex-start" }}>
+                            <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+                                <p style={{ fontSize: 14, display: "inline", margin: 0, padding: 0 }}>Grade Structure</p>
+                                <IconButton size="small" sx={{ color: "#000" }} onClick={(event) => { setAnchorEl(event.currentTarget) }}>
                                     <MoreVertIcon fontSize="small" sx={{ color: "#000" }} />
                                 </IconButton>
                                 <Menu
+
                                     id="simple-menu"
                                     anchorEl={anchorEl}
                                     keepMounted
                                     open={Boolean(anchorEl)}
                                     onClose={() => setAnchorEl(null)}
-                                    transformOrigin={{ horizontal: 'right', vertical: 'top' }} // left of add button
+                                    MenuListProps={{
+                                        'aria-labelledby': 'lock-button',
+                                        role: 'listbox',
+                                    }}
+                                    // anchorOrigin={{
+                                    //     vertical: 'bottom',
+                                    //     horizontal: 'right',
+                                    // }}
+                                    transformOrigin={{
+                                        vertical: 'top',
+                                    }}
+                                    style={{ marginTop: 40 }}
                                 >
                                     <MenuItem onClick={() => { window.location = "/grade-struct/edit/" + classData.ClassID }}>
                                         Edit
                                     </MenuItem>
+                                    <MenuItem onClick={() => onClickEditShowGrade()}>
+                                        Edit show grade for Student
+                                    </MenuItem>
                                 </Menu>
-
                             </div>
-                        </div>
-                        <div style={{ marginTop: 5 }}>
-                            {(items.length > 0) && items.map((e) => {
-                                return <p style={{ fontSize: 15, color: "#2574e2" }}>{e.Name}: {e.Grade}</p>;
+                            {(items.length > 0) && items.map((e, index) => {
+                                return <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+                                    <p style={{ fontSize: 15, color: "#2574e2", opacity: e.IsShowed ? 1 : 0.5 }}>{e.Name}: {e.Grade}</p>
+                                    {showEditCheckBox && <Checkbox defaultChecked={e.IsShowed || false} size="small" onChange={(event) => onCheckBoxChange(event, e, index)} />}
+                                </div>;
                             })}
+                            {showEditCheckBox &&
+                                <div style={{ display: "flex", justifyContent: "space-around", marginTop: 10 }}>
+                                    <Button variant="contained" style={{
+                                        // backgroundColor: '#1aff1a',
+                                        fontSize: 10
+                                    }}
+                                        color="primary"
+                                        onClick={() => onClickSave()}
+                                    >Save</Button>
+                                    <Button variant="contained" style={{
+                                        backgroundColor: '#ed5e68',
+                                        fontSize: 10
+                                    }}
+                                        onClick={() => onClickCancel()}
+                                    // size={20}
+                                    >Cancel</Button>
+                                </div>
+                            }
+
+
                         </div>
+
+
                     </div>
                     <div className="main__announcements">
                         <div className="main__announcementsWrapper">
