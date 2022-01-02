@@ -1,4 +1,5 @@
 import * as React from 'react';
+import useStyles from 'react';
 import { useState, useEffect } from "react";
 import "./style.css";
 import { useLocalContext } from "../../context/context"
@@ -32,7 +33,10 @@ import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
 import Button from '@mui/material/Button';
 import { getAccessToken, getUrlGetPeopleInClass, getUrlAddStudentToClass, getUrlGetStudentInClass } from '../../services/app.service';
-
+import { InputAdornment } from '@mui/material';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import TextField from '@mui/material/TextField';
+import { InputBase } from '@mui/material';
 
 // function createData(name, calories, fat, carbs, protein) {
 //     return {
@@ -61,9 +65,9 @@ import { getAccessToken, getUrlGetPeopleInClass, getUrlAddStudentToClass, getUrl
 
 
 
-const getlistHeadLabel = () => {
-    const examplelistHeadLabel = ["StudenID", "FullName", "CTDL", "Web", "Mobile"];
-    return examplelistHeadLabel;
+const getlistLabel = () => {
+    const examplelistLabel = ["UserID", "FullName", "CTDL", "Web", "Mobile"];
+    return examplelistLabel;
 }
 
 
@@ -78,68 +82,100 @@ export default function Score({ classData }) {
     const [page, setPage] = React.useState(0);
     const [dense, setDense] = React.useState(false);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
-    // useEffect(() => {
-    //     console.log('load people');
-    //     const token = getAccessToken();
+    const [dataTable, setDataTable] = React.useState([]);
+    const [dataScore, setdataScore] = React.useState([]);
+    const [dataStudent, setdataStudent] = React.useState([]);
+    const [rows, setrows] = React.useState([]);
+    const [listLabel, setListLabel] = useState(["UserID", "FullName"]);
+    const [rankToLabel, setRankToLabel] = useState([""]);
 
-    //     const config = {
-    //         headers: { Authorization: `Bearer ${token}` }
-    //     };
+    const TextInput = props => {
+        const { onChange, type } = props;
+        const classes = useStyles();
 
-    //     const url = getUrlGetPeopleInClass(classData.ClassID);
-    //     console.log(config, url);
+        return (
+            <TextField
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                id="phoneNumber"
+                disableUnderline={false}
+                // label="Phone Number"
+                name="phoneNumber"
+                autoComplete="phoneNumber"
+                autoFocus
+                classes={{ notchedOutline: classes.input }}
 
-    //     axios.get(
-    //         url,
-    //         config
-    //     ).then(res => {
-    //         console.log(res.data);
-    //         // window.location.href = '/';
-    //         const dataUsers = res.data;
-    //         let tempListStudents = [], tempListTeachers = [], tempCSVdata = [];
-    //         for (let i in dataUsers) {
-    //             if (dataUsers[i].Role === 'teacher')
-    //                 tempListTeachers.push(dataUsers[i]);
-    //             if (dataUsers[i].Role === 'student') {
-    //                 tempListStudents.push(dataUsers[i]);
-    //                 tempCSVdata.push({ StudenID: dataUsers[i].UserID, Fullname: dataUsers[i].FullName });
-    //             }
+                // onChange={handlePhoneNumberChange}
+                className={classes.textField}
+                placeholder="Phone Number"
+                InputProps={{
+                    startAdornment: (
+                        <InputAdornment position="start">
+                            <AccountCircleIcon />
+                        </InputAdornment>
+                    ),
+                    classes: { notchedOutline: classes.noBorder }
+                }}
+            />
+        );
+    };
 
+    useEffect(() => {
+        async function getData() {
+            const url = 'http://localhost:3000/gradeClass/class/' + classData.ClassID;
+            console.log(url);
 
-    //         }
-    //         setListStdents(tempListStudents);
-    //         setListTeachers(tempListTeachers);
-    //         setCsvData(tempCSVdata);
-    //     }).catch(e => {
-    //         console.log(e);
-    //     });
-    // }, [])
-    // const listStudents = [{ name: "Phan Dinh Kha" }, { name: "Nguyen Tien Dat" }, { name: "Tran Bao Nguyen" }];
-    const getScoreBoard = () => {
-        const dataScore= [];
-        const dataStudent= [];
-        const dataTablel = [];
-        const url = 'http://localhost:3000/gradeClass/class/' + classData.ClassID;
-        console.log(url);
-        axios.get(url).then((reponse) => {
-            dataScore = reponse.data;
-            console.log(reponse.data);
-        })
-        .catch((error) => {
-            console.log("get Data error", error);
-        });
-        const url2 = getUrlGetStudentInClass();
-        axios.get(url2).then((reponse) => {
-            dataStudent = reponse.data;
-            console.log(reponse.data);
-        })
-        .catch((error) => {
-            console.log("get Data error", error);
-        });
-        for(let i =0; i <dataStudent.length; ++i){
-            
+            await axios.get(url).then((reponse) => {
+                setdataScore(reponse.data);
+                console.log("dataScore", url, reponse.data);
+            })
+                .catch((error) => {
+                    console.log("get Data error", error);
+                });
+            const url2 = getUrlGetStudentInClass(classData.ClassID);
+            await axios.get(url2).then((reponse) => {
+                setdataStudent(reponse.data);
+                console.log("dataStudent", reponse.data);
+
+            })
+                .catch((error) => {
+                    console.log("get Data error", error);
+                });
         }
+        getData();
 
+    }, [])
+
+    useEffect(() => {
+        dataStudent.map((o) => {
+            let check = true;
+            dataTable.map((e) => {
+                if (e.UserID === o.UserID) check = false;
+            });
+            if (check) dataTable.push({ UserID: o.UserID, FullName: o.FullName });
+        });
+        const newLabel = [...listLabel];
+        dataStudent.map((o) => {
+            if (!o.Rank) return o;
+            while (newLabel.length < o.Rank + 2) newLabel.push("");
+            newLabel[o.Rank + 1] = String(o.Name);
+        });
+        const newdataTable = [...dataTable];
+        dataScore.map((o) => {
+            newdataTable.map((e) => {
+                if (e.UserID === o.UserID) {
+                    e[listLabel[o.Rank + 1]] = o.Grade;
+                    console.log(e);
+                }
+            });
+        });
+        setListLabel(newLabel);
+        setrows(newdataTable);
+    }, [dataStudent, dataScore]);
+
+    const getScoreBoard = () => {
         const exampleData = [
             {
                 StudenID: "18120116",
@@ -159,13 +195,25 @@ export default function Score({ classData }) {
         ];
         return [...exampleData, ...exampleData, ...exampleData, ...exampleData, ...exampleData, ...exampleData, ...exampleData, ...exampleData, ...exampleData, ...exampleData, ...exampleData, ...exampleData, ...exampleData, ...exampleData, ...exampleData, ...exampleData,];
     }
-    const rows = getScoreBoard();
-    const listHeadLabel = getlistHeadLabel();
+    // const rows = getScoreBoard();
+
+
+    const handleChange = (e, index, row) => {
+        row[listLabel[index]] = e;
+        console.log("chaekjablksjbdfalkjfaskljhf", e, index, row);
+        // console.log("StudenId:", row.StudenID);
+        // console.log("label:", listLabel[index]);
+        // console.log("value", e.value);
+        // row[listLabel[index]] = e.value;
+        // console.log("event:", e);
+        // console.log("headIndex:", index);
+        // console.log("row:", row);
+    }
     const handleSave = (e, index, row) => {
         console.log("StudenId:", row.StudenID);
-        console.log("label:", listHeadLabel[index]);
+        console.log("label:", listLabel[index]);
         console.log("value", e.value);
-        row[listHeadLabel[index]] = e.value;
+        row[listLabel[index]] = e.value;
         console.log("event:", e);
         console.log("headIndex:", index);
         console.log("row:", row);
@@ -242,7 +290,7 @@ export default function Score({ classData }) {
                     <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
                         <TableHead>
                             <TableRow>
-                                {listHeadLabel.map((value, index) => {
+                                {listLabel.map((value, index) => {
                                     return <TableCell align="center">{value}</TableCell>;
                                 })}
                                 {/* <TableCell>StudentID</TableCell>
@@ -254,8 +302,9 @@ export default function Score({ classData }) {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {rows.map((row, indexRow) => (
-                                <TableRow
+                            {rows.map((row, indexRow) => {
+                                // console.log("render row", row);
+                                return <TableRow
                                     // key={row.StudenID}
                                     // key={indexRow}
                                     sx={{
@@ -267,7 +316,8 @@ export default function Score({ classData }) {
                                         "&:hover": { bgcolor: "#cccccc" }
                                     }}
                                 >
-                                    {listHeadLabel.map((value, index) => {
+                                    {listLabel.map((value, index) => {
+                                        // console.log("render value", row, value, row[value]);
                                         return <TableCell align="center" sx={{
                                             // '&:last-child td, &:last-child th': { border: 10 },
                                             // bgcolor: (indexRow % 2 === 0) ? "#f1f1f1" : "#ffffff",
@@ -282,7 +332,7 @@ export default function Score({ classData }) {
                                                 margin: 0,
                                                 padding: 0
                                             }}>
-                                                <EditText style={{
+                                                {/* <EditText style={{
                                                     display: "flex",
                                                     textAlign: "center",
                                                     alignItems: "center",
@@ -293,10 +343,16 @@ export default function Score({ classData }) {
                                                     borderWidth: 0,
                                                     width: "100px",
                                                 }}
-                                                    name={`Edit value row:${indexRow} label:${listHeadLabel[index]} `}
+                                                    name={`Edit value row:${indexRow} label:${listLabel[index]} `}
                                                     readonly={index <= 1}
-                                                    defaultValue={row[value]}
-                                                    onSave={(e) => handleSave(e, index, row)} />
+                                                    defaultValue={rows[indexRow][value] || ""}
+                                                    onChange={(e) => handleChange(e, index, row)}
+                                                    onSave={(e) => handleSave(e, index, row)} /> */}
+
+                                                <InputBase
+                                                    defaultValue={rows[indexRow][value] || ""}
+                                                />
+
                                             </div>
                                         </TableCell>;
                                     })}
@@ -307,8 +363,8 @@ export default function Score({ classData }) {
                                 <TableCell align="right">{row.fat}</TableCell>
                                 <TableCell align="right">{row.carbs}</TableCell>
                                 <TableCell align="right">{row.protein}</TableCell> */}
-                                </TableRow>
-                            ))}
+                                </TableRow>;
+                            })}
                         </TableBody>
                     </Table>
                 </TableContainer>
