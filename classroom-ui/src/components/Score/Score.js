@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useState, useEffect } from "react";
 import "./style.css";
 import { useLocalContext } from "../../context/context"
-import { getAccessToken, getUrlAddStudentToClass } from '../../services/app.service';
+// import { getAccessToken, getUrlAddStudentToClass } from '../../services/app.service';
 import axios from 'axios';
 import { CSVLink, CSVDownload } from "react-csv";
 import CSVReader from 'react-csv-reader';
@@ -31,6 +31,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
 import Button from '@mui/material/Button';
+import { getAccessToken, getUrlGetPeopleInClass, getUrlAddStudentToClass } from '../../services/app.service';
 
 
 // function createData(name, calories, fat, carbs, protein) {
@@ -59,26 +60,7 @@ import Button from '@mui/material/Button';
 //     createData('Oreo', 437, 18.0, 63, 4.0),
 
 
-const getScoreBoard = () => {
-    const exampleData = [
-        {
-            StudenID: "18120116",
-            FullName: "Đạt",
-            CTDL: "8",
-            Web: "9",
-            Mobile: "8",
-        }
-        ,
-        {
-            StudenID: "18120141",
-            FullName: "Nguyên",
-            CTDL: "9",
-            Web: "9",
-            Mobile: "9",
-        }
-    ];
-    return [...exampleData, ...exampleData, ...exampleData, ...exampleData, ...exampleData, ...exampleData, ...exampleData, ...exampleData, ...exampleData, ...exampleData, ...exampleData, ...exampleData, ...exampleData, ...exampleData, ...exampleData, ...exampleData,];
-}
+
 const getlistHeadLabel = () => {
     const examplelistHeadLabel = ["StudenID", "FullName", "CTDL", "Web", "Mobile"];
     return examplelistHeadLabel;
@@ -86,8 +68,8 @@ const getlistHeadLabel = () => {
 
 
 export default function Score({ classData }) {
-    const { setPersonJoinedClass, settabValue } = useLocalContext();
 
+    const { setPersonJoinedClass, settabValue } = useLocalContext();
     const [listStudents, setListStdents] = useState([]);
     const [csvData, setCsvData] = useState([]);
     const [order, setOrder] = React.useState('asc');
@@ -96,7 +78,73 @@ export default function Score({ classData }) {
     const [page, setPage] = React.useState(0);
     const [dense, setDense] = React.useState(false);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
+    // useEffect(() => {
+    //     console.log('load people');
+    //     const token = getAccessToken();
+
+    //     const config = {
+    //         headers: { Authorization: `Bearer ${token}` }
+    //     };
+
+    //     const url = getUrlGetPeopleInClass(classData.ClassID);
+    //     console.log(config, url);
+
+    //     axios.get(
+    //         url,
+    //         config
+    //     ).then(res => {
+    //         console.log(res.data);
+    //         // window.location.href = '/';
+    //         const dataUsers = res.data;
+    //         let tempListStudents = [], tempListTeachers = [], tempCSVdata = [];
+    //         for (let i in dataUsers) {
+    //             if (dataUsers[i].Role === 'teacher')
+    //                 tempListTeachers.push(dataUsers[i]);
+    //             if (dataUsers[i].Role === 'student') {
+    //                 tempListStudents.push(dataUsers[i]);
+    //                 tempCSVdata.push({ StudenID: dataUsers[i].UserID, Fullname: dataUsers[i].FullName });
+    //             }
+
+
+    //         }
+    //         setListStdents(tempListStudents);
+    //         setListTeachers(tempListTeachers);
+    //         setCsvData(tempCSVdata);
+    //     }).catch(e => {
+    //         console.log(e);
+    //     });
+    // }, [])
     // const listStudents = [{ name: "Phan Dinh Kha" }, { name: "Nguyen Tien Dat" }, { name: "Tran Bao Nguyen" }];
+    const getScoreBoard = () => {
+        const url = 'http://localhost:3000/gradeClass/class/' + classData.ClassID;
+        console.log(url);
+        axios.get(url).then((reponse) => {
+            console.log(reponse.data);
+        })
+            .catch((error) => {
+                console.log("get Data error", error);
+            })
+
+
+        const exampleData = [
+            {
+                StudenID: "18120116",
+                FullName: "Đạt",
+                CTDL: "8",
+                Web: "9",
+                Mobile: "8",
+            }
+            ,
+            {
+                StudenID: "18120141",
+                FullName: "Nguyên",
+                CTDL: "9",
+                Web: "9",
+                Mobile: "9",
+            }
+        ];
+        return [...exampleData, ...exampleData, ...exampleData, ...exampleData, ...exampleData, ...exampleData, ...exampleData, ...exampleData, ...exampleData, ...exampleData, ...exampleData, ...exampleData, ...exampleData, ...exampleData, ...exampleData, ...exampleData,];
+    }
     const rows = getScoreBoard();
     const listHeadLabel = getlistHeadLabel();
     const handleSave = (e, index, row) => {
@@ -165,7 +213,7 @@ export default function Score({ classData }) {
                         parserOptions={papaparseOptions}
                         inputId="ObiWan"
                         inputName="ObiWan"
-                        inputStyle={{ color: 'red' }}
+                    // cssInputClass="textCSV"
                     >
 
                     </CSVReader>
@@ -220,7 +268,7 @@ export default function Score({ classData }) {
                                                     width: "100px",
                                                 }}
                                                     name={`Edit value row:${indexRow} label:${listHeadLabel[index]} `}
-                                                    readonly={index === 0}
+                                                    readonly={index <= 1}
                                                     defaultValue={row[value]}
                                                     onSave={(e) => handleSave(e, index, row)} />
                                             </div>

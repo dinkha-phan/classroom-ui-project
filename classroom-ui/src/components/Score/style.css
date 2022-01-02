@@ -27,3 +27,7 @@
     display: flex;
 
 }
+.textCSV{
+    color: blue;
+    border: solid 1px;
+}
