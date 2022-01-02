@@ -151,6 +151,7 @@ export default function Score({ classData }) {
     useEffect(() => {
         dataStudent.map((o) => {
             let check = true;
+            console.log('sdasas',dataTable);
             dataTable.map((e) => {
                 if (e.UserID === o.UserID) check = false;
             });
@@ -166,12 +167,13 @@ export default function Score({ classData }) {
         dataScore.map((o) => {
             newdataTable.map((e) => {
                 if (e.UserID === o.UserID) {
-                    e[listLabel[o.Rank + 1]] = o.Grade;
+                    e[newLabel[o.Rank + 1]] = o.Grade;
                     console.log(e);
                 }
             });
         });
         setListLabel(newLabel);
+        console.log('datass',newdataTable);
         setrows(newdataTable);
     }, [dataStudent, dataScore]);
 
