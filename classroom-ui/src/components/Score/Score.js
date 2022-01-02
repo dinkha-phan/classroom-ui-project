@@ -244,10 +244,22 @@ export default function Score({ classData }) {
                                 <TableRow
                                     // key={row.StudenID}
                                     // key={indexRow}
-                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                    sx={{
+
+                                        // '&:last-child td, &:last-child th': { border: 10 },
+                                        bgcolor: (indexRow % 2 === 0) ? "#f1f1f1" : "#ffffff",
+                                        my: 0,
+                                        py: 0,
+                                        "&:hover": { bgcolor: "#cccccc" }
+                                    }}
                                 >
                                     {listHeadLabel.map((value, index) => {
-                                        return <TableCell align="center">
+                                        return <TableCell align="center" sx={{
+                                            // '&:last-child td, &:last-child th': { border: 10 },
+                                            // bgcolor: (indexRow % 2 === 0) ? "#f1f1f1" : "#ffffff",
+                                            my: 0,
+                                            py: 0,
+                                        }}>
 
                                             <div style={{
                                                 display: "flex", justifyContent: "center",

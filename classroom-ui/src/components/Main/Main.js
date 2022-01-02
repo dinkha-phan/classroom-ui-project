@@ -233,20 +233,27 @@ const Main = ({ classData }) => {
                             })}
                             {showEditCheckBox &&
                                 <div style={{ display: "flex", justifyContent: "space-around", marginTop: 10 }}>
-                                    <Button variant="contained" style={{
-                                        // backgroundColor: '#1aff1a',
-                                        fontSize: 10
-                                    }}
+                                    <Button variant="contained"
+                                        style={{
+                                            // backgroundColor: '#1aff1a',
+                                            fontSize: 10
+                                        }}
                                         color="primary"
                                         onClick={() => onClickSave()}
-                                    >Save</Button>
-                                    <Button variant="contained" style={{
-                                        backgroundColor: '#ed5e68',
-                                        fontSize: 10
-                                    }}
+                                    >
+                                        Save
+                                    </Button>
+                                    <Button
+                                        variant="contained"
+                                        style={{
+                                            backgroundColor: '#f6665c',
+                                            fontSize: 10,
+                                            color: "white"
+                                        }}
                                         onClick={() => onClickCancel()}
-                                    // size={20}
-                                    >Cancel</Button>
+                                    >
+                                        Cancel
+                                    </Button>
                                 </div>
                             }
 
