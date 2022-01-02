@@ -31,7 +31,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
 import Button from '@mui/material/Button';
-import { getAccessToken, getUrlGetPeopleInClass, getUrlAddStudentToClass } from '../../services/app.service';
+import { getAccessToken, getUrlGetPeopleInClass, getUrlAddStudentToClass, getUrlGetStudentInClass } from '../../services/app.service';
 
 
 // function createData(name, calories, fat, carbs, protein) {
@@ -116,15 +116,29 @@ export default function Score({ classData }) {
     // }, [])
     // const listStudents = [{ name: "Phan Dinh Kha" }, { name: "Nguyen Tien Dat" }, { name: "Tran Bao Nguyen" }];
     const getScoreBoard = () => {
+        const dataScore= [];
+        const dataStudent= [];
+        const dataTablel = [];
         const url = 'http://localhost:3000/gradeClass/class/' + classData.ClassID;
         console.log(url);
         axios.get(url).then((reponse) => {
+            dataScore = reponse.data;
             console.log(reponse.data);
         })
-            .catch((error) => {
-                console.log("get Data error", error);
-            })
-
+        .catch((error) => {
+            console.log("get Data error", error);
+        });
+        const url2 = getUrlGetStudentInClass();
+        axios.get(url2).then((reponse) => {
+            dataStudent = reponse.data;
+            console.log(reponse.data);
+        })
+        .catch((error) => {
+            console.log("get Data error", error);
+        });
+        for(let i =0; i <dataStudent.length; ++i){
+            
+        }
 
         const exampleData = [
             {
