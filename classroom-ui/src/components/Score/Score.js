@@ -9,42 +9,30 @@ import { CSVLink, CSVDownload } from "react-csv";
 import CSVReader from 'react-csv-reader';
 import { EditText } from 'react-edit-text';
 import DownloadIcon from '@mui/icons-material/Download';
-import PropTypes from 'prop-types';
-import { alpha } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
-import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
-import TableSortLabel from '@mui/material/TableSortLabel';
-import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import Checkbox from '@mui/material/Checkbox';
-import IconButton from '@mui/material/IconButton';
-import Tooltip from '@mui/material/Tooltip';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import Switch from '@mui/material/Switch';
-import DeleteIcon from '@mui/icons-material/Delete';
-import FilterListIcon from '@mui/icons-material/FilterList';
-import { visuallyHidden } from '@mui/utils';
 import Button from '@mui/material/Button';
 import { getAccessToken, getUrlGetPeopleInClass, getUrlAddStudentToClass, getUrlGetStudentInClass } from '../../services/app.service';
-import { InputAdornment } from '@mui/material';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import TextField from '@mui/material/TextField';
-import { InputBase } from '@mui/material';
 import Modal from '@mui/material/Modal';
 import UploadIcon from '@mui/icons-material/Upload';
-import MenuItem from '@mui/material/MenuItem';
 import InputLabel from '@mui/material/InputLabel';
-import FormHelperText from '@mui/material/FormHelperText';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
-
+import IconButton from '@mui/material/IconButton';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import {
+    Menu,
+    MenuItem
+} from "@material-ui/core";
 const styleModal = {
     position: 'absolute',
     top: '50%',
@@ -73,7 +61,8 @@ export default function Score({ classData }) {
     const [sumChecked, setSumChecked] = React.useState(0);
     const [openUpload, setOpenUpload] = useState(false);
     const [columnUpload, setColumnUpload] = useState("");
-
+    const [anchorEl, setAnchorEl] = useState(null);
+    const [selectedColumn, setSelectedColumn] = useState({});
 
 
     const handleOpen = () => setOpen(true);
@@ -247,12 +236,6 @@ export default function Score({ classData }) {
         setChecked([...newChecked]);
     };
 
-    // const handleChange3 = (event) => {
-    //     setChecked([checked[0], event.target.checked]);
-    // };
-    const modalDownload = () => {
-
-    }
 
     return (
         <>
@@ -370,7 +353,43 @@ export default function Score({ classData }) {
                         <TableHead>
                             <TableRow>
                                 {listLabel.map((value, index) => {
-                                    return <TableCell align="center">{value}</TableCell>;
+                                    return <TableCell align="center">
+                                        {value}
+
+                                        <IconButton size="small" sx={{ color: "#000" }} onClick={(event) => { setAnchorEl(event.currentTarget) }}>
+                                            <MoreVertIcon fontSize="small" sx={{ color: "#000" }} />
+                                        </IconButton>
+                                        <Menu
+
+                                            id="simple-menu"
+                                            anchorEl={anchorEl}
+                                            keepMounted
+                                            open={Boolean(anchorEl)}
+                                            onClose={() => setAnchorEl(null)}
+                                            MenuListProps={{
+                                                'aria-labelledby': 'lock-button',
+                                                role: 'listbox',
+                                            }}
+                                            // anchorOrigin={{
+                                            //     vertical: 'bottom',
+                                            //     horizontal: 'right',
+                                            // }}
+                                            transformOrigin={{
+                                                vertical: 'top',
+                                            }}
+                                            style={{ marginTop: 40 }}
+                                        >
+                                            <MenuItem onClick={() => { setOpenUpload(true); setColumnUpload(value) }}>
+                                                Import Grade
+                                            </MenuItem>
+                                            <MenuItem onClick={() => { handleOpen(); setSelectedColumn({ value, index }) }}>
+                                                Download Grade
+                                            </MenuItem>
+                                            <MenuItem onClick={() => { }}>
+                                                Mark a Grade as public
+                                            </MenuItem>
+                                        </Menu>
+                                    </TableCell>;
                                 })}
                                 <TableCell align="center">Sum</TableCell>
                             </TableRow>
