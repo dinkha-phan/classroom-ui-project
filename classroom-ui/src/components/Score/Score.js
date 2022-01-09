@@ -20,6 +20,7 @@ import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
+import CsvDownloader from 'react-csv-downloader';
 import Button from '@mui/material/Button';
 import { getAccessToken, getUrlGetPeopleInClass, getUrlAddStudentToClass, getUrlGetStudentInClass } from '../../services/app.service';
 import Modal from '@mui/material/Modal';
@@ -29,6 +30,10 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import IconButton from '@mui/material/IconButton';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
 import {
     Menu,
     MenuItem
@@ -62,8 +67,8 @@ export default function Score({ classData }) {
     const [openUpload, setOpenUpload] = useState(false);
     const [columnUpload, setColumnUpload] = useState("");
     const [anchorEl, setAnchorEl] = useState(null);
-    const [selectedColumn, setSelectedColumn] = useState({});
-
+    const [selectedColumn, setSelectedColumn] = useState('');
+    const [dataUpload, setDataUpload] = useState([]);
 
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
@@ -182,32 +187,41 @@ export default function Score({ classData }) {
         // console.log("headIndex:", index);
         // console.log("row:", row);
     }
-    const handleForce = (data, fileInfo) => {
+    const handleForce2 = (data, fileInfo) => {
+        setDataUpload(data);
+    };
+    const handleForce = () => {
         // console.log(data, fileInfo);
         const token = getAccessToken();
-        var tmpCSVData = csvData;
-        var tmpListStudents = listStudents;
-        for (let i = 0; i < data.length; ++i) {
+        let tmpCSVData = rows;
+        let rank =0;
+        for(let i =0; i <listLabel.length; ++i){
+            if(listLabel[i] === selectedColumn){
+                rank = i-1;
+                break;
+            }
+        }
+        for (let i = 0; i < dataUpload.length; ++i) {
             const config = {
-                headers: { Authorization: `Bearer ${token}` }
+                headers: { Authorization: `Bearer ${token}` },
+                grade: dataUpload[i]['Grade'],
             };
-            const url = getUrlAddStudentToClass(classData.ClassID, data[i].StudenID);
+            const url = 'http://localhost:3000/gradeClass/user/' + dataUpload[i]['StudentID'] + '/class/' + classData.ClassID + '/rank/' + rank;
             console.log(config, url);
 
             axios.put(
                 url,
-                config
+                config,
             ).then((response) => {
                 if (response.data === 'Success') {
-                    tmpCSVData.push({ StudenID: data[i].StudenID, Fullname: data[i].Fullname });
-                    tmpListStudents.push({ StudenID: data[i].StudenID, FullName: data[i].Fullname });
+                    tmpCSVData[i][selectedColumn] = dataUpload[i]['Grade']; 
                 }
             }).catch((error) => {
                 console.log(error);
             })
         }
-        setListStdents(tmpListStudents);
-        setCsvData(tmpCSVData);
+        setrows(tmpCSVData);
+        setOpenUpload(false);
     };
     const papaparseOptions = {
         header: true,
@@ -222,7 +236,18 @@ export default function Score({ classData }) {
         settabValue("3");
     }, []);
 
-
+    const downloadGrade = ()=>{
+        console.log('valueDD',selectedColumn);
+        let dataDownload = [];
+        for(let i = 0; i <rows.length; ++i){
+            let row = {
+                StudentID: rows[i]['UserID'],
+                Grade: rows[i][selectedColumn]
+            }
+            dataDownload.push(row);
+        }
+        return dataDownload;
+    }
 
     const handleChange1 = (event) => {
         const newChecked = checked.map(() => event.target.checked);
@@ -282,7 +307,7 @@ export default function Score({ classData }) {
                                 })}
                             </Box>
                             <Typography id="modal-modal-description" sx={{ mt: 2, display: "flex", justifyContent: "center" }}>
-                                <CSVLink data={csvData} style={{ textDecoration: "none" }} >
+                                <CSVLink data={csvData} style={{ textDecoration: "none" }}>
                                     <Button variant="contained" startIcon={<DownloadIcon />} onClick={handleDownload}>
                                         Download
                                     </Button>
@@ -291,61 +316,46 @@ export default function Score({ classData }) {
 
                         </Box>
                     </Modal>
-                    <Modal
+                    <Dialog
                         open={openUpload}
                         onClose={() => { setOpenUpload(false) }}
-                        aria-labelledby="modal-modal-title"
-                        aria-describedby="modal-modal-description"
                     >
-                        <Box sx={styleModal}>
+                        
+                        <DialogTitle>
 
+                        
                             <Box sx={{ display: 'flex', flexDirection: "column", justifyContent: "center" }}>
                                 <Typography id="modal-modal-title" variant="h6" component="h2" sx={{ mb: 2 }}>
                                     Upload
                                 </Typography>
-                                <FormControl sx={{ m: 1, minWidth: 300 }}>
-                                    <InputLabel id="demo-simple-select-helper-label">Select grade</InputLabel>
-                                    <Select
-                                        labelId="demo-simple-select-helper-label"
-                                        id="demo-simple-select-helper"
-                                        value={columnUpload}
-                                        label="Column upload"
-                                        onChange={(event) => { setColumnUpload(event.target.value) }}
-                                    >
-                                        <MenuItem value="">
-                                            <em>None</em>
-                                        </MenuItem>
-                                        {listLabel.map((label, index) => {
-                                            if (index > 1)
-                                                return <MenuItem value={label}>{label}</MenuItem>;
-                                            return <></>;
-
-                                        })}
-                                    </Select>
-                                </FormControl>
 
                             </Box>
+                        </DialogTitle>
+                        <DialogContent>
                             <Typography id="modal-modal-description" sx={{ mt: 2, display: "flex", justifyContent: "center" }}>
                                 <CSVReader
                                     cssClass="react-csv-input"
-                                    onFileLoaded={handleForce}
+                                    onFileLoaded={handleForce2}
                                     parserOptions={papaparseOptions}
                                     inputId="ObiWan"
                                     inputName="ObiWan"
                                 // cssInputClass="textCSV"
                                 >
+
                                 </CSVReader>
                             </Typography>
+                        </DialogContent>
+                        <DialogActions>
                             <Typography id="modal-modal-description" sx={{ mt: 2, display: "flex", justifyContent: "center" }}>
                                 <Button variant="contained"
                                     startIcon={<UploadIcon />}
-                                    onClick={() => { }}>
+                                    onClick={handleForce}>
                                     Upload
                                 </Button>
                             </Typography>
-
-                        </Box>
-                    </Modal>
+                            </DialogActions>
+                    
+                    </Dialog>
                 </div>
 
                 <TableContainer component={Paper} style={{ width: "90%", boxShadow: "0px 1px 5px grey" }}>
@@ -356,7 +366,7 @@ export default function Score({ classData }) {
                                     return <TableCell align="center">
                                         {value}
 
-                                        <IconButton size="small" sx={{ color: "#000" }} onClick={(event) => { setAnchorEl(event.currentTarget) }}>
+                                        <IconButton size="small" sx={{ color: "#000" }} onClick={(event) => { setAnchorEl(event.currentTarget); setSelectedColumn(value);}}>
                                             <MoreVertIcon fontSize="small" sx={{ color: "#000" }} />
                                         </IconButton>
                                         <Menu
@@ -382,9 +392,14 @@ export default function Score({ classData }) {
                                             <MenuItem onClick={() => { setOpenUpload(true); setColumnUpload(value) }}>
                                                 Import Grade
                                             </MenuItem>
-                                            <MenuItem onClick={() => { handleOpen(); setSelectedColumn({ value, index }) }}>
-                                                Download Grade
-                                            </MenuItem>
+                                            <CSVLink data = {downloadGrade()} filename={"Grade.csv"} 
+                                                onClick={() =>{}}
+                                            >
+                                                <MenuItem>
+                                                    Download Grade
+                                                </MenuItem>
+                                            </CSVLink>
+                                            
                                             <MenuItem onClick={() => { }}>
                                                 Mark a Grade as public
                                             </MenuItem>
