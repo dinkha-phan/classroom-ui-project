@@ -123,15 +123,21 @@ export default function AlignItemsList({ classData }) {
 
     return (
         <>
-            <CSVReader
-                cssClass="react-csv-input"
-                onFileLoaded={handleForce}
-                parserOptions={papaparseOptions}
-                inputId="ObiWan"
-                inputName="ObiWan"
-                inputStyle={{ color: 'red' }}
-            />
-            <CSVLink data={csvData}>Download me</CSVLink>
+
+            {
+                (classData.Role === "teacher") ? <>
+                    <CSVReader
+                        cssClass="react-csv-input"
+                        onFileLoaded={handleForce}
+                        parserOptions={papaparseOptions}
+                        inputId="ObiWan"
+                        inputName="ObiWan"
+                        inputStyle={{ color: 'red' }}
+                    />
+                    <CSVLink data={csvData}>Download me</CSVLink>
+                </> : <> </>
+            }
+
             <div className="main">
                 <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}
                     subheader={
