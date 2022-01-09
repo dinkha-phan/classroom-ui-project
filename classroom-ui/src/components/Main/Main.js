@@ -194,9 +194,13 @@ const Main = ({ classData }) => {
                         <div style={{ display: "flex", flexDirection: "column", alignContent: "flex-start" }}>
                             <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
                                 <p style={{ fontSize: 14, display: "inline", margin: 0, padding: 0 }}>Grade Structure</p>
-                                <IconButton size="small" sx={{ color: "#000" }} onClick={(event) => { setAnchorEl(event.currentTarget) }}>
-                                    <MoreVertIcon fontSize="small" sx={{ color: "#000" }} />
-                                </IconButton>
+                                {(classData.Role === "teacher") ? (
+                                    <IconButton size="small" sx={{ color: "#000" }} onClick={(event) => { setAnchorEl(event.currentTarget) }}>
+                                        <MoreVertIcon fontSize="small" sx={{ color: "#000" }} />
+                                    </IconButton>)
+                                    :
+                                    <></>
+                                }
                                 <Menu
 
                                     id="simple-menu"
@@ -227,7 +231,7 @@ const Main = ({ classData }) => {
                             </div>
                             {(items.length > 0) && items.map((e, index) => {
                                 return <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
-                                    <p style={{ fontSize: 15, color: "#2574e2", opacity: e.IsShowed ? 1 : 0.5 }}>{e.Name}: {e.Grade}</p>
+                                    <p style={{ fontSize: 15, color: "#2574e2" }}>{e.Name}: {e.Grade}</p>
                                     {showEditCheckBox && <Checkbox defaultChecked={e.IsShowed || false} size="small" onChange={(event) => onCheckBoxChange(event, e, index)} />}
                                 </div>;
                             })}
