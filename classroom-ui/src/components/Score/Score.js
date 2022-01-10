@@ -147,7 +147,7 @@ export default function Score({ classData }) {
         newdataTable.map((row, index) => {
             while (listSum.length < index + 1) listSum.push(0);
             listLabel.map((label, index2) => {
-                if (index2 > 1) {
+                if (index2 > 1 && listIsShow[index2]) {
                     if (!newdataTable[index][label]) {
                         console.log("###############################", newdataTable[index]);
                         newdataTable[index][label] = 0;
@@ -174,6 +174,22 @@ export default function Score({ classData }) {
         //setChecked(newChecked);
         setrows(newdataTable);
     }, [dataStudent, dataScore]);
+    useEffect(() => {
+        const listSum = [];
+        rows.map((row, index) => {
+            while (listSum.length < index + 1) listSum.push(0);
+            listLabel.map((label, index2) => {
+                if (index2 > 1 && listIsShow[index2]) {
+                    if (!rows[index][label]) {
+                        rows[index][label] = 0;
+                    }
+                    listSum[index] += rows[index][label];
+                }
+            })
+        })
+        setColSum(listSum);
+
+    }, [listLabel, listIsShow, rows]);
     useEffect(() => {
         let sum = 0;
         checked.map((e) => {
@@ -531,7 +547,8 @@ export default function Score({ classData }) {
                                                 }}
                                                     name={`Edit value row:${indexRow} label:${listLabel[index]} `}
                                                     readonly={index <= 1 || classData.Role === "student"}
-                                                    defaultValue={String(rows[indexRow][value])}
+
+                                                    defaultValue={((classData.Role === "student") && (!listIsShow[index]) && (index > 1)) ? "Chưa chấm" : String(rows[indexRow][value])}
                                                     onSave={(e) => handleSave(e, index, row, indexRow)} />
                                             </div>
                                         </TableCell>;
