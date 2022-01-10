@@ -9,6 +9,7 @@ import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import axios from "axios";
 import SaveIcon from '@mui/icons-material/Save';
 import HighlightOffRoundedIcon from '@mui/icons-material/HighlightOffRounded';
+import {getUrlEditGradeStructOfClass, getUrlGetGradeStructOfClass} from '../../services/app.service';
 import IconButton from '@mui/material/IconButton';
 // fake data generator
 const getItems = count =>
@@ -52,9 +53,7 @@ const Drag = ({ classData }) => {
   const onClickSave = (index) => {
     setEditIndex(index);
     const { Rank, Grade, ClassID, Name } = items[index];
-
-    const url = 'http://localhost:3000/grade-struct/class/'
-      + ClassID + '/rank/' + String(index + 1);
+    const url = getUrlEditGradeStructOfClass(ClassID, String(index + 1));
 
     const postData = {
       Name: Name,
@@ -108,7 +107,7 @@ const Drag = ({ classData }) => {
   }, [editIndex])
 
   useEffect(() => {
-    const url = 'http://localhost:3000/grade-struct/class/' + classData.ClassID;
+    const url = getUrlGetGradeStructOfClass(classData.ClassID);
     axios.get(url).then((reponse) => {
       setItems(reponse.data);
       console.log(reponse.data);
@@ -155,16 +154,11 @@ const Drag = ({ classData }) => {
 
 
     for (let i = a; i <= b; i++) {
-
-      const url = 'http://localhost:3000/grade-struct/class/'
-        + classData.ClassID + '/rank/' + String(i + 1);
-
+      const url = getUrlEditGradeStructOfClass(classData.ClassID, String(i + 1));
       const postData = {
         Name: itemss[i].Name,
         Grade: itemss[i].Grade
       }
-
-
       axios.put(url, postData).then((response) => {
         console.log(response);
       }).catch((error) => {
@@ -175,8 +169,6 @@ const Drag = ({ classData }) => {
       setItems(itemss);
       setEditAble(editAbles);
     }
-
-
   }
 
   const onClickDelete = (index) => {
@@ -211,8 +203,7 @@ const Drag = ({ classData }) => {
 
     for (let i = a; i <= b; i++) {
 
-      const url = 'http://localhost:3000/grade-struct/class/'
-        + classData.ClassID + '/rank/' + String(i + 1);
+      const url = getUrlEditGradeStructOfClass(classData.ClassID, String(i + 1));
 
       const postData = {
         Name: itemss[i].Name,
@@ -231,8 +222,7 @@ const Drag = ({ classData }) => {
 
     const { Rank, Grade, ClassID, Name } = itemss[index];
 
-    const url = 'http://localhost:3000/grade-struct/class/'
-      + ClassID + '/rank/' + String(itemss.length);
+    const url = getUrlEditGradeStructOfClass(ClassID, String(itemss.length));
     axios.delete(url).then((response) => {
       console.log(response);
 
@@ -259,8 +249,7 @@ const Drag = ({ classData }) => {
     });
     setItems(itemss);
     let rank = itemss.length + 1;
-    const url = 'http://localhost:3000/grade-struct/class/' + classData.ClassID
-      + '/rank/' + rank;
+    const url = getUrlEditGradeStructOfClass(classData.ClassID, rank);
     const postItem = {
       Name: newName,
       Grade: newGrade,

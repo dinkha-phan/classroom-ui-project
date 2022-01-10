@@ -59,10 +59,16 @@ function getUrlConfirmJoinClass(classID) {
 };
 
 function getUrlGetGradeStructOfClass(classID){
-    return urlLocalAPI + '/grade-struct/class/' + classsID;
+    return urlLocalAPI + '/grade-struct/class/' + classID;
 }
 function getUrlGetGradesOfClass(classID){
     return urlLocalAPI + '/gradeClass/class/' + classID;
+}
+function getUrlEditGradesOfClass(classID, userID, rank){
+    return urlLocalAPI + '/gradeClass/user/'  + userID + '/class/' + classID + '/rank/' + rank;
+}
+function getUrlEditGradeStructOfClass(ClassID, rank){
+    return urlLocalAPI + '/grade-struct/class/' + ClassID + '/rank/' + rank;
 }
 // ===================================================
 
@@ -127,7 +133,8 @@ export {
 
     getUrlGetGradeStructOfClass,
     getUrlGetGradesOfClass,
-
+    getUrlEditGradesOfClass,
+    getUrlEditGradeStructOfClass,
     getUrlUpdateUser,
     getUrlGetUserByEmail,
 
