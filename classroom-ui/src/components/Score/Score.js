@@ -17,7 +17,10 @@ import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
-import { getAccessToken, getUrlGetStudentInClass } from '../../services/app.service';
+import { getAccessToken, getUrlGetStudentInClass, getUrlGetGradeStructOfClass,
+    getUrlGetGradesOfClass,
+    getUrlEditGradesOfClass,
+    getUrlEditGradeStructOfClass} from '../../services/app.service';
 import UploadIcon from '@mui/icons-material/Upload';
 import IconButton from '@mui/material/IconButton';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
@@ -53,7 +56,6 @@ export default function Score({ classData }) {
     const [listLabel, setListLabel] = useState(["UserID", "FullName"]);
     const [listIsShow, setListIsShow] = useState([1, 1]);
     const [colSum, setColSum] = useState([]);
-    const [open, setOpen] = useState(false);
     const [checked, setChecked] = useState([]);
     const [sumChecked, setSumChecked] = useState(0);
     const [openUpload, setOpenUpload] = useState(false);
@@ -62,10 +64,9 @@ export default function Score({ classData }) {
     const [selectedColumn, setSelectedColumn] = useState('');
     const [dataUpload, setDataUpload] = useState([]);
 
-    const handleClose = () => setOpen(false);
     useEffect(() => {
         async function getData() {
-            const url3 = 'http://localhost:3000/grade-struct/class/' + classData.ClassID;
+            const url3 = getUrlGetGradeStructOfClass(classData.ClassID);
             let titleTmp = [...listLabel];
             let listShow = [...listIsShow];
             await axios.get(url3).then((reponse) => {
@@ -82,7 +83,7 @@ export default function Score({ classData }) {
                     console.log("get Data error", error);
                 });
 
-            const url = 'http://localhost:3000/gradeClass/class/' + classData.ClassID;
+            const url = getUrlGetGradesOfClass(classData.ClassID);
             console.log(url);
 
             await axios.get(url).then((reponse) => {
@@ -178,7 +179,7 @@ export default function Score({ classData }) {
         const Rank = index - 1;
         const Grade = e.value;
         console.log("post data", Rank, Grade, ClassID, UserID);
-        const url = 'http://localhost:3000/gradeClass/user/' + UserID + '/class/' + ClassID + '/rank/' + Rank;
+        const url = getUrlEditGradesOfClass(ClassID, UserID, Rank);
         const postData = {
             grade: Grade,
         }
@@ -214,7 +215,7 @@ export default function Score({ classData }) {
                 headers: { Authorization: `Bearer ${token}` },
                 grade: dataUpload[i]['Grade'],
             };
-            const url = 'http://localhost:3000/gradeClass/user/' + dataUpload[i]['StudentID'] + '/class/' + classData.ClassID + '/rank/' + rank;
+            const url = getUrlEditGradesOfClass(classData.ClassID, dataUpload[i]['StudentID'], rank);
             console.log(config, url);
 
             axios.put(
@@ -255,8 +256,7 @@ export default function Score({ classData }) {
         const IsShowed = 1;
         // const { Rank, Grade, ClassID, Name, IsShowed } = data;
 
-        const url = 'http://localhost:3000/grade-struct/class/'
-            + ClassID + '/rank/' + String(parseInt(Rank));
+        const url = getUrlEditGradeStructOfClass(ClassID, String(parseInt(Rank)));
 
         // console.log(data);
         console.log(url);
