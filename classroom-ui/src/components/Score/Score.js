@@ -278,9 +278,12 @@ export default function Score({ classData }) {
         const postData = {
             IsShowed: IsShowed,
         }
-
+        const newListShow = [...listIsShow];
+        newListShow[Rank + 1] = 1;
+        setListIsShow(newListShow)
         axios.put(url, postData).then((response) => {
             console.log(response);
+
         }).catch((error) => {
             console.log(error);
         })
@@ -323,12 +326,17 @@ export default function Score({ classData }) {
 
                     {
                         (classData.Role === "teacher") ? <>
-                            <Button variant="contained" startIcon={<UploadIcon />} onClick={() => { setOpenUpload(true) }}>
+                            {/* <Button variant="contained" startIcon={<UploadIcon />} onClick={() => { setOpenUpload(true) }}>
                                 Upload
-                            </Button>
-                            <Button variant="contained" startIcon={<DownloadIcon />} onClick={handleOpen}>
+                            </Button> */}
+                            {/* <Button variant="contained" startIcon={<DownloadIcon />} onClick={handleOpen}>
                                 Download
-                            </Button>
+                            </Button> */}
+                            <CSVLink data={rows} style={{ textDecoration: "none" }}>
+                                <Button variant="contained" startIcon={<DownloadIcon />}>
+                                    Download
+                                </Button>
+                            </CSVLink>
                         </> : <></>
                     }
 
@@ -417,9 +425,13 @@ export default function Score({ classData }) {
                                         {value}
                                         {(classData.Role === "teacher") &&
                                             <>
-                                                <IconButton size="small" sx={{ color: "#000" }} onClick={(event) => { setAnchorEl(event.currentTarget); setSelectedColumn(value); }}>
-                                                    <MoreVertIcon fontSize="small" sx={{ color: "#000" }} />
-                                                </IconButton>
+                                                {
+                                                    (index > 1) &&
+                                                    <IconButton size="small" sx={{ color: "#000" }} onClick={(event) => { setAnchorEl(event.currentTarget); setSelectedColumn(value); }}>
+                                                        <MoreVertIcon fontSize="small" sx={{ color: "#000" }} />
+                                                    </IconButton>
+                                                }
+
 
                                                 <Menu
                                                     id="simple-menu"
