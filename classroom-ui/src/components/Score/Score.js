@@ -34,6 +34,7 @@ import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
+
 import {
     Menu,
     MenuItem
@@ -52,7 +53,7 @@ const styleModal = {
 
 export default function Score({ classData }) {
 
-    const { setPersonJoinedClass, settabValue } = useLocalContext();
+    const { setPersonJoinedClass, settabValue, loggedInUser } = useLocalContext();
     const [listStudents, setListStdents] = useState([]);
     const [csvData, setCsvData] = useState([]);
     const [dataTable, setDataTable] = useState([]);
@@ -320,12 +321,17 @@ export default function Score({ classData }) {
 
                 <div style={{ display: "flex", flexDirection: "row", width: "90%", justifyContent: "space-between", marginBottom: 20 }}>
 
-                    <Button variant="contained" startIcon={<UploadIcon />} onClick={() => { setOpenUpload(true) }}>
-                        Upload
-                    </Button>
-                    <Button variant="contained" startIcon={<DownloadIcon />} onClick={handleOpen}>
-                        Download
-                    </Button>
+                    {
+                        (classData.Role === "teacher") ? <>
+                            <Button variant="contained" startIcon={<UploadIcon />} onClick={() => { setOpenUpload(true) }}>
+                                Upload
+                            </Button>
+                            <Button variant="contained" startIcon={<DownloadIcon />} onClick={handleOpen}>
+                                Download
+                            </Button>
+                        </> : <></>
+                    }
+
                     <Modal
                         open={open}
                         onClose={handleClose}
@@ -409,33 +415,43 @@ export default function Score({ classData }) {
                                 {listLabel.map((value, index) => {
                                     return <TableCell align="center">
                                         {value}
-                                        <IconButton size="small" sx={{ color: "#000" }} onClick={(event) => { setAnchorEl(event.currentTarget); setSelectedColumn(value); }}>
-                                            <MoreVertIcon fontSize="small" sx={{ color: "#000" }} />
-                                        </IconButton>
-                                        <Menu
-                                            id="simple-menu"
-                                            anchorEl={anchorEl}
-                                            keepMounted
-                                            open={Boolean(anchorEl)}
-                                            onClose={() => setAnchorEl(null)}
-                                            MenuListProps={{
-                                                'aria-labelledby': 'lock-button',
-                                                role: 'listbox',
-                                            }}
-                                            transformOrigin={{
-                                                vertical: 'top',
-                                            }}
-                                            style={{ marginTop: 40 }}
-                                        >
-                                            <MenuItem onClick={() => { setOpenUpload(true); setColumnUpload(value) }}>
-                                                Import Grade
-                                            </MenuItem>
-                                            <MenuItem >
-                                                <CSVLink data={downloadGrade()} filename={"Grade.csv"}
-                                                    onClick={() => { }} style={{ textDecoration: "none", color: "#000000" }}
+                                        {classData.role === "teacher" &&
+                                            <>
+                                                <IconButton size="small" sx={{ color: "#000" }} onClick={(event) => { setAnchorEl(event.currentTarget); setSelectedColumn(value); }}>
+                                                    <MoreVertIcon fontSize="small" sx={{ color: "#000" }} />
+                                                </IconButton>
+
+                                                <Menu
+                                                    id="simple-menu"
+                                                    anchorEl={anchorEl}
+                                                    keepMounted
+                                                    open={Boolean(anchorEl)}
+                                                    onClose={() => setAnchorEl(null)}
+                                                    MenuListProps={{
+                                                        'aria-labelledby': 'lock-button',
+                                                        role: 'listbox',
+                                                    }}
+                                                    transformOrigin={{
+                                                        vertical: 'top',
+                                                    }}
+                                                    style={{ marginTop: 40 }}
                                                 >
-                                                    Download Grade
-                                                </CSVLink>
+                                                    <MenuItem onClick={() => { setOpenUpload(true); setColumnUpload(value) }}>
+                                                        Import Grade
+                                                    </MenuItem>
+                                                    <MenuItem >
+                                                        <CSVLink data={downloadGrade()} filename={"Grade.csv"}
+                                                            onClick={() => { }} style={{ textDecoration: "none", color: "#000000" }}
+                                                        >
+                                                            Download Grade
+                                                        </CSVLink>
+                                                    </MenuItem>
+                                                    {
+                                                        <MenuItem disabled={!Boolean(listIsShow[value])} onClick={() => markGradeStructAsPublic(value)}>
+                                                            Mark a Grade as public
+                                                        </MenuItem>
+                                                    }
+
                                             </MenuItem>
                                              {[1].map((value2) =>{
                                                 if(listIsShow[index] ===0){
@@ -454,9 +470,10 @@ export default function Score({ classData }) {
                                             {/* <MenuItem disabled={listIsShow[index] === 0} onClick={() => markGradeStructAsPublic(value)}>
                                                 Mark a Grade as public
                                             </MenuItem> */}
-                                            
-
                                         </Menu>
+                                                </Menu>
+                                            </>
+                                        }
                                     </TableCell>;
                                 })}
                                 <TableCell align="center">Sum</TableCell>
@@ -465,6 +482,9 @@ export default function Score({ classData }) {
 
                         <TableBody>
                             {rows.map((row, indexRow) => {
+                                console.log("row", row, loggedInUser);
+                                if (classData.Role === "student" && row.UserID !== String(loggedInUser.id))
+                                    return <></>;
                                 return <TableRow
                                     sx={{
                                         bgcolor: (indexRow % 2 === 0) ? "#f1f1f1" : "#ffffff",
@@ -497,7 +517,7 @@ export default function Score({ classData }) {
                                                     width: "100px",
                                                 }}
                                                     name={`Edit value row:${indexRow} label:${listLabel[index]} `}
-                                                    readonly={index <= 1}
+                                                    readonly={index <= 1 || classData.Role === "student"}
                                                     defaultValue={String(rows[indexRow][value])}
                                                     onSave={(e) => handleSave(e, index, row, indexRow)} />
                                             </div>
