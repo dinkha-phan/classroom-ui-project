@@ -258,12 +258,12 @@ export default function Score({ classData }) {
     }, []);
 
 
-    const markGradeStructAsPublic = (label) => {
+    const markGradeStructAsPublic = () => {
 
         const ClassID = classData.ClassID;
         let Rank = 0;
         listLabel.map((e, index) => {
-            if (e === label) Rank = index - 1;
+            if (e === selectedColumn) Rank = index - 1;
         })
         const IsShowed = 1;
         // const { Rank, Grade, ClassID, Name, IsShowed } = data;
@@ -437,19 +437,28 @@ export default function Score({ classData }) {
                                                     Download Grade
                                                 </CSVLink>
                                             </MenuItem>
-                                             {[1].map((value2) =>{
-                                                if(listIsShow[index] ===0){
-                                                    return (
-                                                        <MenuItem onClick={() => markGradeStructAsPublic(value)}>
+                                             {listLabel.map((value2, index2) =>{
+                                                if(selectedColumn ===listLabel[index2]){
+                                                    if(listIsShow[index2]){
+                                                        console.log('nham nhi', listIsShow[index]);
+                                                        return (
+                                                            <MenuItem disabled onClick={() => markGradeStructAsPublic}>
+                                                                Mark a Grade as public 
+                                                            </MenuItem>
+                                                        );
+                                                    }
+                                                    else {
+                                                        console.log('nham nhi2', index);
+                                                        return(
+                                                        
+                                                        <MenuItem onClick={() => markGradeStructAsPublic}>
                                                             Mark a Grade as public
                                                         </MenuItem>
                                                     );
+                                                        }
+                                                    
                                                 }
-                                                else return(
-                                                    <MenuItem onClick={() => markGradeStructAsPublic(value)}>
-                                                Mark a Grade as public
-                                            </MenuItem>
-                                                );
+                                                
                                             })} 
                                             {/* <MenuItem disabled={listIsShow[index] === 0} onClick={() => markGradeStructAsPublic(value)}>
                                                 Mark a Grade as public
