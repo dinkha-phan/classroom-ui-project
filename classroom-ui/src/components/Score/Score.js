@@ -55,16 +55,16 @@ export default function Score({ classData }) {
     const { setPersonJoinedClass, settabValue } = useLocalContext();
     const [listStudents, setListStdents] = useState([]);
     const [csvData, setCsvData] = useState([]);
-    const [dataTable, setDataTable] = React.useState([]);
-    const [dataScore, setdataScore] = React.useState([]);
-    const [dataStudent, setdataStudent] = React.useState([]);
-    const [rows, setrows] = React.useState([]);
+    const [dataTable, setDataTable] = useState([]);
+    const [dataScore, setdataScore] = useState([]);
+    const [dataStudent, setdataStudent] = useState([]);
+    const [rows, setrows] = useState([]);
     const [listLabel, setListLabel] = useState(["UserID", "FullName"]);
-    const [listIsShow, setListIsShow] = useState([]);
+    const [listIsShow, setListIsShow] = useState([1, 1]);
     const [colSum, setColSum] = useState([]);
-    const [open, setOpen] = React.useState(false);
-    const [checked, setChecked] = React.useState([]);
-    const [sumChecked, setSumChecked] = React.useState(0);
+    const [open, setOpen] = useState(false);
+    const [checked, setChecked] = useState([]);
+    const [sumChecked, setSumChecked] = useState(0);
     const [openUpload, setOpenUpload] = useState(false);
     const [columnUpload, setColumnUpload] = useState("");
     const [anchorEl, setAnchorEl] = useState(null);
@@ -75,6 +75,23 @@ export default function Score({ classData }) {
     const handleClose = () => setOpen(false);
     useEffect(() => {
         async function getData() {
+            const url3 = 'http://localhost:3000/grade-struct/class/' + classData.ClassID;
+            let titleTmp =[...listLabel];
+            let listShow = [...listIsShow];
+            await axios.get(url3).then((reponse) => {
+                console.log("listLabessss", reponse.data);
+                for(let i =0; i< reponse.data.length; ++i){
+                    titleTmp.push(reponse.data[i]['Name']);
+                    listShow.push(reponse.data[i]['IsShowed']);
+                }
+                setListLabel(titleTmp);
+                setListIsShow(listShow);
+
+            })
+                .catch((error) => {
+                    console.log("get Data error", error);
+                });
+
             const url = 'http://localhost:3000/gradeClass/class/' + classData.ClassID;
             console.log(url);
 
@@ -110,25 +127,25 @@ export default function Score({ classData }) {
         });
         console.log('listSum liSum', dataTable);
 
-        const newLabel = [...listLabel];
-        dataStudent.map((o) => {
-            if (!o.Rank) return o;
-            while (newLabel.length < o.Rank + 2) newLabel.push("");
-            newLabel[o.Rank + 1] = String(o.Name);
-        });
+        // const newLabel = [...listLabel];
+        // dataStudent.map((o) => {
+        //     if (!o.Rank) return o;
+        //     while (newLabel.length < o.Rank + 2) newLabel.push("");
+        //     newLabel[o.Rank + 1] = String(o.Name);
+        // });
         const newdataTable = [...dataTable];
         dataScore.map((o) => {
             newdataTable.map((e) => {
                 if (e.UserID === o.UserID) {
-                    e[newLabel[o.Rank + 1]] = o.Grade;
-                    console.log(e);
+                    e[listLabel[o.Rank + 1]] = o.Grade;
+                    console.log('spoeds',listLabel);
                 }
             });
         });
         const listSum = [];
         newdataTable.map((row, index) => {
             while (listSum.length < index + 1) listSum.push(0);
-            newLabel.map((label, index2) => {
+            listLabel.map((label, index2) => {
                 if (index2 > 1) {
                     if (!newdataTable[index][label]) {
                         console.log("###############################", newdataTable[index]);
@@ -138,11 +155,10 @@ export default function Score({ classData }) {
                 }
             })
         })
-        console.log('listSum listSum listSum listSum listSum');
         setColSum(listSum);
-        setListLabel(newLabel);
+        //setListLabel(newLabel);
         const newListShow = [];
-        while (newListShow.length < newLabel.length) newListShow.push(0);
+        while (newListShow.length < listLabel.length) newListShow.push(0);
         dataStudent.map((e) => {
             listLabel.map((label, index) => {
                 if (label === e.Name)
@@ -153,8 +169,8 @@ export default function Score({ classData }) {
 
         console.log("ListIsShow", newListShow);
         const newChecked = [];
-        while (newLabel.length > newChecked.length) newChecked.push(true);
-        setChecked(newChecked);
+        //while (newLabel.length > newChecked.length) newChecked.push(true);
+        //setChecked(newChecked);
         setrows(newdataTable);
     }, [dataStudent, dataScore]);
     useEffect(() => {
@@ -421,11 +437,24 @@ export default function Score({ classData }) {
                                                     Download Grade
                                                 </CSVLink>
                                             </MenuItem>
-                                            {
-                                                <MenuItem disabled={!Boolean(listIsShow[value])} onClick={() => markGradeStructAsPublic(value)}>
-                                                    Mark a Grade as public
-                                                </MenuItem>
-                                            }
+                                             {[1].map((value2) =>{
+                                                if(listIsShow[index] ===0){
+                                                    return (
+                                                        <MenuItem onClick={() => markGradeStructAsPublic(value)}>
+                                                            Mark a Grade as public
+                                                        </MenuItem>
+                                                    );
+                                                }
+                                                else return(
+                                                    <MenuItem onClick={() => markGradeStructAsPublic(value)}>
+                                                Mark a Grade as public
+                                            </MenuItem>
+                                                );
+                                            })} 
+                                            {/* <MenuItem disabled={listIsShow[index] === 0} onClick={() => markGradeStructAsPublic(value)}>
+                                                Mark a Grade as public
+                                            </MenuItem> */}
+                                            
 
                                         </Menu>
                                     </TableCell>;
