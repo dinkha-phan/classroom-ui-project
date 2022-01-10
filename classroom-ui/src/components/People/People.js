@@ -16,11 +16,24 @@ import { getAccessToken, getUrlGetPeopleInClass, getUrlAddStudentToClass } from 
 import axios from 'axios';
 import { CSVLink, CSVDownload } from "react-csv";
 import CSVReader from 'react-csv-reader';
+import Button from '@mui/material/Button';
+import UploadIcon from '@mui/icons-material/Upload';
+import DownloadIcon from '@mui/icons-material/Download';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+
+
 export default function AlignItemsList({ classData }) {
 
     const [listStudents, setListStdents] = useState([]);
     const [listTeachers, setListTeachers] = useState([]);
     const [csvData, setCsvData] = useState([]);
+    const [openUpload, setOpenUpload] = useState(false);
+
     // const listStudents = [{ name: "Phan Dinh Kha" }, { name: "Nguyen Tien Dat" }, { name: "Tran Bao Nguyen" }];
     // const listTeachers = [{ name: "Phan Dinh Kha" }, { name: "Nguyen Tien Dat" }, { name: "Tran Bao Nguyen" }];
     const { personJoinedClass,
@@ -29,6 +42,7 @@ export default function AlignItemsList({ classData }) {
         settabValue } = useLocalContext();
 
     const [label, setLabel] = useState("");
+    const [dataUpload, setDataUpload] = useState([]);
 
     const handleOnclickAddTeacher = () => {
         console.log("AddTeacher");
@@ -40,8 +54,9 @@ export default function AlignItemsList({ classData }) {
         setLabel("Invite Student");
         setShowInvitePeople(true);
     }
-    const handleForce = (data, fileInfo) => {
+    const handleForce = () => {
         const token = getAccessToken();
+        const data = dataUpload;
         var tmpCSVData = csvData;
         var tmpListStudents = listStudents;
         for (let i = 0; i < data.length; ++i) {
@@ -78,7 +93,6 @@ export default function AlignItemsList({ classData }) {
             setPersonJoinedClass("Student");
         else
             setPersonJoinedClass("Teacher");
-
         settabValue("2");
     }, []);
 
@@ -98,7 +112,6 @@ export default function AlignItemsList({ classData }) {
             config
         ).then(res => {
             console.log(res.data);
-            // window.location.href = '/';
             const dataUsers = res.data;
             let tempListStudents = [], tempListTeachers = [], tempCSVdata = [];
             for (let i in dataUsers) {
@@ -108,8 +121,6 @@ export default function AlignItemsList({ classData }) {
                     tempListStudents.push(dataUsers[i]);
                     tempCSVdata.push({ StudenID: dataUsers[i].UserID, Fullname: dataUsers[i].FullName });
                 }
-
-
             }
             console.log(tempListStudents);
             console.log(tempListTeachers);
@@ -121,23 +132,68 @@ export default function AlignItemsList({ classData }) {
         });
     }, [])
 
+
+    const handleForce2 = (data, fileInfo) => {
+        setDataUpload(data);
+    };
     return (
         <>
 
-            {
-                (classData.Role === "teacher") ? <>
-                    <CSVReader
+            {(classData.Role === "teacher") ?
+                <div style={{ display: "flex", justifyContent: "flex-end", marginRight: 30 }}>
+                    {/* <CSVReader
                         cssClass="react-csv-input"
                         onFileLoaded={handleForce}
                         parserOptions={papaparseOptions}
                         inputId="ObiWan"
                         inputName="ObiWan"
-                        inputStyle={{ color: 'red' }}
-                    />
-                    <CSVLink data={csvData}>Download me</CSVLink>
-                </> : <> </>
+                        inputStyle={{ color: 'white' }}
+                    /> */}
+                    <Button variant="contained" size="small" startIcon={<UploadIcon />} onClick={() => { setOpenUpload(true) }} sx={{ mr: 1 }}>
+                        Upload
+                    </Button>
+                    <CSVLink data={csvData} style={{ textDecoration: "none" }} >
+                        <Button variant="contained" size="small" startIcon={<DownloadIcon />}>
+                            Download
+                        </Button>
+                    </CSVLink>
+                </div> : <> </>
             }
-
+            <>
+                <Dialog
+                    open={openUpload}
+                    onClose={() => { setOpenUpload(false) }}
+                >
+                    <DialogTitle>
+                        <Box sx={{ display: 'flex', flexDirection: "column", justifyContent: "center" }}>
+                            <Typography id="modal-modal-title" variant="h6" component="h2" sx={{ mb: 2 }}>
+                                Upload
+                            </Typography>
+                        </Box>
+                    </DialogTitle>
+                    <DialogContent>
+                        <Typography id="modal-modal-description" sx={{ display: "flex", justifyContent: "center" }}>
+                            <CSVReader
+                                cssClass="react-csv-input"
+                                onFileLoaded={handleForce2}
+                                parserOptions={papaparseOptions}
+                                inputId="ObiWan"
+                                inputName="ObiWan"
+                            >
+                            </CSVReader>
+                        </Typography>
+                    </DialogContent>
+                    <DialogActions>
+                        <Typography id="modal-modal-description" style={{ margin: "auto 0", display: "flex", width: "100%", justifyContent: "center" }}>
+                            <Button variant="contained"
+                                startIcon={<UploadIcon />}
+                                onClick={handleForce}>
+                                Upload
+                            </Button>
+                        </Typography>
+                    </DialogActions>
+                </Dialog>
+            </>
             <div className="main">
                 <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}
                     subheader={

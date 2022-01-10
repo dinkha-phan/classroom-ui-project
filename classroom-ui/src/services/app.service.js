@@ -58,10 +58,10 @@ function getUrlConfirmJoinClass(classID) {
     return urlLocalAPI + '/join-class/confirm/' + classID;
 };
 
-function getUrlGetGradeStructOfClass(classID){
+function getUrlGetGradeStructOfClass(classID) {
     return urlLocalAPI + '/grade-struct/class/' + classID;
 }
-function getUrlGetGradesOfClass(classID){
+function getUrlGetGradesOfClass(classID) {
     return urlLocalAPI + '/gradeClass/class/' + classID;
 }
 function getUrlEditGradesOfClass(classID, userID, rank){
