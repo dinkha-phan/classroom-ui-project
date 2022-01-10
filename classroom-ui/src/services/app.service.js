@@ -58,8 +58,12 @@ function getUrlConfirmJoinClass(classID) {
     return urlLocalAPI + '/join-class/confirm/' + classID;
 };
 
-
-
+function getUrlGetGradeStructOfClass(classID){
+    return urlLocalAPI + '/grade-struct/class/' + classsID;
+}
+function getUrlGetGradesOfClass(classID){
+    return urlLocalAPI + '/gradeClass/class/' + classID;
+}
 // ===================================================
 
 function getAccessToken() {
@@ -120,6 +124,9 @@ export {
     getUrlGetPeopleInClass,
     getUrlInvitePeople,
     getUrlConfirmJoinClass,
+
+    getUrlGetGradeStructOfClass,
+    getUrlGetGradesOfClass,
 
     getUrlUpdateUser,
     getUrlGetUserByEmail,
