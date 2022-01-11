@@ -63,20 +63,28 @@ export default function Score({ classData }) {
     const [anchorEl, setAnchorEl] = useState(null);
     const [selectedColumn, setSelectedColumn] = useState('');
     const [dataUpload, setDataUpload] = useState([]);
+    const [gradeSPoint, setGradeSPoint] = useState([]);
+    const [sumGSPoint, setSumGSPoint] = useState(0);
 
     useEffect(() => {
         async function getData() {
             const url3 = getUrlGetGradeStructOfClass(classData.ClassID);
             let titleTmp = [...listLabel];
             let listShow = [...listIsShow];
+            let listSPoint = [...gradeSPoint];
+            let sums = 0;
             await axios.get(url3).then((reponse) => {
                 console.log("listLabessss", reponse.data);
                 for (let i = 0; i < reponse.data.length; ++i) {
                     titleTmp.push(reponse.data[i]['Name']);
                     listShow.push(reponse.data[i]['IsShowed']);
+                    listSPoint.push(reponse.data[i]['Grade']);
+                    sums += reponse.data[i]['Grade'];
                 }
                 setListLabel(titleTmp);
                 setListIsShow(listShow);
+                setGradeSPoint(listSPoint);
+                setSumGSPoint(sums);
 
             })
                 .catch((error) => {
@@ -127,10 +135,14 @@ export default function Score({ classData }) {
         newdataTable.map((row, index) => {
             while (listSum.length < index + 1) listSum.push(0);
             listLabel.map((label, index2) => {
-                if (index2 > 1 && listIsShow[index2]) {
-                    if (!newdataTable[index][label])
-                        newdataTable[index][label] = 0;
-                    listSum[index] += newdataTable[index][label];
+                if (index2 > 1) {
+                    if(classData.Role === 'teacher'){
+                        listSum[index] += (newdataTable[index][label] * gradeSPoint[index2-2])/sumGSPoint ;
+                    }
+                    else if(listIsShow[index2]){
+                        if (!newdataTable[index][label]) newdataTable[index][label] = 0;
+                        listSum[index] += (newdataTable[index][label] * gradeSPoint[index2-2])/sumGSPoint ;
+                    } 
                 }
             })
         })
@@ -151,11 +163,13 @@ export default function Score({ classData }) {
         rows.map((row, index) => {
             while (listSum.length < index + 1) listSum.push(0);
             listLabel.map((label, index2) => {
-                if (index2 > 1 && listIsShow[index2]) {
-                    if (!rows[index][label]) {
-                        rows[index][label] = 0;
+                if (index2 > 1) {
+                    if(classData.Role === 'teacher'){
+                        listSum[index] += (rows[index][label] * gradeSPoint[index2-2])/sumGSPoint ;
                     }
-                    listSum[index] += rows[index][label];
+                    else if(listIsShow[index2]){
+                        listSum[index] += (rows[index][label] * gradeSPoint[index2-2])/sumGSPoint ;
+                    } 
                 }
             })
         })
@@ -192,7 +206,7 @@ export default function Score({ classData }) {
         console.log("event:", e);
         console.log(colSum);
         const newColSum = [...colSum];
-        newColSum[indexRow] = newColSum[indexRow] - parseInt(e.previousValue) + parseInt(e.value);
+        newColSum[indexRow] = newColSum[indexRow] + ((parseInt(e.value) - parseInt(e.previousValue)) *  gradeSPoint[index-2]/sumGSPoint);
         console.log(newColSum);
         setColSum(newColSum);
     }
