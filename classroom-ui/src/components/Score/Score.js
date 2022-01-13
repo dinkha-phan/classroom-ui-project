@@ -21,7 +21,10 @@ import {
     getAccessToken, getUrlGetStudentInClass, getUrlGetGradeStructOfClass,
     getUrlGetGradesOfClass,
     getUrlEditGradesOfClass,
-    getUrlEditGradeStructOfClass
+    getUrlEditGradeStructOfClass,
+    getUrlEditComment,
+    getUrlAddOrGetNoti,
+    getUrlEditNoti
 } from '../../services/app.service';
 import UploadIcon from '@mui/icons-material/Upload';
 import IconButton from '@mui/material/IconButton';
@@ -368,7 +371,7 @@ export default function Score({ classData }) {
         const { UserID, ClassID, Rank } = commentInfo;
         console.log(commentInfo, teacherComment, studentComment, expectGrade);
 
-        const url = 'http://127.0.0.1:3000/gradeClass/comment/user/' + UserID + '/class/' + ClassID + '/rank/' + Rank;
+        const url = getUrlEditComment(ClassID, UserID, Rank);
 
         console.log(url);
         const postData = {

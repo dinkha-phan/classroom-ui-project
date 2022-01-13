@@ -1,75 +1,85 @@
 const urlAPI = 'https://class-api-ndk.herokuapp.com';
 const urlLocalAPI = 'http://127.0.0.1:3000';
-
+const CurrentUrlAPI = urlLocalAPI;
 // const urlSignIn = 'https://classrom-api-ntk.herokuapp.com/login';
-const urlSignIn = urlLocalAPI + '/login';
+const urlSignIn = CurrentUrlAPI + '/login';
 
 // const urlSignUp = 'https://classrom-api-ntk.herokuapp.com/signup';
-const urlSignUp = urlLocalAPI + '/signup';
+const urlSignUp = CurrentUrlAPI + '/signup';
 
 function getUrlGetJoinedClasses(userID) {
-    return urlLocalAPI + '/users/' + userID + '/class-user?role=student'
+    return CurrentUrlAPI + '/users/' + userID + '/class-user?role=student'
 };
 
 function getUrlGetCreatedClasses(userID) {
-    return urlLocalAPI + '/users/' + userID + '/class-user?role=teacher'
+    return CurrentUrlAPI + '/users/' + userID + '/class-user?role=teacher'
 };
 
 function getUrlCreateClasseForUser(userID) {
-    return urlLocalAPI + '/users/' + userID + '/class-user'
+    return CurrentUrlAPI + '/users/' + userID + '/class-user'
 };
 
 function getUrlAddUserToClass(userID) {
-    return urlLocalAPI + '/users/' + userID + '/class-user'
+    return CurrentUrlAPI + '/users/' + userID + '/class-user'
 };
 
 function getUrlRemoveUserFromClass(userID, classID) {
-    return urlLocalAPI + '/users/' + userID + '/class-user/' + classID;
+    return CurrentUrlAPI + '/users/' + userID + '/class-user/' + classID;
 };
 
 function getUrlGetDetailClass(userID, classID) {
-    return urlLocalAPI + '/classes/' + classID;
+    return CurrentUrlAPI + '/classes/' + classID;
 };
 
 function getUrlGetPeopleInClass(classID) {
-    return urlLocalAPI + '/classes/' + classID + '/class-user/';
+    return CurrentUrlAPI + '/classes/' + classID + '/class-user/';
 };
 function getUrlGetStudentInClass(classID) {
-    return urlLocalAPI + '/classes/' + classID + '/student/';
+    return CurrentUrlAPI + '/classes/' + classID + '/student/';
 };
 function getUrlAddStudentToClass(classID, studentID) {
-    return urlLocalAPI + '/classes/' + classID + '/student/' + studentID;
+    return CurrentUrlAPI + '/classes/' + classID + '/student/' + studentID;
 };
 function getUrlInvitePeople(classID) {
-    return urlLocalAPI + '/join-class/invitations';
+    return CurrentUrlAPI + '/join-class/invitations';
 };
 
 function getUrlUpdateUser(userID) {
-    return urlLocalAPI + '/users/' + userID;
+    return CurrentUrlAPI + '/users/' + userID;
 };
 
 function getUrlGetUserByEmail(email) {
     // http://127.0.0.1:3000/users?email=b@c.com&typeSearch=single
-    return urlLocalAPI + '/users/?email=' + email + '&typeSearch=single';
+    return CurrentUrlAPI + '/users/?email=' + email + '&typeSearch=single';
 };
 
 function getUrlConfirmJoinClass(classID) {
     // http://127.0.0.1:3000/users?email=b@c.com&typeSearch=single
-    return urlLocalAPI + '/join-class/confirm/' + classID;
+    return CurrentUrlAPI + '/join-class/confirm/' + classID;
 };
 
 function getUrlGetGradeStructOfClass(classID) {
-    return urlLocalAPI + '/grade-struct/class/' + classID;
+    return CurrentUrlAPI + '/grade-struct/class/' + classID;
 }
 function getUrlGetGradesOfClass(classID) {
-    return urlLocalAPI + '/gradeClass/class/' + classID;
+    return CurrentUrlAPI + '/gradeClass/class/' + classID;
 }
 function getUrlEditGradesOfClass(classID, userID, rank){
-    return urlLocalAPI + '/gradeClass/user/'  + userID + '/class/' + classID + '/rank/' + rank;
+    return CurrentUrlAPI + '/gradeClass/user/'  + userID + '/class/' + classID + '/rank/' + rank;
 }
 function getUrlEditGradeStructOfClass(ClassID, rank){
-    return urlLocalAPI + '/grade-struct/class/' + ClassID + '/rank/' + rank;
+    return CurrentUrlAPI + '/grade-struct/class/' + ClassID + '/rank/' + rank;
 }
+function getUrlEditComment(ClassID, userID, rank){
+    return CurrentUrlAPI + '/gradeClass/comment/user/'  + userID + '/class/' + ClassID + '/rank/' + rank;;
+}
+function getUrlAddOrGetNoti(userID){
+    return CurrentUrlAPI + '/noti/user/'  + userID;
+}
+function getUrlEditNoti(notiID){
+    return CurrentUrlAPI + '/noti/'  + notiID;
+}
+
 // ===================================================
 
 function getAccessToken() {
@@ -112,8 +122,7 @@ function parseJwt(token) {
 };
 
 export {
-    urlLocalAPI,
-    urlAPI,
+    CurrentUrlAPI,
 
     urlSignIn,
     urlSignUp,
@@ -135,6 +144,11 @@ export {
     getUrlGetGradesOfClass,
     getUrlEditGradesOfClass,
     getUrlEditGradeStructOfClass,
+    getUrlEditComment,
+
+    getUrlAddOrGetNoti,
+    getUrlEditNoti,
+
     getUrlUpdateUser,
     getUrlGetUserByEmail,
 
