@@ -17,10 +17,12 @@ import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
-import { getAccessToken, getUrlGetStudentInClass, getUrlGetGradeStructOfClass,
+import {
+    getAccessToken, getUrlGetStudentInClass, getUrlGetGradeStructOfClass,
     getUrlGetGradesOfClass,
     getUrlEditGradesOfClass,
-    getUrlEditGradeStructOfClass} from '../../services/app.service';
+    getUrlEditGradeStructOfClass
+} from '../../services/app.service';
 import UploadIcon from '@mui/icons-material/Upload';
 import IconButton from '@mui/material/IconButton';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
@@ -28,6 +30,8 @@ import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
+import { InputBase } from '@mui/material';
+import TextField from '@mui/material/TextField';
 
 import {
     Menu,
@@ -61,10 +65,17 @@ export default function Score({ classData }) {
     const [openUpload, setOpenUpload] = useState(false);
     const [columnUpload, setColumnUpload] = useState("");
     const [anchorEl, setAnchorEl] = useState(null);
+    const [anchorElCell, setAnchorElCell] = useState(null);
     const [selectedColumn, setSelectedColumn] = useState('');
     const [dataUpload, setDataUpload] = useState([]);
     const [gradeSPoint, setGradeSPoint] = useState([]);
     const [sumGSPoint, setSumGSPoint] = useState(0);
+    const [rowOver, setRowOver] = useState(0);
+    const [columnOver, setColumnOver] = useState(0);
+    const [openComment, setOpenComment] = useState(false);
+
+
+    const space4 = "    ";
 
     useEffect(() => {
         async function getData() {
@@ -136,13 +147,13 @@ export default function Score({ classData }) {
             while (listSum.length < index + 1) listSum.push(0);
             listLabel.map((label, index2) => {
                 if (index2 > 1) {
-                    if(classData.Role === 'teacher'){
-                        listSum[index] += (newdataTable[index][label] * gradeSPoint[index2-2])/sumGSPoint ;
+                    if (classData.Role === 'teacher') {
+                        listSum[index] += (newdataTable[index][label] * gradeSPoint[index2 - 2]) / sumGSPoint;
                     }
-                    else if(listIsShow[index2]){
+                    else if (listIsShow[index2]) {
                         if (!newdataTable[index][label]) newdataTable[index][label] = 0;
-                        listSum[index] += (newdataTable[index][label] * gradeSPoint[index2-2])/sumGSPoint ;
-                    } 
+                        listSum[index] += (newdataTable[index][label] * gradeSPoint[index2 - 2]) / sumGSPoint;
+                    }
                 }
             })
         })
@@ -164,12 +175,12 @@ export default function Score({ classData }) {
             while (listSum.length < index + 1) listSum.push(0);
             listLabel.map((label, index2) => {
                 if (index2 > 1) {
-                    if(classData.Role === 'teacher'){
-                        listSum[index] += (rows[index][label] * gradeSPoint[index2-2])/sumGSPoint ;
+                    if (classData.Role === 'teacher') {
+                        listSum[index] += (rows[index][label] * gradeSPoint[index2 - 2]) / sumGSPoint;
                     }
-                    else if(listIsShow[index2]){
-                        listSum[index] += (rows[index][label] * gradeSPoint[index2-2])/sumGSPoint ;
-                    } 
+                    else if (listIsShow[index2]) {
+                        listSum[index] += (rows[index][label] * gradeSPoint[index2 - 2]) / sumGSPoint;
+                    }
                 }
             })
         })
@@ -206,7 +217,7 @@ export default function Score({ classData }) {
         console.log("event:", e);
         console.log(colSum);
         const newColSum = [...colSum];
-        newColSum[indexRow] = newColSum[indexRow] + ((parseInt(e.value) - parseInt(e.previousValue)) *  gradeSPoint[index-2]/sumGSPoint);
+        newColSum[indexRow] = newColSum[indexRow] + ((parseInt(e.value) - parseInt(e.previousValue)) * gradeSPoint[index - 2] / sumGSPoint);
         console.log(newColSum);
         setColSum(newColSum);
     }
@@ -258,7 +269,10 @@ export default function Score({ classData }) {
             setPersonJoinedClass("Teacher");
         settabValue("3");
     }, []);
-
+    const handleClickAddComment = () => {
+        setOpenComment(true);
+        setAnchorElCell(null);
+    }
 
     const markGradeStructAsPublic = () => {
 
@@ -290,7 +304,7 @@ export default function Score({ classData }) {
     }
 
     const downloadGrade = () => {
-        console.log('valueDD', selectedColumn);
+        // console.log('valueDD', selectedColumn);
         let dataDownload = [];
         for (let i = 0; i < rows.length; ++i) {
             let row = {
@@ -302,21 +316,112 @@ export default function Score({ classData }) {
         return dataDownload;
     }
 
-    const handleChange1 = (event) => {
-        const newChecked = checked.map(() => event.target.checked);
-        console.log(newChecked);
-        setChecked([...newChecked]);
-    };
 
-    const handleChange2 = (e, index) => {
-        const newChecked = checked.map((e) => e);
-        newChecked[index] = e.target.checked;
-        setChecked([...newChecked]);
-    };
 
+    const handleSaveComment = () => {
+        setOpenComment(false);
+    };
 
     return (
         <>
+
+            <Dialog
+                open={openUpload}
+                onClose={() => { setOpenUpload(false) }}
+            >
+                <DialogTitle>
+                    <Box sx={{ display: 'flex', flexDirection: "column", justifyContent: "center" }}>
+                        <Typography id="modal-modal-title" variant="h6" component="h2" sx={{ mb: 2 }}>
+                            Upload
+                        </Typography>
+                    </Box>
+                </DialogTitle>
+                <DialogContent>
+                    <Typography id="modal-modal-description" sx={{ display: "flex", justifyContent: "center" }}>
+                        <CSVReader
+                            cssClass="react-csv-input"
+                            onFileLoaded={handleForce2}
+                            parserOptions={papaparseOptions}
+                            inputId="ObiWan"
+                            inputName="ObiWan"
+                        // cssInputClass="textCSV"
+                        >
+                        </CSVReader>
+                    </Typography>
+                </DialogContent>
+                <DialogActions>
+                    <Typography id="modal-modal-description" style={{ margin: "auto 0", display: "flex", width: "100%", justifyContent: "center" }}>
+                        <Button variant="contained"
+                            startIcon={<UploadIcon />}
+                            onClick={handleForce}>
+                            Upload
+                        </Button>
+                    </Typography>
+                </DialogActions>
+            </Dialog>
+            <Dialog
+                open={openComment}
+                onClose={() => { setOpenComment(false) }}
+            >
+                <DialogTitle>
+                    <Box sx={{ display: 'flex', flexDirection: "column", justifyContent: "center" }}>
+                        <Typography id="modal-modal-title" variant="h6" component="h2">
+                            Teacher comment
+                        </Typography>
+                    </Box>
+                </DialogTitle>
+                <DialogContent>
+                    <TextField
+                        id="outlined-multiline-static"
+                        label="Multiline"
+                        multiline
+                        InputProps={{
+                            readOnly: (classData.Role !== "teacher")
+                        }}
+                        rows={3}
+                        defaultValue="Default Value"
+                        sx={{ mt: 1, width: "100%" }}
+                    />
+                </DialogContent>
+                <DialogTitle>
+                    <Box sx={{ display: 'flex', flexDirection: "column", justifyContent: "center" }}>
+                        <Typography id="modal-modal-title" variant="h6" component="h2">
+                            Student comment
+                        </Typography>
+                    </Box>
+                </DialogTitle>
+                <DialogContent>
+                    <TextField
+                        id="outlined-multiline-static"
+                        label="Multiline"
+                        multiline
+                        InputProps={{
+                            readOnly: (classData.Role !== "student")
+                        }}
+
+                        rows={3}
+                        defaultValue="Default Value"
+                        sx={{ mt: 1, width: "100%" }}
+                    />
+                </DialogContent>
+                <DialogActions>
+                    <Typography id="modal-modal-description" style={{ display: "flex", width: "100%", justifyContent: "space-around", marginBottom: 10 }}>
+                        <Button variant="contained"
+                            onClick={() => setOpenComment(false)}
+                            sx={{ ml: 10, mr: 10 }}
+                        >
+                            Cancel
+                        </Button>
+                        <Button variant="contained"
+                            onClick={() => handleSaveComment()}
+                            sx={{ ml: 10, mr: 10 }}
+                        >
+                            Save
+                        </Button>
+
+                    </Typography>
+                </DialogActions>
+            </Dialog>
             <div style={{
                 display: "flex", flexDirection: "column",
                 justifyContent: "center", alignItems: "center", width: "100%",
@@ -334,40 +439,6 @@ export default function Score({ classData }) {
                         </> : <></>
                     }
                 </div>
-                <Dialog
-                    open={openUpload}
-                    onClose={() => { setOpenUpload(false) }}
-                >
-                    <DialogTitle>
-                        <Box sx={{ display: 'flex', flexDirection: "column", justifyContent: "center" }}>
-                            <Typography id="modal-modal-title" variant="h6" component="h2" sx={{ mb: 2 }}>
-                                Upload
-                            </Typography>
-                        </Box>
-                    </DialogTitle>
-                    <DialogContent>
-                        <Typography id="modal-modal-description" sx={{ display: "flex", justifyContent: "center" }}>
-                            <CSVReader
-                                cssClass="react-csv-input"
-                                onFileLoaded={handleForce2}
-                                parserOptions={papaparseOptions}
-                                inputId="ObiWan"
-                                inputName="ObiWan"
-                            // cssInputClass="textCSV"
-                            >
-                            </CSVReader>
-                        </Typography>
-                    </DialogContent>
-                    <DialogActions>
-                        <Typography id="modal-modal-description" style={{ margin: "auto 0", display: "flex", width: "100%", justifyContent: "center" }}>
-                            <Button variant="contained"
-                                startIcon={<UploadIcon />}
-                                onClick={handleForce}>
-                                Upload
-                            </Button>
-                        </Typography>
-                    </DialogActions>
-                </Dialog>
 
                 <TableContainer component={Paper} style={{ width: "90%", boxShadow: "0px 1px 5px grey", opacity: (rows.length === 0) ? 0 : 1 }}>
                     <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
@@ -443,7 +514,7 @@ export default function Score({ classData }) {
 
                         <TableBody>
                             {rows.map((row, indexRow) => {
-                                console.log("row", row, loggedInUser);
+                                // console.log("row", row, loggedInUser);
                                 if (classData.Role === "student" && row.UserID !== String(loggedInUser.id))
                                     return <></>;
                                 return <TableRow
@@ -451,21 +522,26 @@ export default function Score({ classData }) {
                                         bgcolor: (indexRow % 2 === 0) ? "#f1f1f1" : "#ffffff",
                                         my: 0,
                                         py: 0,
-                                        "&:hover": { bgcolor: "#cccccc" }
+                                        "&:hover": { bgcolor: "#d9d9d9" }
                                     }}
                                 >
                                     {listLabel.map((value, index) => {
                                         return <TableCell align="center" sx={{
                                             my: 0,
                                             py: 0,
-                                        }}>
+                                            "&:hover": { border: 1.2, borderColor: "#737373" }
+                                        }}
+                                            onMouseLeave={() => { setColumnOver(-1); setRowOver(-1); }}
+                                            onMouseOver={() => { setColumnOver(index); setRowOver(indexRow); }}
+                                        >
                                             <div style={{
                                                 display: "flex", justifyContent: "center",
                                                 alignItems: "center",
                                                 height: "100%",
                                                 margin: 0,
-                                                padding: 0
+                                                padding: 0,
                                             }}>
+                                                {(index > 1 && columnOver === index && rowOver === indexRow) && <p>{space4}</p>}
                                                 <EditText style={{
                                                     display: "flex",
                                                     textAlign: "center",
@@ -475,16 +551,59 @@ export default function Score({ classData }) {
                                                     paddingBottom: 6,
                                                     margin: 0,
                                                     borderWidth: 0,
-                                                    width: "100px",
+                                                    maxWidth: (index > 1) ? 50 : 300,
                                                 }}
                                                     name={`Edit value row:${indexRow} label:${listLabel[index]} `}
                                                     readonly={index <= 1 || classData.Role === "student"}
                                                     defaultValue={((classData.Role === "student") && (!listIsShow[index]) && (index > 1)) ? "Chưa chấm" : String(rows[indexRow][value])}
-                                                    onSave={(e) => handleSave(e, index, row, indexRow)} />
+                                                    onSave={(e) => handleSave(e, index, row, indexRow)}
+                                                    type="number"
+                                                />
+                                                {/* {index > 1 && value != "Sum" && <div>/100</div>} */}
+                                                {
+                                                    (index > 1 && columnOver === index && rowOver === indexRow) ?
+                                                        <>
+                                                            <p>/100</p>
+                                                            {
+                                                                (index > 1) &&
+                                                                <IconButton size="small" sx={{ color: "#000" }} onClick={(event) => { setAnchorElCell(event.currentTarget) }}>
+                                                                    <MoreVertIcon fontSize="small" sx={{ color: "#000" }} />
+                                                                </IconButton>
+                                                            }
+                                                            <Menu
+                                                                id="simple-menu222"
+                                                                anchorEl={anchorElCell}
+                                                                keepMounted
+                                                                open={Boolean(anchorElCell)}
+                                                                onClose={() => setAnchorElCell(null)}
+                                                                MenuListProps={{
+                                                                    'aria-labelledby': 'lock-button',
+                                                                    role: 'listbox',
+                                                                }}
+                                                                transformOrigin={{
+                                                                    vertical: 'top',
+                                                                }}
+                                                                style={{ marginTop: 40 }}
+                                                            >
+                                                                <MenuItem onClick={() => handleClickAddComment()}>
+                                                                    Thêm nhận xét
+                                                                </MenuItem>
+                                                            </Menu>
+                                                        </>
+                                                        :
+                                                        <>
+
+
+                                                        </>
+                                                }
                                             </div>
                                         </TableCell>;
                                     })}
-                                    <TableCell><div style={{
+                                    <TableCell sx={{
+                                        my: 0,
+                                        py: 0,
+                                        "&:hover": { border: 1.2, borderColor: "#737373" }
+                                    }}><div style={{
                                         display: "flex", justifyContent: "center",
                                         alignItems: "center",
                                         height: "100%",
