@@ -73,10 +73,37 @@ export default function Score({ classData }) {
     const [rowOver, setRowOver] = useState(0);
     const [columnOver, setColumnOver] = useState(0);
     const [openComment, setOpenComment] = useState(false);
-
+    const [teacherComment, setTeacherComment] = useState("");
+    const [studentComment, setStudentComment] = useState("");
+    const [commentInfo, setCommentInfo] = useState({});
+    const [expectGrade, setExpectGrade] = useState(0);
+    const [rowsStatus, setRowsStatus] = useState([]);
 
     const space4 = "    ";
+    const space1 = " ";
+    const loadDataScore = async () => {
+        const url = getUrlGetGradesOfClass(classData.ClassID);
+        console.log(url);
 
+        await axios.get(url).then((reponse) => {
+            setdataScore(reponse.data);
+            console.log("dataScore", url, reponse.data);
+        })
+            .catch((error) => {
+                console.log("get Data error", error);
+            });
+    }
+    const loadDataStudent = async () => {
+        const url2 = getUrlGetStudentInClass(classData.ClassID);
+        await axios.get(url2).then((reponse) => {
+            setdataStudent(reponse.data);
+            console.log("dataStudent", reponse.data);
+
+        })
+            .catch((error) => {
+                console.log("get Data error", error);
+            });
+    }
     useEffect(() => {
         async function getData() {
             const url3 = getUrlGetGradeStructOfClass(classData.ClassID);
@@ -101,26 +128,8 @@ export default function Score({ classData }) {
                 .catch((error) => {
                     console.log("get Data error", error);
                 });
-
-            const url = getUrlGetGradesOfClass(classData.ClassID);
-            console.log(url);
-
-            await axios.get(url).then((reponse) => {
-                setdataScore(reponse.data);
-                console.log("dataScore", url, reponse.data);
-            })
-                .catch((error) => {
-                    console.log("get Data error", error);
-                });
-            const url2 = getUrlGetStudentInClass(classData.ClassID);
-            await axios.get(url2).then((reponse) => {
-                setdataStudent(reponse.data);
-                console.log("dataStudent", reponse.data);
-
-            })
-                .catch((error) => {
-                    console.log("get Data error", error);
-                });
+            await loadDataScore();
+            await loadDataStudent();
         }
         getData();
 
@@ -169,6 +178,23 @@ export default function Score({ classData }) {
         setListIsShow(newListShow);
         setrows(newdataTable);
     }, [dataStudent, dataScore]);
+    useEffect(() => {
+
+        const newRowsStatus = rows.map((e) => {
+            return { ...e };
+        });
+        dataScore.map((data) => {
+            newRowsStatus.map((row) => {
+                if (data.UserID === row.UserID) {
+                    row[listLabel[data.Rank + 1]] = data.Status || 0;
+                }
+            })
+        })
+
+        console.log("newRowsStatus", newRowsStatus);
+        setRowsStatus(newRowsStatus);
+
+    }, [dataScore, rows])
     useEffect(() => {
         const listSum = [];
         rows.map((row, index) => {
@@ -269,9 +295,28 @@ export default function Score({ classData }) {
             setPersonJoinedClass("Teacher");
         settabValue("3");
     }, []);
-    const handleClickAddComment = () => {
+    const handleClickAddComment = (index, row, indexRow) => {
         setOpenComment(true);
         setAnchorElCell(null);
+
+        const rank = index - 1;
+        console.log("### data score", dataScore);
+        console.log("### row", row);
+        console.log("### rank", rank);
+
+        dataScore.forEach((e) => {
+            if (e.UserID === row.UserID && rank === e.Rank) {
+                console.log(e);
+                setTeacherComment(e.CommentTC);
+                setStudentComment(e.CommentST);
+                setExpectGrade(e.ExpectGrade);
+                setCommentInfo({
+                    UserID: e.UserID,
+                    Rank: rank,
+                    ClassID: classData.ClassID,
+                });
+            }
+        })
     }
 
     const markGradeStructAsPublic = () => {
@@ -318,8 +363,26 @@ export default function Score({ classData }) {
 
 
 
-    const handleSaveComment = () => {
+    const handleSaveComment = async () => {
         setOpenComment(false);
+        const { UserID, ClassID, Rank } = commentInfo;
+        console.log(commentInfo, teacherComment, studentComment, expectGrade);
+
+        const url = 'http://127.0.0.1:3000/gradeClass/comment/user/' + UserID + '/class/' + ClassID + '/rank/' + Rank;
+
+        console.log(url);
+        const postData = {
+            stCmt: studentComment,
+            tcCmt: teacherComment,
+            exGrade: expectGrade,
+            status: (classData.Role === "student") ? 1 : 2
+        }
+        await axios.put(url, postData).then((response) => {
+            console.log(response);
+        }).catch((error) => {
+            console.log(error);
+        })
+        await loadDataScore();
     };
 
     return (
@@ -373,13 +436,14 @@ export default function Score({ classData }) {
                 <DialogContent>
                     <TextField
                         id="outlined-multiline-static"
-                        label="Multiline"
+                        label=""
                         multiline
                         InputProps={{
                             readOnly: (classData.Role !== "teacher")
                         }}
                         rows={3}
-                        defaultValue="Default Value"
+                        onChange={(event) => { setTeacherComment(event.target.value) }}
+                        defaultValue={teacherComment}
                         sx={{ mt: 1, width: "100%" }}
                     />
                 </DialogContent>
@@ -393,14 +457,25 @@ export default function Score({ classData }) {
                 <DialogContent>
                     <TextField
                         id="outlined-multiline-static"
-                        label="Multiline"
+                        label=""
                         multiline
                         InputProps={{
                             readOnly: (classData.Role !== "student")
                         }}
-
                         rows={3}
-                        defaultValue="Default Value"
+                        onChange={(event) => { setStudentComment(event.target.value) }}
+                        defaultValue={studentComment}
+                        sx={{ mt: 1, width: "100%" }}
+                    />
+                    <TextField
+                        id="outlined-multiline-static"
+                        label="Expectation grade"
+                        InputProps={{
+                            readOnly: (classData.Role !== "student")
+                        }}
+                        type="number"
+                        onChange={(event) => { setExpectGrade(event.target.value) }}
+                        defaultValue={expectGrade}
                         sx={{ mt: 1, width: "100%" }}
                     />
                 </DialogContent>
@@ -416,7 +491,7 @@ export default function Score({ classData }) {
                             onClick={() => handleSaveComment()}
                             sx={{ ml: 10, mr: 10 }}
                         >
-                            Save
+                            {space1}Save{space1}
                         </Button>
 
                     </Typography>
@@ -529,6 +604,10 @@ export default function Score({ classData }) {
                                         return <TableCell align="center" sx={{
                                             my: 0,
                                             py: 0,
+                                            bgcolor: (rowsStatus && rowsStatus[indexRow] && rowsStatus[indexRow][value] === 1) ?
+                                                "#fff200" : (rowsStatus && rowsStatus[indexRow] && rowsStatus[indexRow][value] === 2) ?
+                                                    "#0ed145" : (indexRow % 2 === 0) ? "#f1f1f1" : "#ffffff"
+                                            ,
                                             "&:hover": { border: 1.2, borderColor: "#737373" }
                                         }}
                                             onMouseLeave={() => { setColumnOver(-1); setRowOver(-1); }}
@@ -585,7 +664,7 @@ export default function Score({ classData }) {
                                                                 }}
                                                                 style={{ marginTop: 40 }}
                                                             >
-                                                                <MenuItem onClick={() => handleClickAddComment()}>
+                                                                <MenuItem onClick={() => handleClickAddComment(index, row, indexRow)}>
                                                                     Thêm nhận xét
                                                                 </MenuItem>
                                                             </Menu>
