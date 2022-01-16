@@ -24,7 +24,9 @@ import {
     getUrlEditGradeStructOfClass,
     getUrlEditComment,
     getUrlAddOrGetNoti,
-    getUrlEditNoti
+    getUrlEditNoti,
+    CurrentUrlUI,
+    CurrentUrlAPI
 } from '../../services/app.service';
 import UploadIcon from '@mui/icons-material/Upload';
 import IconButton from '@mui/material/IconButton';
@@ -35,6 +37,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import { InputBase } from '@mui/material';
 import TextField from '@mui/material/TextField';
+import { getUrlGetPeopleInClass } from '../../services/app.service';
 
 import {
     Menu,
@@ -81,7 +84,9 @@ export default function Score({ classData }) {
     const [commentInfo, setCommentInfo] = useState({});
     const [expectGrade, setExpectGrade] = useState(0);
     const [rowsStatus, setRowsStatus] = useState([]);
-
+    const [listStudents, setListStdents] = useState([]);
+    const [listTeachers, setListTeachers] = useState([]);
+    const [editUserID, setEditUserID] = useState("");
     const space4 = "    ";
     const space1 = " ";
     const loadDataScore = async () => {
@@ -136,6 +141,41 @@ export default function Score({ classData }) {
         }
         getData();
 
+    }, [])
+
+    useEffect(() => {
+        console.log('load people');
+        const token = getAccessToken();
+
+        const config = {
+            headers: { Authorization: `Bearer ${token}` }
+        };
+
+        const url = getUrlGetPeopleInClass(classData.ClassID);
+        console.log(config, url);
+
+        axios.get(
+            url,
+            config
+        ).then(res => {
+            console.log(res.data);
+            const dataUsers = res.data;
+            let tempListStudents = [], tempListTeachers = [], tempCSVdata = [];
+            for (let i in dataUsers) {
+                if (dataUsers[i].Role === 'teacher')
+                    tempListTeachers.push(dataUsers[i]);
+                if (dataUsers[i].Role === 'student') {
+                    tempListStudents.push(dataUsers[i]);
+                    tempCSVdata.push({ StudenID: dataUsers[i].UserID, Fullname: dataUsers[i].FullName });
+                }
+            }
+            console.log("#######");
+            console.log(tempListStudents);
+            setListStdents(tempListStudents);
+            setListTeachers(tempListTeachers);
+        }).catch(e => {
+            console.log(e);
+        });
     }, [])
 
     useEffect(() => {
@@ -298,7 +338,10 @@ export default function Score({ classData }) {
             setPersonJoinedClass("Teacher");
         settabValue("3");
     }, []);
+
     const handleClickAddComment = (index, row, indexRow) => {
+        console.log("########### row", row);
+        setEditUserID(row.UserID);
         setOpenComment(true);
         setAnchorElCell(null);
 
@@ -322,7 +365,7 @@ export default function Score({ classData }) {
         })
     }
 
-    const markGradeStructAsPublic = () => {
+    const markGradeStructAsPublic = async () => {
 
         const ClassID = classData.ClassID;
         let Rank = 0;
@@ -349,6 +392,23 @@ export default function Score({ classData }) {
         }).catch((error) => {
             console.log(error);
         })
+        console.log("### listStudentslistStudentslistStudents", listStudents);
+
+
+        const postData2 = {
+            content: `${listLabel[Rank + 1]} was made public in class ${classData.Name}`,
+            link: `/student/${classData.ClassID}`
+        }
+
+
+        await listStudents.map(async (data) => {
+            const url2 = getUrlAddOrGetNoti(data.UserID);
+            await axios.post(url2, postData2).then((response) => {
+                console.log(response);
+            }).catch((error) => {
+                console.log(error);
+            })
+        });
     }
 
     const downloadGrade = () => {
@@ -386,6 +446,40 @@ export default function Score({ classData }) {
             console.log(error);
         })
         await loadDataScore();
+
+        if (classData.Role === "student") {
+            const postData2 = {
+                content: `${UserID} want review his grade in class ${classData.Name}`,
+                link: `/teacher/${classData.ClassID}`
+            }
+            console.log("listTeachers", listTeachers);
+
+            await listTeachers.map(async (data) => {
+                const url2 = getUrlAddOrGetNoti(data.UserID);
+                console.log("12312312312312312", postData2);
+                await axios.post(url2, postData2).then((response) => {
+                    console.log(response);
+                }).catch((error) => {
+                    console.log(error);
+                })
+            });
+        }
+        else {
+            const postData2 = {
+                content: `${UserID} responded your grade in class ${classData.Name}`,
+                link: `/student/${classData.ClassID}`
+            }
+
+            const url2 = getUrlAddOrGetNoti(editUserID);
+            console.log("12312312312312312", url2, postData2);
+            await axios.post(url2, postData2).then((response) => {
+                console.log("12312312312312312", response);
+            }).catch((error) => {
+                console.log(error);
+            })
+
+        }
+
     };
 
     return (

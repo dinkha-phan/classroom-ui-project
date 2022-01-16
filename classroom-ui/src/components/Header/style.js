@@ -43,4 +43,26 @@ export const useStyles = makeStyles((theme) => ({
         cursor: "pointer", // animation when move the mouse on element having class
         "&:hover": { backgroundColor: "#f5f5f5" }
     },
+    comment_unread: {
+        marginRight: "15px",
+        color: "#5f6368",
+        cursor: "pointer", // animation when move the mouse on element having class
+        display: "flex",
+        flexDirection: "row",
+        alignItems: "center",
+        marginLeft: "10px",
+        backgroundColor: "#cccccc",
+        "&:hover": { backgroundColor: "#b3b3b3" }
+    },
+    comment_readed: {
+        marginRight: "15px",
+        color: "#5f6368",
+        cursor: "pointer", // animation when move the mouse on element having class
+        display: "flex",
+        flexDirection: "row",
+        alignItems: "center",
+        marginLeft: "10px",
+        backgroundColor: "#ffffff",
+        "&:hover": { backgroundColor: "#b3b3b3" }
+    }
 }));

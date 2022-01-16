@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import axios from 'axios';
 
 import {
     AppBar,
@@ -10,6 +11,11 @@ import {
     Tab,
     Tabs
 } from "@material-ui/core";
+import {
+
+    getUrlAddOrGetNoti,
+    CurrentUrlAPI
+} from '../../services/app.service';
 import { Add, Apps } from "@material-ui/icons";
 import { useStyles } from "./style";
 import { useState } from "react";
@@ -29,13 +35,15 @@ import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import CheckIcon from '@mui/icons-material/Check';
+import Badge from '@mui/material/Badge';
+
 const Header = ({ children }) => {
     const classes = useStyles()
     const [anchorEl, setAnchorEl] = useState(null);
     const [anchorElAvatar, setAnchorElAvatar] = useState(null);
     const [anchorNotification, setAnchorNotification] = useState(null);
     const [anchorElMoreHoz, setAnchorElMoreHoz] = useState(null);
-
+    const [numberUnread, setNumberUnread] = useState(0);
     const [listNotifitication, setListNotification] = useState([]);
 
     const { setShowProfile } = useLocalContext();
@@ -54,10 +62,33 @@ const Header = ({ children }) => {
         "18120116 đã bình luận về số điểm của mình tại bài tập 1",
         "18120116 đã bình luận về số điểm của mình tại bài tập 1"];
 
-    useEffect(() => {
+    useEffect(async () => {
+
         setListNotification([...listNoti]);
 
+
+        const url2 = getUrlAddOrGetNoti(loggedInUser.id);
+
+        await axios.get(url2).then((response) => {
+            console.log("######### data notification", response.data);
+            setListNotification([...response.data]);
+        }).catch((error) => {
+            console.log(error);
+        })
+
+
     }, [])
+
+
+    useEffect(async () => {
+
+        let number = 0;
+        listNotifitication.map(data => {
+            if (data.Status === 0) number += 1;
+        })
+        setNumberUnread(number);
+
+    }, [listNotifitication])
 
     const handleClick = (event) => setAnchorEl(event.currentTarget);
     const handleClickAvatar = (event) => setAnchorElAvatar(event.currentTarget);
@@ -102,6 +133,29 @@ const Header = ({ children }) => {
                 {children}
             </div>
         );
+    }
+    const getStudentID = (content) => {
+        let word = [];
+        if (content)
+            word = content.split(' ');
+        console.log("word", word);
+        if (word.length > 0) return word[0];
+        return "";
+    }
+    const handleClickComment = async (data) => {
+
+
+        const url = CurrentUrlAPI + '/noti/' + data.NotiID;
+
+        await axios.put(url).then((response) => {
+            console.log("handleClickComment", response);
+        }).catch((error) => {
+            console.log(error);
+        })
+
+        window.location.href = `..${data.LinkToClass}`;
+        console.log(data);
+
     }
     return (
         <div className={classes.root}>
@@ -158,8 +212,10 @@ const Header = ({ children }) => {
                             <MenuItem onClick={handleJoin}>Join Class</MenuItem>
                             <MenuItem onClick={handleCreate}>Create Class</MenuItem>
                         </Menu>
-                        <IconButton>
-                            <NotificationsIcon onClick={handleClickNotification} />
+                        <IconButton onClick={handleClickNotification}>
+                            <Badge color="primary" badgeContent={numberUnread} size="small">
+                                <NotificationsIcon />
+                            </Badge>
                         </IconButton>
 
                         <Menu
@@ -170,10 +226,10 @@ const Header = ({ children }) => {
                             onClose={handleCloseNotification}
                             transformOrigin={{ horizontal: 'right', vertical: 'top' }} // left of add button
                         >
-                            {(listNoti.length > 0) ?
+                            {(listNotifitication.length > 0) ?
                                 <>
                                     <List sx={{ width: '300px', maxHeight: "400px", bgcolor: 'background.paper' }}>
-                                        <div style={{ position: "absolute", right: 0, top: 0 }}>
+                                        {/* <div style={{ position: "absolute", right: 0, top: 0 }}>
                                             <IconButton sx={{ color: "black" }} onClick={(event) => setAnchorElMoreHoz(event.currentTarget)}>
                                                 <MoreHorizIcon />
                                             </IconButton>
@@ -196,11 +252,15 @@ const Header = ({ children }) => {
                                             >
                                                 <MenuItem onClick={markAllAsRead}> Đánh dấu tất cả là đã đọc    <CheckIcon sx={{ ml: 1 }} /></MenuItem>
                                             </Menu>
-                                        </div>
+                                        </div> */}
                                         {
-                                            listNoti.map((content) => {
+                                            listNotifitication.map((data) => {
                                                 return (
-                                                    <div className={classes.icon} style={{ display: "flex", flexDirection: "row", alignItems: "center", marginLeft: "10px" }}>
+                                                    <div
+                                                        className={(data.Status === 0) ? classes.comment_unread : classes.comment_readed}
+
+                                                        onClick={() => handleClickComment(data)}
+                                                    >
                                                         <ListItemAvatar>
                                                             <Avatar>
                                                                 <MessageOutlinedIcon />
@@ -208,10 +268,10 @@ const Header = ({ children }) => {
                                                         </ListItemAvatar>
                                                         <ListItemText >
                                                             <p style={{ fontSize: 14, color: "black" }}>
-                                                                18120116
+                                                                {getStudentID(data.Content).toString()}
                                                             </p>
                                                             <p style={{ fontSize: 11 }}>
-                                                                {content}
+                                                                {data.Content}
                                                             </p>
                                                         </ListItemText>
                                                     </div>

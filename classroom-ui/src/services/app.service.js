@@ -1,6 +1,11 @@
 const urlAPI = 'https://class-api-ndk.herokuapp.com';
 const urlLocalAPI = 'http://127.0.0.1:3000';
 const CurrentUrlAPI = urlLocalAPI;
+
+const urlUI = 'https://class-api-ndk.herokuapp.com';
+const urlLocalUI = 'http://127.0.0.1:3001';
+const CurrentUrlUI = urlLocalUI;
+
 // const urlSignIn = 'https://classrom-api-ntk.herokuapp.com/login';
 const urlSignIn = CurrentUrlAPI + '/login';
 
@@ -64,20 +69,20 @@ function getUrlGetGradeStructOfClass(classID) {
 function getUrlGetGradesOfClass(classID) {
     return CurrentUrlAPI + '/gradeClass/class/' + classID;
 }
-function getUrlEditGradesOfClass(classID, userID, rank){
-    return CurrentUrlAPI + '/gradeClass/user/'  + userID + '/class/' + classID + '/rank/' + rank;
+function getUrlEditGradesOfClass(classID, userID, rank) {
+    return CurrentUrlAPI + '/gradeClass/user/' + userID + '/class/' + classID + '/rank/' + rank;
 }
-function getUrlEditGradeStructOfClass(ClassID, rank){
+function getUrlEditGradeStructOfClass(ClassID, rank) {
     return CurrentUrlAPI + '/grade-struct/class/' + ClassID + '/rank/' + rank;
 }
-function getUrlEditComment(ClassID, userID, rank){
-    return CurrentUrlAPI + '/gradeClass/comment/user/'  + userID + '/class/' + ClassID + '/rank/' + rank;;
+function getUrlEditComment(ClassID, userID, rank) {
+    return CurrentUrlAPI + '/gradeClass/comment/user/' + userID + '/class/' + ClassID + '/rank/' + rank;;
 }
-function getUrlAddOrGetNoti(userID){
-    return CurrentUrlAPI + '/noti/user/'  + userID;
+function getUrlAddOrGetNoti(userID) {
+    return CurrentUrlAPI + '/noti/user/' + userID;
 }
-function getUrlEditNoti(notiID){
-    return CurrentUrlAPI + '/noti/'  + notiID;
+function getUrlEditNoti(notiID) {
+    return CurrentUrlAPI + '/noti/' + notiID;
 }
 
 // ===================================================
@@ -123,7 +128,7 @@ function parseJwt(token) {
 
 export {
     CurrentUrlAPI,
-
+    CurrentUrlUI,
     urlSignIn,
     urlSignUp,
 

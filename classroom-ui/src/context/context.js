@@ -14,6 +14,7 @@ export function ConxtextProvider({ children }) {
     const [loggedInMail, setLoggedInMail] = useState(null);
     const [personJoinedClass, setPersonJoinedClass] = useState("");
     const [tabValue, settabValue] = useState("1");
+    const [gotoScoreTab, setGotoScoreTab] = useState(false);
     const [listJoinedClasses, setListJoinedClasses] = useState([]);
     const [listCreatedClasses, setListCreatedClasses] = useState([]);
     const [showProfile, setShowProfile] = useState(false);
@@ -88,6 +89,7 @@ export function ConxtextProvider({ children }) {
         showInvitePeople, setShowInvitePeople,
         gradeStruct, setGradeStruct,
         classData, setClassData,
+        gotoScoreTab, setGotoScoreTab
     }
 
     return (
