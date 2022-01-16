@@ -32,7 +32,7 @@ export const useStyles = makeStyles((theme) => ({
         justifyContent: "space-between",
         alignItems: "center",
     },
-    header__wrapper__center:{
+    header__wrapper__center: {
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center",
@@ -41,5 +41,6 @@ export const useStyles = makeStyles((theme) => ({
         marginRight: "15px",
         color: "#5f6368",
         cursor: "pointer", // animation when move the mouse on element having class
-    }
+        "&:hover": { backgroundColor: "#f5f5f5" }
+    },
 }));

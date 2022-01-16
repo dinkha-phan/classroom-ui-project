@@ -269,7 +269,7 @@ const Main = ({ classData }) => {
                     <div className="main__announcements">
                         <div className="main__announcementsWrapper">
                             <div className="main__ancContent">
-                                {showInput ? (
+                                {/* {showInput ? (
                                     <div className="main__form">
                                         <TextField
                                             id="filled-multiline-flexible"
@@ -312,7 +312,14 @@ const Main = ({ classData }) => {
                                         <Avatar />
                                         <div>Announce Something to class</div>
                                     </div>
-                                )}
+                                )} */}
+                                <div
+                                    className="main__wrapper100"
+                                // onClick={() => setShowInput(true)}
+                                >
+                                    <Avatar />
+                                    <div>Announce Something to class</div>
+                                </div>
                             </div>
                         </div>
                         {/* <Announcment classData={classData} /> */}

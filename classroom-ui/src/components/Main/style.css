@@ -76,15 +76,17 @@
 }
 .main__announce {
   display: flex;
+  width: 100%;
+  flex-direction: row;
   /* justify-content: center; */
-  flex-shrink: 0;
+  /* flex-shrink: 0; */
   margin-top: 1rem;
 }
 .main__announcements {
-  padding: 1rem;
+  padding: 3px;
   overflow: hidden;
-  margin: -2.4rem;
   margin-left: 1rem;
+  width: 100%;
   /* margin-top: 1.5rem; */
 }
 .main__subText {
