@@ -56,6 +56,7 @@ export default function SignIn() {
 
 
                 const token = result.token;
+                setAccessToken(result.token);
                 const userData = parseJwt(token);
 
                 console.log(token, userData);
@@ -64,7 +65,7 @@ export default function SignIn() {
                 setLoggedInMail(userData.email);
 
                 //TODO: save AT and RT to local storage 
-                setAccessToken(result.token);
+                
             });
 
     };

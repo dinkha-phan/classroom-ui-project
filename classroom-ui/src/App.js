@@ -147,8 +147,6 @@ function App() {
 
                     </Route> */}
 
-                    <Route path="/join-class/confirm/:id" children={<Child />} />
-
                     {/* List Class */}
                     <ProtectedRoute user={loggedInMail} path="/" exact>
                         <Drawer />
@@ -170,66 +168,3 @@ function App() {
 
 export default App;
 
-
-function Child() {
-    const {
-        setLoggedInUser, setLoggedInMail,
-        loggedInUser, loggedInMail } = useLocalContext();
-
-    // We can use the `useParams` hook here to access
-    // the dynamic pieces of the URL.
-    useEffect(() => {
-        if (!loggedInMail) {
-            // load data of user using token store at local storage
-            const token = getAccessToken();
-
-            if (token) {
-                let dataUser = parseJwt(getAccessToken());
-
-                console.log(dataUser);
-                setLoggedInUser(dataUser);
-                setLoggedInMail(dataUser.email);
-
-                const token = getAccessToken();
-
-                const config = {
-                    headers: { Authorization: `Bearer ${token}` }
-                };
-
-                const url = getUrlConfirmJoinClass(dataUser.email);
-
-                const bodyParameters = {
-                    "email": dataUser.email
-                };
-
-                console.log(config, bodyParameters, url);
-
-                axios.post(
-                    url,
-                    bodyParameters,
-                    config
-                ).then(res => {
-                    console.log(res.data);
-                    window.location.href = 'http://127.0.0.1:3001/'
-
-                }).catch(e => {
-                    removeAccessToken(); 
-                    window.location.href = 'http://localhost:3001/signin';
-                });
-
-            }
-            else {
-                removeAccessToken(); 
-                window.location.href = 'http://localhost:3001/signin';
-            }
-        }
-
-    }, [])
-    let { id } = useParams();
-
-    return (
-        <div>
-            <h3>ID: {id}</h3>
-        </div>
-    );
-}
