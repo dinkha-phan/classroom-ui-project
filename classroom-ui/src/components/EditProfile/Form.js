@@ -29,20 +29,22 @@ const Form = () => {
 
         const bodyParameters = {
             fullName: fullName,
+            headers: { Authorization: `Bearer ${token}` }
         };
 
         console.log(config, bodyParameters, url);
 
         axios.put(
             url,
-            bodyParameters,
-            config
+            bodyParameters
+          
         ).then(res => {
             console.log(res.data);
             window.location.reload();
 
-        }).catch(e => {
-            console.log(e)
+        }).catch((error) => {
+            console.log(error);
+            window.location.href = 'http://localhost:3001/signin';
         });
     }
 

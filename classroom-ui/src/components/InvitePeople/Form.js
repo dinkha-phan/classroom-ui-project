@@ -23,10 +23,6 @@ const Form = ({ Label, classID }) => {
 
         const token = getAccessToken();
 
-        const config = {
-            headers: { Authorization: `Bearer ${token}` }
-        };
-
         let role = 'student';
         if (Label === 'Invite Teacher') {
             role = 'teacher';
@@ -36,7 +32,8 @@ const Form = ({ Label, classID }) => {
         const bodyParameters = {
             role: role,
             classID: classID,
-            email: emailInvite
+            email: emailInvite,
+            headers: { Authorization: `Bearer ${token}` }
         };
 
         // {
@@ -44,18 +41,17 @@ const Form = ({ Label, classID }) => {
         //     "email": "b@c.com",
         //     "role": "student"
         // }
-        console.log(config, bodyParameters, url);
 
         axios.post(
             url,
             bodyParameters,
-            config
         ).then(res => {
             console.log(res.data);
             setShowInvitePeople(false);
 
-        }).catch(e => {
-            console.log(e)
+        }).catch((error) => {
+            console.log(error);
+            window.location.href = 'http://localhost:3001/signin';
         });
     }
 

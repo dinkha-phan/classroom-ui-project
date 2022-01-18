@@ -100,17 +100,6 @@ function removeAccessToken() {
     window.localStorage.removeItem('token');
 }
 
-function setRefreshToken(strToken) {
-    window.localStorage.setItem('refreshToken', strToken);
-}
-
-function getRefreshToken(strToken) {
-    window.localStorage.getItem('refreshToken');
-}
-
-function removeRefreshToken() {
-    window.localStorage.removeItem('refreshToken');
-}
 
 
 
@@ -161,9 +150,4 @@ export {
     setAccessToken,
     removeAccessToken,
     parseJwt,
-
-
-    setRefreshToken,
-    getRefreshToken,
-    removeRefreshToken,
 }

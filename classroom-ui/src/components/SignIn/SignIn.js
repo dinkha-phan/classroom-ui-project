@@ -64,7 +64,6 @@ export default function SignIn() {
                 setLoggedInMail(userData.email);
 
                 //TODO: save AT and RT to local storage 
-                setRefreshToken(result.refreshToken);
                 setAccessToken(result.token);
             });
 

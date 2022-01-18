@@ -40,14 +40,14 @@ const JoinClass = () => {
         const bodyParameters = {
             role: "student",
             classCode: classCode,
+            headers: { Authorization: `Bearer ${token}` }
         };
 
         console.log(config, bodyParameters, url);
 
         axios.post(
             url,
-            bodyParameters,
-            config
+            bodyParameters
         ).then(res => {
             console.log(res.data);
             if (res.data.error && res.data.error !== '') {
@@ -58,8 +58,9 @@ const JoinClass = () => {
 
             window.location.href = '/'
 
-        }).catch(e => {
-            console.log(e)
+        }).catch((error) => {
+            console.log(error);
+            window.location.href = 'http://localhost:3001/signin';
         });
         
     }

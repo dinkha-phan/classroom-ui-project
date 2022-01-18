@@ -33,7 +33,8 @@ const Form = () => {
             name: className,
             part: Section,
             title: Subject,
-            room: Room
+            room: Room,
+            headers: { Authorization: `Bearer ${token}` }
         };
 
         console.log(config, bodyParameters, url);
@@ -41,14 +42,14 @@ const Form = () => {
         axios.post(
             url,
             bodyParameters,
-            config
         ).then(res => {
             console.log(res.data);
             if (res.data.msg === 'success'){
                 window.location.href='/'
             }
-        }).catch(e => {
-            console.log(e)
+        }).catch((error) => {
+            console.log(error);
+            window.location.href = 'http://localhost:3001/signin';
         });
 
 

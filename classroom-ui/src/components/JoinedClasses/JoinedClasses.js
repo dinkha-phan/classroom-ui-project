@@ -49,8 +49,9 @@ const JoinedClasses = ({ classData }) => {
         ).then(res => {
             console.log(res.data);
             window.location.href = '/';
-        }).catch(e => {
-            console.log(e)
+        }).catch((error) => {
+            console.log(error);
+            window.location.href = 'http://localhost:3001/signin';
         });
     }
 

@@ -89,28 +89,34 @@ export default function Score({ classData }) {
     const [editUserID, setEditUserID] = useState("");
     const space4 = "    ";
     const space1 = " ";
+    const token = getAccessToken();
+    const configs ={
+        headers: { Authorization: `Bearer ${token}` }
+    }
     const loadDataScore = async () => {
         const url = getUrlGetGradesOfClass(classData.ClassID);
         console.log(url);
 
-        await axios.get(url).then((reponse) => {
+        await axios.get(url, configs).then((reponse) => {
             setdataScore(reponse.data);
             console.log("dataScore", url, reponse.data);
         })
-            .catch((error) => {
-                console.log("get Data error", error);
-            });
+        .catch((error) => {
+            console.log(error);
+            window.location.href = 'http://localhost:3001/signin';
+        });
     }
     const loadDataStudent = async () => {
         const url2 = getUrlGetStudentInClass(classData.ClassID);
-        await axios.get(url2).then((reponse) => {
+        await axios.get(url2, configs).then((reponse) => {
             setdataStudent(reponse.data);
             console.log("dataStudent", reponse.data);
 
         })
-            .catch((error) => {
-                console.log("get Data error", error);
-            });
+        .catch((error) => {
+            console.log(error);
+            window.location.href = 'http://localhost:3001/signin';
+        });
     }
     useEffect(() => {
         async function getData() {
@@ -119,7 +125,7 @@ export default function Score({ classData }) {
             let listShow = [...listIsShow];
             let listSPoint = [...gradeSPoint];
             let sums = 0;
-            await axios.get(url3).then((reponse) => {
+            await axios.get(url3, configs).then((reponse) => {
                 console.log("listLabessss", reponse.data);
                 for (let i = 0; i < reponse.data.length; ++i) {
                     titleTmp.push(reponse.data[i]['Name']);
@@ -133,9 +139,10 @@ export default function Score({ classData }) {
                 setSumGSPoint(sums);
 
             })
-                .catch((error) => {
-                    console.log("get Data error", error);
-                });
+            .catch((error) => {
+                console.log(error);
+                window.location.href = 'http://localhost:3001/signin';
+            });
             await loadDataScore();
             await loadDataStudent();
         }
@@ -173,8 +180,9 @@ export default function Score({ classData }) {
             console.log(tempListStudents);
             setListStdents(tempListStudents);
             setListTeachers(tempListTeachers);
-        }).catch(e => {
-            console.log(e);
+        }).catch((error) => {
+            console.log(error);
+            window.location.href = 'http://localhost:3001/signin';
         });
     }, [])
 
@@ -276,13 +284,15 @@ export default function Score({ classData }) {
         const url = getUrlEditGradesOfClass(ClassID, UserID, Rank);
         const postData = {
             grade: Grade,
+            headers: { Authorization: `Bearer ${token}` }
         }
 
         axios.put(url, postData).then((response) => {
             console.log(response);
         }).catch((error) => {
             console.log(error);
-        })
+            window.location.href = 'http://localhost:3001/signin';
+        });
         console.log("event:", e);
         console.log(colSum);
         const newColSum = [...colSum];
@@ -321,7 +331,8 @@ export default function Score({ classData }) {
                 }
             }).catch((error) => {
                 console.log(error);
-            })
+                window.location.href = 'http://localhost:3001/signin';
+            });
         }
         setrows(tmpCSVData);
         setOpenUpload(false);
@@ -382,6 +393,7 @@ export default function Score({ classData }) {
 
         const postData = {
             IsShowed: IsShowed,
+            headers: { Authorization: `Bearer ${token}` }
         }
         const newListShow = [...listIsShow];
         newListShow[Rank + 1] = 1;
@@ -391,13 +403,15 @@ export default function Score({ classData }) {
 
         }).catch((error) => {
             console.log(error);
-        })
+            window.location.href = 'http://localhost:3001/signin';
+        });
         console.log("### listStudentslistStudentslistStudents", listStudents);
 
 
         const postData2 = {
             content: `${listLabel[Rank + 1]} was made public in class ${classData.Name}`,
-            link: `/student/${classData.ClassID}`
+            link: `/student/${classData.ClassID}`,
+            headers: { Authorization: `Bearer ${token}` }
         }
 
 
@@ -407,7 +421,8 @@ export default function Score({ classData }) {
                 console.log(response);
             }).catch((error) => {
                 console.log(error);
-            })
+                window.location.href = 'http://localhost:3001/signin';
+            });
         });
     }
 
@@ -438,19 +453,22 @@ export default function Score({ classData }) {
             stCmt: studentComment,
             tcCmt: teacherComment,
             exGrade: expectGrade,
-            status: (classData.Role === "student") ? 1 : 2
+            status: (classData.Role === "student") ? 1 : 2,
+            headers: { Authorization: `Bearer ${token}` }
         }
         await axios.put(url, postData).then((response) => {
             console.log(response);
         }).catch((error) => {
             console.log(error);
-        })
+            window.location.href = 'http://localhost:3001/signin';
+        });
         await loadDataScore();
 
         if (classData.Role === "student") {
             const postData2 = {
                 content: `${UserID} want review his grade in class ${classData.Name}`,
-                link: `/teacher/${classData.ClassID}`
+                link: `/teacher/${classData.ClassID}`,
+                headers: { Authorization: `Bearer ${token}` }
             }
             console.log("listTeachers", listTeachers);
 
@@ -461,7 +479,8 @@ export default function Score({ classData }) {
                     console.log(response);
                 }).catch((error) => {
                     console.log(error);
-                })
+                    window.location.href = 'http://localhost:3001/signin';
+                });
             });
         }
         else {
@@ -476,7 +495,8 @@ export default function Score({ classData }) {
                 console.log("12312312312312312", response);
             }).catch((error) => {
                 console.log(error);
-            })
+                window.location.href = 'http://localhost:3001/signin';
+            });
 
         }
 

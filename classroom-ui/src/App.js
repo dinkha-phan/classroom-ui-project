@@ -24,6 +24,9 @@ function App() {
             // load data of user using token store at local storage
             const token = getAccessToken();
 
+                const config = {
+                    headers: { Authorization: `Bearer ${token}` }
+                };
             if (token) {
                 let dataUser = parseJwt(token);
 
@@ -33,12 +36,15 @@ function App() {
 
                 const urlGetUserDetail = getUrlGetUserByEmail(dataUser.email);
 
-                axios.get(urlGetUserDetail)
+                axios.get(urlGetUserDetail, config)
                     .then(res => {
                         dataUser.fullName = res.data[0].FullName;
                         setLoggedInUser(dataUser);
                     })
-                    .catch(error => console.log(error));
+                    .catch((error) => {
+                        console.log(error);
+                        window.location.href = 'http://localhost:3001/signin';
+                    });
             }
         }
 
@@ -47,24 +53,34 @@ function App() {
             const urlGetJoinedClasses = getUrlGetJoinedClasses(loggedInUser.id);
             const urlGetCreatesClasses = getUrlGetCreatedClasses(loggedInUser.id);
 
+            const token = getAccessToken();
 
+            const config = {
+                headers: { Authorization: `Bearer ${token}` }
+            };
             // get AT and set it to header
 
-            axios.get(urlGetJoinedClasses)
+            axios.get(urlGetJoinedClasses, config)
                 .then(res => {
                     console.log(res.data);
                     const data = res.data;
                     setListJoinedClasses(data);
                 })
-                .catch(error => console.log(error));
+                .catch((error) => {
+                    console.log(error);
+                    window.location.href = 'http://localhost:3001/signin';
+                });
 
-            axios.get(urlGetCreatesClasses)
+            axios.get(urlGetCreatesClasses, config)
                 .then(res => {
                     console.log(res.data);
                     const data = res.data;
                     setListCreatedClasses(data);
                 })
-                .catch(error => console.log(error));
+                .catch((error) => {
+                    console.log(error);
+                    window.location.href = 'http://localhost:3001/signin';
+                });
         }
         // return () => { }
     }, [loggedInMail])
@@ -190,12 +206,12 @@ function Child() {
                     // window.location.href = 'http://127.0.0.1:3001/'
 
                 }).catch(e => {
-                    console.log(e)
+                    window.location.href = 'http://localhost:3001/signin';
                 });
 
             }
             else {
-                window.location.href = 'http://localhost:3001/';
+                window.location.href = 'http://localhost:3001/signin';
             }
         }
 

@@ -76,7 +76,8 @@ export default function AlignItemsList({ classData }) {
                 }
             }).catch((error) => {
                 console.log(error);
-            })
+                window.location.href = 'http://localhost:3001/signin';
+            });
         }
         setListStdents(tmpListStudents);
         setCsvData(tmpCSVData);
@@ -127,8 +128,9 @@ export default function AlignItemsList({ classData }) {
             setListStdents(tempListStudents);
             setListTeachers(tempListTeachers);
             setCsvData(tempCSVdata);
-        }).catch(e => {
-            console.log(e);
+        }).catch((error) => {
+            console.log(error);
+            window.location.href = 'http://localhost:3001/signin';
         });
     }, [])
 

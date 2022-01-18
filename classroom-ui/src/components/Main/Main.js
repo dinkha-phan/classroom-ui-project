@@ -12,6 +12,7 @@ import IconButton from '@mui/material/IconButton';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import axios from "axios";
 import Checkbox from '@mui/material/Checkbox';
+import { getAccessToken } from "../../services/app.service";
 
 import "./style.css";
 import { green } from "@mui/material/colors";
@@ -76,18 +77,20 @@ const Main = ({ classData }) => {
 
         console.log(data);
         console.log(url);
-
+        const token = getAccessToken();
         const postData = {
             Name: Name,
             Grade: Grade,
             IsShowed: IsShowed,
+            headers: { Authorization: `Bearer ${token}` }
         }
 
         axios.put(url, postData).then((response) => {
             console.log(response);
         }).catch((error) => {
             console.log(error);
-        })
+            window.location.href = 'http://localhost:3001/signin';
+        });
     }
     const onClickSave = () => {
         console.log("previousCheckBoxValues", previousCheckBoxValues);
@@ -114,17 +117,21 @@ const Main = ({ classData }) => {
             setPersonJoinedClass("Student");
         else setPersonJoinedClass("Teacher");
         settabValue("1");
-
+        const token = getAccessToken();
+        const config ={
+            headers: { Authorization: `Bearer ${token}` }
+        }
 
         const url = 'http://localhost:3000/grade-struct/class/' + classData.ClassID;
-        axios.get(url).then((reponse) => {
+        axios.get(url, config).then((reponse) => {
             console.log(reponse);
             setItems(reponse.data);
             setGradeStruct(reponse.data);
         })
-            .catch((error) => {
-                console.log("get Data error", error);
-            });
+        .catch((error) => {
+            console.log(error);
+            window.location.href = 'http://localhost:3001/signin';
+        });
 
 
 

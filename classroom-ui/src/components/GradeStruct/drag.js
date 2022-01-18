@@ -9,7 +9,7 @@ import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import axios from "axios";
 import SaveIcon from '@mui/icons-material/Save';
 import HighlightOffRoundedIcon from '@mui/icons-material/HighlightOffRounded';
-import {getUrlEditGradeStructOfClass, getUrlGetGradeStructOfClass} from '../../services/app.service';
+import {getUrlEditGradeStructOfClass, getUrlGetGradeStructOfClass, getAccessToken} from '../../services/app.service';
 import IconButton from '@mui/material/IconButton';
 // fake data generator
 const getItems = count =>
@@ -17,7 +17,10 @@ const getItems = count =>
     id: `item-${k}`,
     content: `item ${k}`
   }));
-
+const token = getAccessToken();
+const config = {
+  headers: { Authorization: `Bearer ${token}` }
+}
 const reorder = (list, startIndex, endIndex) => {
   const result = Array.from(list);
   const [removed] = result.splice(startIndex, 1);
@@ -54,17 +57,18 @@ const Drag = ({ classData }) => {
     setEditIndex(index);
     const { Rank, Grade, ClassID, Name } = items[index];
     const url = getUrlEditGradeStructOfClass(ClassID, String(index + 1));
-
     const postData = {
       Name: Name,
       Grade: Grade,
+      headers: { Authorization: `Bearer ${token}` }
     }
 
     axios.put(url, postData).then((response) => {
       console.log(response);
     }).catch((error) => {
       console.log(error);
-    })
+      window.location.href = 'http://localhost:3001/signin';
+  });
 
   }
 
@@ -108,13 +112,16 @@ const Drag = ({ classData }) => {
 
   useEffect(() => {
     const url = getUrlGetGradeStructOfClass(classData.ClassID);
-    axios.get(url).then((reponse) => {
+
+    
+    axios.get(url, config).then((reponse) => {
       setItems(reponse.data);
       console.log(reponse.data);
     })
-      .catch((error) => {
-        console.log("get Data error", error);
-      })
+    .catch((error) => {
+      console.log(error);
+      window.location.href = 'http://localhost:3001/signin';
+  });
   }, [])
 
   useEffect(() => {
@@ -157,13 +164,15 @@ const Drag = ({ classData }) => {
       const url = getUrlEditGradeStructOfClass(classData.ClassID, String(i + 1));
       const postData = {
         Name: itemss[i].Name,
-        Grade: itemss[i].Grade
+        Grade: itemss[i].Grade,
+        headers: { Authorization: `Bearer ${token}` }
       }
       axios.put(url, postData).then((response) => {
         console.log(response);
       }).catch((error) => {
         console.log(error);
-      })
+        window.location.href = 'http://localhost:3001/signin';
+    });
     }
     if (!result.isResetItem) {
       setItems(itemss);
@@ -204,17 +213,18 @@ const Drag = ({ classData }) => {
     for (let i = a; i <= b; i++) {
 
       const url = getUrlEditGradeStructOfClass(classData.ClassID, String(i + 1));
-
       const postData = {
         Name: itemss[i].Name,
-        Grade: itemss[i].Grade
+        Grade: itemss[i].Grade,
+        headers: { Authorization: `Bearer ${token}` }
       }
 
       axios.put(url, postData).then((response) => {
         console.log(response);
       }).catch((error) => {
         console.log(error);
-      })
+        window.location.href = 'http://localhost:3001/signin';
+    });
     }
 
 
@@ -223,7 +233,7 @@ const Drag = ({ classData }) => {
     const { Rank, Grade, ClassID, Name } = itemss[index];
 
     const url = getUrlEditGradeStructOfClass(ClassID, String(itemss.length));
-    axios.delete(url).then((response) => {
+    axios.delete(url, config).then((response) => {
       console.log(response);
 
       const newItemss = [...itemss];
@@ -236,7 +246,8 @@ const Drag = ({ classData }) => {
 
     }).catch((error) => {
       console.log(error);
-    })
+      window.location.href = 'http://localhost:3001/signin';
+  });
 
 
   }
@@ -253,15 +264,17 @@ const Drag = ({ classData }) => {
     const postItem = {
       Name: newName,
       Grade: newGrade,
+      headers: { Authorization: `Bearer ${token}` }
     };
     setNewName("");
     setNewGrade("");
     axios.put(url, postItem).then((reponse) => {
       // setItems(reponse.data);
     })
-      .catch((error) => {
-        console.log("get Data error", error);
-      })
+    .catch((error) => {
+      console.log(error);
+      window.location.href = 'http://localhost:3001/signin';
+  });
   }
   // length = items.length(); 
 

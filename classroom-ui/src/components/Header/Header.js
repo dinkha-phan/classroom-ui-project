@@ -36,6 +36,7 @@ import IconButton from '@mui/material/IconButton';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import CheckIcon from '@mui/icons-material/Check';
 import Badge from '@mui/material/Badge';
+import {getAccessToken}  from '../../services/app.service'; 
 
 const Header = ({ children }) => {
     const classes = useStyles()
@@ -68,13 +69,17 @@ const Header = ({ children }) => {
 
 
         const url2 = getUrlAddOrGetNoti(loggedInUser.id);
-
-        await axios.get(url2).then((response) => {
+        const token = getAccessToken();
+        const config = {
+            headers: { Authorization: `Bearer ${token}` }
+        }
+        await axios.get(url2, config).then((response) => {
             console.log("######### data notification", response.data);
             setListNotification([...response.data]);
         }).catch((error) => {
             console.log(error);
-        })
+            window.location.href = 'http://localhost:3001/signin';
+        });
 
 
     }, [])
@@ -146,12 +151,16 @@ const Header = ({ children }) => {
 
 
         const url = CurrentUrlAPI + '/noti/' + data.NotiID;
-
-        await axios.put(url).then((response) => {
+        const token = getAccessToken();
+        const config ={
+            headers: { Authorization: `Bearer ${token}` }
+        }
+        await axios.put(url, config).then((response) => {
             console.log("handleClickComment", response);
         }).catch((error) => {
             console.log(error);
-        })
+            window.location.href = 'http://localhost:3001/signin';
+        });
 
         window.location.href = `..${data.LinkToClass}`;
         console.log(data);
