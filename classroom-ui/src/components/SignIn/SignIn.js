@@ -71,11 +71,21 @@ export default function SignIn() {
     };
     const responseSucessGoogle = (response) => {
         console.log(response);
-        axios.post({
-            url: "http://localhost:3000/login/google",
-            data: { tokenId: response.tokenId }
-        }).then(response => {
-            console.log("Google login success", response);
+        const url = "http://localhost:3000/login/google";
+        const postData ={
+            data: response.profileObj
+        }
+        axios.post(url, postData).then(respons => {
+            console.log("Google login success", respons);
+            const token = respons.data.token;
+                setAccessToken(token);
+                const userData = parseJwt(token);
+
+                console.log(token, userData);
+
+                setLoggedInUser(userData);
+                setLoggedInMail(userData.email);
+
         })
     }
     const responseErrorGoogle = (response) => {
