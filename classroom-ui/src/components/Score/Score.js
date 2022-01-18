@@ -37,7 +37,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import { InputBase } from '@mui/material';
 import TextField from '@mui/material/TextField';
-import { getUrlGetPeopleInClass } from '../../services/app.service';
+import { getUrlGetPeopleInClass, removeAccessToken } from '../../services/app.service';
 
 import {
     Menu,
@@ -103,7 +103,8 @@ export default function Score({ classData }) {
         })
         .catch((error) => {
             console.log(error);
-            window.location.href = 'http://localhost:3001/signin';
+            removeAccessToken(); 
+window.location.href = 'http://localhost:3001/signin';
         });
     }
     const loadDataStudent = async () => {
@@ -115,7 +116,8 @@ export default function Score({ classData }) {
         })
         .catch((error) => {
             console.log(error);
-            window.location.href = 'http://localhost:3001/signin';
+            removeAccessToken(); 
+window.location.href = 'http://localhost:3001/signin';
         });
     }
     useEffect(() => {
@@ -141,7 +143,8 @@ export default function Score({ classData }) {
             })
             .catch((error) => {
                 console.log(error);
-                window.location.href = 'http://localhost:3001/signin';
+                removeAccessToken(); 
+window.location.href = 'http://localhost:3001/signin';
             });
             await loadDataScore();
             await loadDataStudent();
@@ -182,7 +185,8 @@ export default function Score({ classData }) {
             setListTeachers(tempListTeachers);
         }).catch((error) => {
             console.log(error);
-            window.location.href = 'http://localhost:3001/signin';
+            removeAccessToken(); 
+window.location.href = 'http://localhost:3001/signin';
         });
     }, [])
 
@@ -291,7 +295,8 @@ export default function Score({ classData }) {
             console.log(response);
         }).catch((error) => {
             console.log(error);
-            window.location.href = 'http://localhost:3001/signin';
+            removeAccessToken(); 
+window.location.href = 'http://localhost:3001/signin';
         });
         console.log("event:", e);
         console.log(colSum);
@@ -331,7 +336,8 @@ export default function Score({ classData }) {
                 }
             }).catch((error) => {
                 console.log(error);
-                window.location.href = 'http://localhost:3001/signin';
+                removeAccessToken(); 
+window.location.href = 'http://localhost:3001/signin';
             });
         }
         setrows(tmpCSVData);
@@ -403,7 +409,8 @@ export default function Score({ classData }) {
 
         }).catch((error) => {
             console.log(error);
-            window.location.href = 'http://localhost:3001/signin';
+            removeAccessToken(); 
+window.location.href = 'http://localhost:3001/signin';
         });
         console.log("### listStudentslistStudentslistStudents", listStudents);
 
@@ -421,7 +428,8 @@ export default function Score({ classData }) {
                 console.log(response);
             }).catch((error) => {
                 console.log(error);
-                window.location.href = 'http://localhost:3001/signin';
+                removeAccessToken(); 
+window.location.href = 'http://localhost:3001/signin';
             });
         });
     }
@@ -460,7 +468,8 @@ export default function Score({ classData }) {
             console.log(response);
         }).catch((error) => {
             console.log(error);
-            window.location.href = 'http://localhost:3001/signin';
+            removeAccessToken(); 
+window.location.href = 'http://localhost:3001/signin';
         });
         await loadDataScore();
 
@@ -479,7 +488,8 @@ export default function Score({ classData }) {
                     console.log(response);
                 }).catch((error) => {
                     console.log(error);
-                    window.location.href = 'http://localhost:3001/signin';
+                    removeAccessToken(); 
+window.location.href = 'http://localhost:3001/signin';
                 });
             });
         }
@@ -495,7 +505,8 @@ export default function Score({ classData }) {
                 console.log("12312312312312312", response);
             }).catch((error) => {
                 console.log(error);
-                window.location.href = 'http://localhost:3001/signin';
+                removeAccessToken(); 
+window.location.href = 'http://localhost:3001/signin';
             });
 
         }

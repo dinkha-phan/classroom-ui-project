@@ -36,7 +36,7 @@ import IconButton from '@mui/material/IconButton';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import CheckIcon from '@mui/icons-material/Check';
 import Badge from '@mui/material/Badge';
-import {getAccessToken}  from '../../services/app.service'; 
+import {getAccessToken, removeAccessToken}  from '../../services/app.service'; 
 
 const Header = ({ children }) => {
     const classes = useStyles()
@@ -78,7 +78,8 @@ const Header = ({ children }) => {
             setListNotification([...response.data]);
         }).catch((error) => {
             console.log(error);
-            window.location.href = 'http://localhost:3001/signin';
+            removeAccessToken(); 
+                    window.location.href = 'http://localhost:3001/signin';
         });
 
 
@@ -159,7 +160,8 @@ const Header = ({ children }) => {
             console.log("handleClickComment", response);
         }).catch((error) => {
             console.log(error);
-            window.location.href = 'http://localhost:3001/signin';
+            removeAccessToken(); 
+                    window.location.href = 'http://localhost:3001/signin';
         });
 
         window.location.href = `..${data.LinkToClass}`;

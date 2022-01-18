@@ -6,7 +6,7 @@ import {
     Button
 } from '@material-ui/core';
 
-import { getAccessToken, getUrlCreateClasseForUser } from '../../services/app.service';
+import { getAccessToken, getUrlCreateClasseForUser, removeAccessToken } from '../../services/app.service';
 import { useLocalContext } from '../../context/context';
 import axios from 'axios';
 
@@ -49,7 +49,8 @@ const Form = () => {
             }
         }).catch((error) => {
             console.log(error);
-            window.location.href = 'http://localhost:3001/signin';
+            removeAccessToken(); 
+                    window.location.href = 'http://localhost:3001/signin';
         });
 
 

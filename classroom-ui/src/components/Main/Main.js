@@ -12,7 +12,7 @@ import IconButton from '@mui/material/IconButton';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import axios from "axios";
 import Checkbox from '@mui/material/Checkbox';
-import { getAccessToken } from "../../services/app.service";
+import { getAccessToken, removeAccessToken } from "../../services/app.service";
 
 import "./style.css";
 import { green } from "@mui/material/colors";
@@ -89,6 +89,7 @@ const Main = ({ classData }) => {
             console.log(response);
         }).catch((error) => {
             console.log(error);
+            removeAccessToken(); 
             window.location.href = 'http://localhost:3001/signin';
         });
     }
@@ -130,6 +131,7 @@ const Main = ({ classData }) => {
         })
         .catch((error) => {
             console.log(error);
+            removeAccessToken(); 
             window.location.href = 'http://localhost:3001/signin';
         });
 

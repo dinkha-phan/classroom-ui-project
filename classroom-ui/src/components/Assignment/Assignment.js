@@ -12,7 +12,7 @@ import "./style.css";
 import { useLocalContext } from "../../context/context"
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import { InvitePeople } from ".."
-import { getAccessToken, getUrlGetPeopleInClass, getUrlAddStudentToClass } from '../../services/app.service';
+import { getAccessToken, removeAccessToken, getUrlGetPeopleInClass, getUrlAddStudentToClass } from '../../services/app.service';
 import axios from 'axios';
 import { CSVLink, CSVDownload } from "react-csv";
 import CSVReader from 'react-csv-reader';
@@ -61,7 +61,8 @@ export default function Assignment({ classData }) {
                 }
             }).catch((error) => {
                 console.log(error);
-                window.location.href = 'http://localhost:3001/signin';
+                removeAccessToken(); 
+                    window.location.href = 'http://localhost:3001/signin';
             });
         }
         setListStdents(tmpListStudents);
@@ -119,7 +120,8 @@ export default function Assignment({ classData }) {
             setCsvData(tempCSVdata);
         }).catch((error) => {
             console.log(error);
-            window.location.href = 'http://localhost:3001/signin';
+            removeAccessToken(); 
+                    window.location.href = 'http://localhost:3001/signin';
         });
     }, [])
 

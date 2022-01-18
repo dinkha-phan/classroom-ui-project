@@ -9,7 +9,7 @@ import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import axios from "axios";
 import SaveIcon from '@mui/icons-material/Save';
 import HighlightOffRoundedIcon from '@mui/icons-material/HighlightOffRounded';
-import {getUrlEditGradeStructOfClass, getUrlGetGradeStructOfClass, getAccessToken} from '../../services/app.service';
+import {getUrlEditGradeStructOfClass, getUrlGetGradeStructOfClass, getAccessToken, removeAccessToken} from '../../services/app.service';
 import IconButton from '@mui/material/IconButton';
 // fake data generator
 const getItems = count =>
@@ -67,7 +67,8 @@ const Drag = ({ classData }) => {
       console.log(response);
     }).catch((error) => {
       console.log(error);
-      window.location.href = 'http://localhost:3001/signin';
+      removeAccessToken(); 
+                    window.location.href = 'http://localhost:3001/signin';
   });
 
   }
@@ -120,7 +121,8 @@ const Drag = ({ classData }) => {
     })
     .catch((error) => {
       console.log(error);
-      window.location.href = 'http://localhost:3001/signin';
+      removeAccessToken(); 
+                    window.location.href = 'http://localhost:3001/signin';
   });
   }, [])
 
@@ -171,7 +173,8 @@ const Drag = ({ classData }) => {
         console.log(response);
       }).catch((error) => {
         console.log(error);
-        window.location.href = 'http://localhost:3001/signin';
+        removeAccessToken(); 
+                    window.location.href = 'http://localhost:3001/signin';
     });
     }
     if (!result.isResetItem) {
@@ -223,7 +226,8 @@ const Drag = ({ classData }) => {
         console.log(response);
       }).catch((error) => {
         console.log(error);
-        window.location.href = 'http://localhost:3001/signin';
+        removeAccessToken(); 
+                    window.location.href = 'http://localhost:3001/signin';
     });
     }
 
@@ -246,7 +250,8 @@ const Drag = ({ classData }) => {
 
     }).catch((error) => {
       console.log(error);
-      window.location.href = 'http://localhost:3001/signin';
+      removeAccessToken(); 
+                    window.location.href = 'http://localhost:3001/signin';
   });
 
 
@@ -273,7 +278,8 @@ const Drag = ({ classData }) => {
     })
     .catch((error) => {
       console.log(error);
-      window.location.href = 'http://localhost:3001/signin';
+      removeAccessToken(); 
+                    window.location.href = 'http://localhost:3001/signin';
   });
   }
   // length = items.length(); 
