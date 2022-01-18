@@ -78,14 +78,16 @@ const Main = ({ classData }) => {
         console.log(data);
         console.log(url);
         const token = getAccessToken();
+        const config ={
+            headers: { Authorization: `Bearer ${token}` }
+        }
         const postData = {
             Name: Name,
             Grade: Grade,
             IsShowed: IsShowed,
-            headers: { Authorization: `Bearer ${token}` }
         }
 
-        axios.put(url, postData).then((response) => {
+        axios.put(url, postData, config).then((response) => {
             console.log(response);
         }).catch((error) => {
             console.log(error);

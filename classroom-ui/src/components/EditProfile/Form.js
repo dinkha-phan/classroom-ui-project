@@ -29,14 +29,16 @@ const Form = () => {
 
         const bodyParameters = {
             fullName: fullName,
-            headers: { Authorization: `Bearer ${token}` }
+            userID: userID,
+            headers: {Authorization: `Bearer ${token}` }
         };
 
-        console.log(config, bodyParameters, url);
+        console.log(bodyParameters);
 
         axios.put(
             url,
-            bodyParameters
+            bodyParameters,
+            config
           
         ).then(res => {
             console.log(res.data);
@@ -44,8 +46,8 @@ const Form = () => {
 
         }).catch((error) => {
             console.log(error);
-            removeAccessToken(); 
-                    window.location.href = 'http://localhost:3001/signin';
+            //removeAccessToken(); 
+            //window.location.href = 'http://localhost:3001/signin';
         });
     }
 
@@ -72,7 +74,7 @@ const Form = () => {
                 />
                 <TextField
                     id="UserID"
-                    disabled
+                    disabled = {userID.length < 10}
                     label="User ID"
                     className="form__input"
                     variant="filled"

@@ -33,8 +33,7 @@ const Form = () => {
             name: className,
             part: Section,
             title: Subject,
-            room: Room,
-            headers: { Authorization: `Bearer ${token}` }
+            room: Room
         };
 
         console.log(config, bodyParameters, url);
@@ -42,6 +41,7 @@ const Form = () => {
         axios.post(
             url,
             bodyParameters,
+            config
         ).then(res => {
             console.log(res.data);
             if (res.data.msg === 'success'){

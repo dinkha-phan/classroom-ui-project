@@ -90,14 +90,14 @@ export default function Score({ classData }) {
     const space4 = "    ";
     const space1 = " ";
     const token = getAccessToken();
-    const configs ={
+    const config ={
         headers: { Authorization: `Bearer ${token}` }
     }
     const loadDataScore = async () => {
         const url = getUrlGetGradesOfClass(classData.ClassID);
         console.log(url);
 
-        await axios.get(url, configs).then((reponse) => {
+        await axios.get(url, config).then((reponse) => {
             setdataScore(reponse.data);
             console.log("dataScore", url, reponse.data);
         })
@@ -109,7 +109,7 @@ window.location.href = 'http://localhost:3001/signin';
     }
     const loadDataStudent = async () => {
         const url2 = getUrlGetStudentInClass(classData.ClassID);
-        await axios.get(url2, configs).then((reponse) => {
+        await axios.get(url2, config).then((reponse) => {
             setdataStudent(reponse.data);
             console.log("dataStudent", reponse.data);
 
@@ -127,7 +127,7 @@ window.location.href = 'http://localhost:3001/signin';
             let listShow = [...listIsShow];
             let listSPoint = [...gradeSPoint];
             let sums = 0;
-            await axios.get(url3, configs).then((reponse) => {
+            await axios.get(url3, config).then((reponse) => {
                 console.log("listLabessss", reponse.data);
                 for (let i = 0; i < reponse.data.length; ++i) {
                     titleTmp.push(reponse.data[i]['Name']);
@@ -155,12 +155,6 @@ window.location.href = 'http://localhost:3001/signin';
 
     useEffect(() => {
         console.log('load people');
-        const token = getAccessToken();
-
-        const config = {
-            headers: { Authorization: `Bearer ${token}` }
-        };
-
         const url = getUrlGetPeopleInClass(classData.ClassID);
         console.log(config, url);
 
@@ -288,10 +282,9 @@ window.location.href = 'http://localhost:3001/signin';
         const url = getUrlEditGradesOfClass(ClassID, UserID, Rank);
         const postData = {
             grade: Grade,
-            headers: { Authorization: `Bearer ${token}` }
         }
 
-        axios.put(url, postData).then((response) => {
+        axios.put(url, postData, config).then((response) => {
             console.log(response);
         }).catch((error) => {
             console.log(error);
@@ -322,13 +315,16 @@ window.location.href = 'http://localhost:3001/signin';
         for (let i = 0; i < dataUpload.length; ++i) {
             const config = {
                 headers: { Authorization: `Bearer ${token}` },
-                grade: dataUpload[i]['Grade'],
             };
+            const postData = {
+                grade: dataUpload[i]['Grade']
+            }
             const url = getUrlEditGradesOfClass(classData.ClassID, dataUpload[i]['StudentID'], rank);
             console.log(config, url);
 
             axios.put(
                 url,
+                postData,
                 config,
             ).then((response) => {
                 if (response.data === 'Success') {
@@ -399,12 +395,11 @@ window.location.href = 'http://localhost:3001/signin';
 
         const postData = {
             IsShowed: IsShowed,
-            headers: { Authorization: `Bearer ${token}` }
         }
         const newListShow = [...listIsShow];
         newListShow[Rank + 1] = 1;
         setListIsShow(newListShow)
-        axios.put(url, postData).then((response) => {
+        axios.put(url, postData, config).then((response) => {
             console.log(response);
 
         }).catch((error) => {
@@ -418,13 +413,11 @@ window.location.href = 'http://localhost:3001/signin';
         const postData2 = {
             content: `${listLabel[Rank + 1]} was made public in class ${classData.Name}`,
             link: `/student/${classData.ClassID}`,
-            headers: { Authorization: `Bearer ${token}` }
         }
-
 
         await listStudents.map(async (data) => {
             const url2 = getUrlAddOrGetNoti(data.UserID);
-            await axios.post(url2, postData2).then((response) => {
+            await axios.post(url2, postData2, config).then((response) => {
                 console.log(response);
             }).catch((error) => {
                 console.log(error);
@@ -462,9 +455,8 @@ window.location.href = 'http://localhost:3001/signin';
             tcCmt: teacherComment,
             exGrade: expectGrade,
             status: (classData.Role === "student") ? 1 : 2,
-            headers: { Authorization: `Bearer ${token}` }
         }
-        await axios.put(url, postData).then((response) => {
+        await axios.put(url, postData, config).then((response) => {
             console.log(response);
         }).catch((error) => {
             console.log(error);
@@ -477,14 +469,13 @@ window.location.href = 'http://localhost:3001/signin';
             const postData2 = {
                 content: `${UserID} want review his grade in class ${classData.Name}`,
                 link: `/teacher/${classData.ClassID}`,
-                headers: { Authorization: `Bearer ${token}` }
             }
             console.log("listTeachers", listTeachers);
 
             await listTeachers.map(async (data) => {
                 const url2 = getUrlAddOrGetNoti(data.UserID);
                 console.log("12312312312312312", postData2);
-                await axios.post(url2, postData2).then((response) => {
+                await axios.post(url2, postData2, config).then((response) => {
                     console.log(response);
                 }).catch((error) => {
                     console.log(error);
@@ -501,7 +492,7 @@ window.location.href = 'http://localhost:3001/signin';
 
             const url2 = getUrlAddOrGetNoti(editUserID);
             console.log("12312312312312312", url2, postData2);
-            await axios.post(url2, postData2).then((response) => {
+            await axios.post(url2, postData2, config).then((response) => {
                 console.log("12312312312312312", response);
             }).catch((error) => {
                 console.log(error);

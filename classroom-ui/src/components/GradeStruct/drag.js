@@ -60,10 +60,9 @@ const Drag = ({ classData }) => {
     const postData = {
       Name: Name,
       Grade: Grade,
-      headers: { Authorization: `Bearer ${token}` }
     }
 
-    axios.put(url, postData).then((response) => {
+    axios.put(url, postData, config).then((response) => {
       console.log(response);
     }).catch((error) => {
       console.log(error);
@@ -167,9 +166,8 @@ const Drag = ({ classData }) => {
       const postData = {
         Name: itemss[i].Name,
         Grade: itemss[i].Grade,
-        headers: { Authorization: `Bearer ${token}` }
       }
-      axios.put(url, postData).then((response) => {
+      axios.put(url, postData, config).then((response) => {
         console.log(response);
       }).catch((error) => {
         console.log(error);
@@ -222,7 +220,7 @@ const Drag = ({ classData }) => {
         headers: { Authorization: `Bearer ${token}` }
       }
 
-      axios.put(url, postData).then((response) => {
+      axios.put(url, postData, config).then((response) => {
         console.log(response);
       }).catch((error) => {
         console.log(error);
@@ -269,11 +267,10 @@ const Drag = ({ classData }) => {
     const postItem = {
       Name: newName,
       Grade: newGrade,
-      headers: { Authorization: `Bearer ${token}` }
     };
     setNewName("");
     setNewGrade("");
-    axios.put(url, postItem).then((reponse) => {
+    axios.put(url, postItem, config).then((reponse) => {
       // setItems(reponse.data);
     })
     .catch((error) => {

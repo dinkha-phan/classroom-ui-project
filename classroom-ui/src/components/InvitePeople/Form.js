@@ -11,7 +11,6 @@ import { useLocalContext } from "../../context/context";
 import { getAccessToken, getUrlInvitePeople, removeAccessToken } from '../../services/app.service';
 import axios from 'axios';
 const ariaLabel = { 'aria-label': 'description' };
-
 const Form = ({ Label, classID }) => {
     const { showInvitePeople, setShowInvitePeople } = useLocalContext();
     const [emailInvite, setEmailInvite] = useState("");
@@ -22,7 +21,6 @@ const Form = ({ Label, classID }) => {
         console.log("email:", emailInvite);
 
         const token = getAccessToken();
-
         let role = 'student';
         if (Label === 'Invite Teacher') {
             role = 'teacher';
@@ -33,7 +31,6 @@ const Form = ({ Label, classID }) => {
             role: role,
             classID: classID,
             email: emailInvite,
-            headers: { Authorization: `Bearer ${token}` }
         };
 
         // {
@@ -41,10 +38,13 @@ const Form = ({ Label, classID }) => {
         //     "email": "b@c.com",
         //     "role": "student"
         // }
-
+        const config ={
+            headers: { Authorization: `Bearer ${token}` }
+        }
         axios.post(
             url,
             bodyParameters,
+            config
         ).then(res => {
             console.log(res.data);
             setShowInvitePeople(false);

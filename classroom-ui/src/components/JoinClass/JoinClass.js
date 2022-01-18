@@ -47,7 +47,8 @@ const JoinClass = () => {
 
         axios.post(
             url,
-            bodyParameters
+            bodyParameters,
+            config
         ).then(res => {
             console.log(res.data);
             if (res.data.error && res.data.error !== '') {
