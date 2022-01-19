@@ -78,7 +78,7 @@ const Main = ({ classData }) => {
         console.log(data);
         console.log(url);
         const token = getAccessToken();
-        const config ={
+        const config = {
             headers: { Authorization: `Bearer ${token}` }
         }
         const postData = {
@@ -91,7 +91,7 @@ const Main = ({ classData }) => {
             console.log(response);
         }).catch((error) => {
             console.log(error);
-            removeAccessToken(); 
+            removeAccessToken();
             window.location.href = 'http://localhost:3001/signin';
         });
     }
@@ -121,7 +121,7 @@ const Main = ({ classData }) => {
         else setPersonJoinedClass("Teacher");
         settabValue("1");
         const token = getAccessToken();
-        const config ={
+        const config = {
             headers: { Authorization: `Bearer ${token}` }
         }
 
@@ -131,11 +131,11 @@ const Main = ({ classData }) => {
             setItems(reponse.data);
             setGradeStruct(reponse.data);
         })
-        .catch((error) => {
-            console.log(error);
-            removeAccessToken(); 
-            window.location.href = 'http://localhost:3001/signin';
-        });
+            .catch((error) => {
+                console.log(error);
+                removeAccessToken();
+                window.location.href = 'http://localhost:3001/signin';
+            });
 
 
 
@@ -235,9 +235,9 @@ const Main = ({ classData }) => {
                                     <MenuItem onClick={() => { window.location = "/grade-struct/edit/" + classData.ClassID }}>
                                         Edit
                                     </MenuItem>
-                                    <MenuItem onClick={() => onClickEditShowGrade()}>
+                                    {/* <MenuItem onClick={() => onClickEditShowGrade()}>
                                         Edit show grade for Student
-                                    </MenuItem>
+                                    </MenuItem> */}
                                 </Menu>
                             </div>
                             {(items.length > 0) && items.map((e, index) => {

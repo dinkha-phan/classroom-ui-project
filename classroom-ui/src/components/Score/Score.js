@@ -90,7 +90,7 @@ export default function Score({ classData }) {
     const space4 = "    ";
     const space1 = " ";
     const token = getAccessToken();
-    const config ={
+    const config = {
         headers: { Authorization: `Bearer ${token}` }
     }
     const loadDataScore = async () => {
@@ -101,11 +101,11 @@ export default function Score({ classData }) {
             setdataScore(reponse.data);
             console.log("dataScore", url, reponse.data);
         })
-        .catch((error) => {
-            console.log(error);
-            removeAccessToken(); 
-window.location.href = 'http://localhost:3001/signin';
-        });
+            .catch((error) => {
+                console.log(error);
+                removeAccessToken();
+                window.location.href = 'http://localhost:3001/signin';
+            });
     }
     const loadDataStudent = async () => {
         const url2 = getUrlGetStudentInClass(classData.ClassID);
@@ -114,11 +114,11 @@ window.location.href = 'http://localhost:3001/signin';
             console.log("dataStudent", reponse.data);
 
         })
-        .catch((error) => {
-            console.log(error);
-            removeAccessToken(); 
-window.location.href = 'http://localhost:3001/signin';
-        });
+            .catch((error) => {
+                console.log(error);
+                removeAccessToken();
+                window.location.href = 'http://localhost:3001/signin';
+            });
     }
     useEffect(() => {
         async function getData() {
@@ -141,11 +141,11 @@ window.location.href = 'http://localhost:3001/signin';
                 setSumGSPoint(sums);
 
             })
-            .catch((error) => {
-                console.log(error);
-                removeAccessToken(); 
-window.location.href = 'http://localhost:3001/signin';
-            });
+                .catch((error) => {
+                    console.log(error);
+                    removeAccessToken();
+                    window.location.href = 'http://localhost:3001/signin';
+                });
             await loadDataScore();
             await loadDataStudent();
         }
@@ -179,8 +179,8 @@ window.location.href = 'http://localhost:3001/signin';
             setListTeachers(tempListTeachers);
         }).catch((error) => {
             console.log(error);
-            removeAccessToken(); 
-window.location.href = 'http://localhost:3001/signin';
+            removeAccessToken();
+            window.location.href = 'http://localhost:3001/signin';
         });
     }, [])
 
@@ -251,10 +251,14 @@ window.location.href = 'http://localhost:3001/signin';
             listLabel.map((label, index2) => {
                 if (index2 > 1) {
                     if (classData.Role === 'teacher') {
-                        listSum[index] += (rows[index][label] * gradeSPoint[index2 - 2]) / sumGSPoint;
+                        if (rows[index][label])
+                            listSum[index] += (rows[index][label] * gradeSPoint[index2 - 2]) / sumGSPoint;
+
                     }
                     else if (listIsShow[index2]) {
-                        listSum[index] += (rows[index][label] * gradeSPoint[index2 - 2]) / sumGSPoint;
+                        if (rows[index][label])
+                            listSum[index] += (rows[index][label] * gradeSPoint[index2 - 2]) / sumGSPoint;
+
                     }
                 }
             })
@@ -288,8 +292,8 @@ window.location.href = 'http://localhost:3001/signin';
             console.log(response);
         }).catch((error) => {
             console.log(error);
-            removeAccessToken(); 
-window.location.href = 'http://localhost:3001/signin';
+            removeAccessToken();
+            window.location.href = 'http://localhost:3001/signin';
         });
         console.log("event:", e);
         console.log(colSum);
@@ -332,8 +336,8 @@ window.location.href = 'http://localhost:3001/signin';
                 }
             }).catch((error) => {
                 console.log(error);
-                removeAccessToken(); 
-window.location.href = 'http://localhost:3001/signin';
+                removeAccessToken();
+                window.location.href = 'http://localhost:3001/signin';
             });
         }
         setrows(tmpCSVData);
@@ -404,8 +408,8 @@ window.location.href = 'http://localhost:3001/signin';
 
         }).catch((error) => {
             console.log(error);
-            removeAccessToken(); 
-window.location.href = 'http://localhost:3001/signin';
+            removeAccessToken();
+            window.location.href = 'http://localhost:3001/signin';
         });
         console.log("### listStudentslistStudentslistStudents", listStudents);
 
@@ -421,8 +425,8 @@ window.location.href = 'http://localhost:3001/signin';
                 console.log(response);
             }).catch((error) => {
                 console.log(error);
-                removeAccessToken(); 
-window.location.href = 'http://localhost:3001/signin';
+                removeAccessToken();
+                window.location.href = 'http://localhost:3001/signin';
             });
         });
     }
@@ -460,8 +464,8 @@ window.location.href = 'http://localhost:3001/signin';
             console.log(response);
         }).catch((error) => {
             console.log(error);
-            removeAccessToken(); 
-window.location.href = 'http://localhost:3001/signin';
+            removeAccessToken();
+            window.location.href = 'http://localhost:3001/signin';
         });
         await loadDataScore();
 
@@ -479,8 +483,8 @@ window.location.href = 'http://localhost:3001/signin';
                     console.log(response);
                 }).catch((error) => {
                     console.log(error);
-                    removeAccessToken(); 
-window.location.href = 'http://localhost:3001/signin';
+                    removeAccessToken();
+                    window.location.href = 'http://localhost:3001/signin';
                 });
             });
         }
@@ -496,8 +500,8 @@ window.location.href = 'http://localhost:3001/signin';
                 console.log("12312312312312312", response);
             }).catch((error) => {
                 console.log(error);
-                removeAccessToken(); 
-window.location.href = 'http://localhost:3001/signin';
+                removeAccessToken();
+                window.location.href = 'http://localhost:3001/signin';
             });
 
         }
@@ -753,7 +757,7 @@ window.location.href = 'http://localhost:3001/signin';
                                                 }}
                                                     name={`Edit value row:${indexRow} label:${listLabel[index]} `}
                                                     readonly={index <= 1 || classData.Role === "student"}
-                                                    defaultValue={((classData.Role === "student") && (!listIsShow[index]) && (index > 1)) ? "Chưa chấm" : String(rows[indexRow][value])}
+                                                    defaultValue={((classData.Role === "student") && (!listIsShow[index]) && (index > 1)) ? "Chưa chấm" : (rows[indexRow][value] ? String(rows[indexRow][value]) : "0")}
                                                     onSave={(e) => handleSave(e, index, row, indexRow)}
                                                     type="number"
                                                 />
@@ -807,7 +811,7 @@ window.location.href = 'http://localhost:3001/signin';
                                         height: "100%",
                                         margin: 0,
                                         padding: 0
-                                    }}>{colSum[indexRow]}</div></TableCell>
+                                    }}>{colSum[indexRow] || "0"}</div></TableCell>
                                 </TableRow>;
                             })}
                         </TableBody>
