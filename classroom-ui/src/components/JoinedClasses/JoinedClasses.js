@@ -7,7 +7,7 @@ import { useLocalContext } from "../../context/context";
 import { useStyles } from "./style";
 import { useState } from "react";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import { getAccessToken, getUrlRemoveUserFromClass, removeAccessToken } from "../../services/app.service";
+import { getAccessToken, getUrlRemoveUserFromClass, removeAccessToken, urlLogin } from "../../services/app.service";
 import axios from "axios";
 
 // ClassID: "bbb2eed3-65c7-4677-8c07-63f3a749b741"
@@ -52,7 +52,7 @@ const JoinedClasses = ({ classData }) => {
         }).catch((error) => {
             console.log(error);
             removeAccessToken(); 
-                    window.location.href = 'http://localhost:3001/signin';
+                    window.location.href = urlLogin;
         });
     }
 

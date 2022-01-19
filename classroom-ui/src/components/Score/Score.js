@@ -26,7 +26,8 @@ import {
     getUrlAddOrGetNoti,
     getUrlEditNoti,
     CurrentUrlUI,
-    CurrentUrlAPI
+    CurrentUrlAPI,
+    urlLogin
 } from '../../services/app.service';
 import UploadIcon from '@mui/icons-material/Upload';
 import IconButton from '@mui/material/IconButton';
@@ -104,7 +105,7 @@ export default function Score({ classData }) {
             .catch((error) => {
                 console.log(error);
                 removeAccessToken();
-                window.location.href = 'http://localhost:3001/signin';
+                window.location.href = urlLogin;
             });
     }
     const loadDataStudent = async () => {
@@ -117,7 +118,7 @@ export default function Score({ classData }) {
             .catch((error) => {
                 console.log(error);
                 removeAccessToken();
-                window.location.href = 'http://localhost:3001/signin';
+                window.location.href = urlLogin;
             });
     }
     useEffect(() => {
@@ -144,7 +145,7 @@ export default function Score({ classData }) {
                 .catch((error) => {
                     console.log(error);
                     removeAccessToken();
-                    window.location.href = 'http://localhost:3001/signin';
+                    window.location.href = urlLogin;
                 });
             await loadDataScore();
             await loadDataStudent();
@@ -180,7 +181,7 @@ export default function Score({ classData }) {
         }).catch((error) => {
             console.log(error);
             removeAccessToken();
-            window.location.href = 'http://localhost:3001/signin';
+            window.location.href = urlLogin;
         });
     }, [])
 
@@ -293,7 +294,7 @@ export default function Score({ classData }) {
         }).catch((error) => {
             console.log(error);
             removeAccessToken();
-            window.location.href = 'http://localhost:3001/signin';
+            window.location.href = urlLogin;
         });
         console.log("event:", e);
         console.log(colSum);
@@ -337,7 +338,7 @@ export default function Score({ classData }) {
             }).catch((error) => {
                 console.log(error);
                 removeAccessToken();
-                window.location.href = 'http://localhost:3001/signin';
+                window.location.href = urlLogin;
             });
         }
         setrows(tmpCSVData);
@@ -409,7 +410,7 @@ export default function Score({ classData }) {
         }).catch((error) => {
             console.log(error);
             removeAccessToken();
-            window.location.href = 'http://localhost:3001/signin';
+            window.location.href = urlLogin;
         });
         console.log("### listStudentslistStudentslistStudents", listStudents);
 
@@ -426,7 +427,7 @@ export default function Score({ classData }) {
             }).catch((error) => {
                 console.log(error);
                 removeAccessToken();
-                window.location.href = 'http://localhost:3001/signin';
+                window.location.href = urlLogin;
             });
         });
     }
@@ -465,7 +466,7 @@ export default function Score({ classData }) {
         }).catch((error) => {
             console.log(error);
             removeAccessToken();
-            window.location.href = 'http://localhost:3001/signin';
+            window.location.href = urlLogin;
         });
         await loadDataScore();
 
@@ -484,7 +485,7 @@ export default function Score({ classData }) {
                 }).catch((error) => {
                     console.log(error);
                     removeAccessToken();
-                    window.location.href = 'http://localhost:3001/signin';
+                    window.location.href = urlLogin;
                 });
             });
         }
@@ -501,7 +502,7 @@ export default function Score({ classData }) {
             }).catch((error) => {
                 console.log(error);
                 removeAccessToken();
-                window.location.href = 'http://localhost:3001/signin';
+                window.location.href = urlLogin;
             });
 
         }

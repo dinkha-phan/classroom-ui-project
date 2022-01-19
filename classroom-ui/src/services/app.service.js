@@ -5,7 +5,7 @@ const CurrentUrlAPI = urlLocalAPI;
 const urlUI = 'https://class-api-ndk.herokuapp.com';
 const urlLocalUI = 'http://127.0.0.1:3001';
 const CurrentUrlUI = urlLocalUI;
-
+const urlLogin = CurrentUrlUI + 'signin';
 // const urlSignIn = 'https://classrom-api-ntk.herokuapp.com/login';
 const urlSignIn = CurrentUrlAPI + '/login';
 
@@ -84,7 +84,9 @@ function getUrlAddOrGetNoti(userID) {
 function getUrlEditNoti(notiID) {
     return CurrentUrlAPI + '/noti/' + notiID;
 }
-
+function getUrlLoginGG(){
+    return CurrentUrlAPI + '/login/google';
+}
 // ===================================================
 
 function getAccessToken() {
@@ -120,7 +122,9 @@ export {
     CurrentUrlUI,
     urlSignIn,
     urlSignUp,
+    urlLogin,
 
+    getUrlLoginGG,
     getUrlGetJoinedClasses,
     getUrlGetCreatedClasses,
     getUrlAddStudentToClass,

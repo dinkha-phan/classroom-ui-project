@@ -9,7 +9,7 @@ import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import axios from "axios";
 import SaveIcon from '@mui/icons-material/Save';
 import HighlightOffRoundedIcon from '@mui/icons-material/HighlightOffRounded';
-import {getUrlEditGradeStructOfClass, getUrlGetGradeStructOfClass, getAccessToken, removeAccessToken} from '../../services/app.service';
+import {getUrlEditGradeStructOfClass, getUrlGetGradeStructOfClass, getAccessToken, removeAccessToken, urlLogin} from '../../services/app.service';
 import IconButton from '@mui/material/IconButton';
 // fake data generator
 const getItems = count =>
@@ -67,7 +67,7 @@ const Drag = ({ classData }) => {
     }).catch((error) => {
       console.log(error);
       removeAccessToken(); 
-                    window.location.href = 'http://localhost:3001/signin';
+                    window.location.href = urlLogin;
   });
 
   }
@@ -121,7 +121,7 @@ const Drag = ({ classData }) => {
     .catch((error) => {
       console.log(error);
       removeAccessToken(); 
-                    window.location.href = 'http://localhost:3001/signin';
+                    window.location.href = urlLogin;
   });
   }, [])
 
@@ -172,7 +172,7 @@ const Drag = ({ classData }) => {
       }).catch((error) => {
         console.log(error);
         removeAccessToken(); 
-                    window.location.href = 'http://localhost:3001/signin';
+                    window.location.href = urlLogin;
     });
     }
     if (!result.isResetItem) {
@@ -225,7 +225,7 @@ const Drag = ({ classData }) => {
       }).catch((error) => {
         console.log(error);
         removeAccessToken(); 
-                    window.location.href = 'http://localhost:3001/signin';
+                    window.location.href = urlLogin;
     });
     }
 
@@ -249,7 +249,7 @@ const Drag = ({ classData }) => {
     }).catch((error) => {
       console.log(error);
       removeAccessToken(); 
-                    window.location.href = 'http://localhost:3001/signin';
+                    window.location.href = urlLogin;
   });
 
 
@@ -276,7 +276,7 @@ const Drag = ({ classData }) => {
     .catch((error) => {
       console.log(error);
       removeAccessToken(); 
-                    window.location.href = 'http://localhost:3001/signin';
+                    window.location.href = urlLogin;
   });
   }
   // length = items.length(); 

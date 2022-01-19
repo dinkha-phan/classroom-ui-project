@@ -8,7 +8,7 @@ import {
 import Input from '@mui/material/Input';
 
 import { useLocalContext } from "../../context/context";
-import { getAccessToken, getUrlInvitePeople, removeAccessToken } from '../../services/app.service';
+import { getAccessToken, getUrlInvitePeople, removeAccessToken, urlLogin } from '../../services/app.service';
 import axios from 'axios';
 const ariaLabel = { 'aria-label': 'description' };
 const Form = ({ Label, classID }) => {
@@ -52,7 +52,7 @@ const Form = ({ Label, classID }) => {
         }).catch((error) => {
             console.log(error);
             removeAccessToken(); 
-                    window.location.href = 'http://localhost:3001/signin';
+                    window.location.href = urlLogin;
         });
     }
 

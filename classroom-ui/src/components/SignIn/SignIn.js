@@ -13,7 +13,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import GoogleLogin from 'react-google-login';
 import { useLocalContext } from '../../context/context';
 import axios from 'axios';
-import { parseJwt, setAccessToken, setRefreshToken, urlSignIn } from '../../services/app.service';
+import { parseJwt, setAccessToken, setRefreshToken, urlSignIn, getUrlLoginGG } from '../../services/app.service';
 function Copyright(props) {
     return (
         <Typography variant="body2" color="text.secondary" align="center" {...props}>
@@ -71,7 +71,7 @@ export default function SignIn() {
     };
     const responseSucessGoogle = (response) => {
         console.log(response);
-        const url = "http://localhost:3000/login/google";
+        const url = getUrlLoginGG();
         const postData ={
             data: response.profileObj
         }

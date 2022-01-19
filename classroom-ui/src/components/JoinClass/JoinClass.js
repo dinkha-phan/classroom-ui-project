@@ -4,7 +4,7 @@ import { Dialog, Slide, Button, Avatar, TextField } from '@material-ui/core'
 import "./style.css"
 import { Close } from '@material-ui/icons'
 import { useState } from 'react'
-import { getAccessToken, getUrlAddUserToClass } from '../../services/app.service'
+import { getAccessToken, getUrlAddUserToClass, urlLogin } from '../../services/app.service'
 import axios from 'axios'
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -61,7 +61,7 @@ const JoinClass = () => {
 
         }).catch((error) => {
             console.log(error);
-            window.location.href = 'http://localhost:3001/signin';
+            window.location.href = urlLogin;
         });
         
     }

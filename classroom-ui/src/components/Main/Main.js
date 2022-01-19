@@ -12,7 +12,7 @@ import IconButton from '@mui/material/IconButton';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import axios from "axios";
 import Checkbox from '@mui/material/Checkbox';
-import { getAccessToken, removeAccessToken } from "../../services/app.service";
+import { getAccessToken, removeAccessToken, urlLogin, getUrlGetGradeStructOfClass, getUrlEditGradeStructOfClass } from "../../services/app.service";
 
 import "./style.css";
 import { green } from "@mui/material/colors";
@@ -72,8 +72,7 @@ const Main = ({ classData }) => {
     const updateGradeStruct = (data) => {
         const { Rank, Grade, ClassID, Name, IsShowed } = data;
 
-        const url = 'http://localhost:3000/grade-struct/class/'
-            + ClassID + '/rank/' + String(parseInt(Rank));
+        const url = getUrlEditGradeStructOfClass(ClassID, String(parseInt(Rank)));
 
         console.log(data);
         console.log(url);
@@ -92,7 +91,7 @@ const Main = ({ classData }) => {
         }).catch((error) => {
             console.log(error);
             removeAccessToken();
-            window.location.href = 'http://localhost:3001/signin';
+            window.location.href = urlLogin;
         });
     }
     const onClickSave = () => {
@@ -125,7 +124,7 @@ const Main = ({ classData }) => {
             headers: { Authorization: `Bearer ${token}` }
         }
 
-        const url = 'http://localhost:3000/grade-struct/class/' + classData.ClassID;
+        const url = getUrlGetGradeStructOfClass(classData.ClassID);
         axios.get(url, config).then((reponse) => {
             console.log(reponse);
             setItems(reponse.data);
@@ -134,7 +133,7 @@ const Main = ({ classData }) => {
             .catch((error) => {
                 console.log(error);
                 removeAccessToken();
-                window.location.href = 'http://localhost:3001/signin';
+                window.location.href = urlLogin;
             });
 
 

@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Switch, Route, useParams } from "react-router-
 import { IsUserRedirect, ProtectedRoute } from './routes/Routes';
 import { useLocalContext } from "./context/context";
 import axios from "axios";
-import { getAccessToken, getUrlConfirmJoinClass, removeAccessToken, getUrlCreateClasseForUser, getUrlGetCreatedClasses, getUrlGetJoinedClasses, getUrlGetUserByEmail, parseJwt, urlLocalAPI } from "./services/app.service";
+import { getAccessToken, getUrlConfirmJoinClass, removeAccessToken, getUrlCreateClasseForUser, getUrlGetCreatedClasses, getUrlGetJoinedClasses, getUrlGetUserByEmail, parseJwt, CurrentUrlUI, urlLogin } from "./services/app.service";
 
 
 
@@ -44,12 +44,12 @@ function App() {
                     .catch((error) => {
                         console.log(error);
                         removeAccessToken(); 
-                        window.location.href = 'http://localhost:3001/signin';
+                        window.location.href = urlLogin;
                     });
             }
             else{
                 removeAccessToken(); 
-                if(window.location.href != 'http://localhost:3001/signin' && window.location.href != 'http://localhost:3001/signup')window.location.href = 'http://localhost:3001/signin';
+                if(window.location.href != urlLogin && window.location.href != CurrentUrlUI + '/signup')window.location.href = urlLogin;
             } 
         }
 
@@ -74,7 +74,7 @@ function App() {
                 .catch((error) => {
                     console.log(error);
                     removeAccessToken(); 
-                    window.location.href = 'http://localhost:3001/signin';
+                    window.location.href = urlLogin;
                 });
 
             axios.get(urlGetCreatesClasses, config)
@@ -86,7 +86,7 @@ function App() {
                 .catch((error) => {
                     console.log(error);
                     removeAccessToken(); 
-                    window.location.href = 'http://localhost:3001/signin';
+                    window.location.href = urlLogin;
                 });
         }
         // return () => { }
