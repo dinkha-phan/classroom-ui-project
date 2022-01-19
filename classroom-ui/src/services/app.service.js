@@ -5,7 +5,7 @@ const CurrentUrlAPI = urlLocalAPI;
 const urlUI = 'https://class-api-ndk.herokuapp.com';
 const urlLocalUI = 'http://127.0.0.1:3001';
 const CurrentUrlUI = urlLocalUI;
-const urlLogin = CurrentUrlUI + 'signin';
+const urlLogin = CurrentUrlUI + '/signin';
 // const urlSignIn = 'https://classrom-api-ntk.herokuapp.com/login';
 const urlSignIn = CurrentUrlAPI + '/login';
 
