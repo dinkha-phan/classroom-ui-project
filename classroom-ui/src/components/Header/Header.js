@@ -153,15 +153,16 @@ const Header = ({ children }) => {
 
         const url = CurrentUrlAPI + '/noti/' + data.NotiID;
         const token = getAccessToken();
+        console.log('aA',token);
         const config ={
             headers: { Authorization: `Bearer ${token}` }
         }
-        await axios.put(url, config).then((response) => {
+        await axios.put(url, config, config).then((response) => {
             console.log("handleClickComment", response);
         }).catch((error) => {
             console.log(error);
             removeAccessToken(); 
-                    window.location.href = urlLogin;
+            window.location.href = urlLogin;
         });
 
         window.location.href = `..${data.LinkToClass}`;

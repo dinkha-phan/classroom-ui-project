@@ -68,6 +68,7 @@ export default function AlignItemsList({ classData }) {
 
             axios.put(
                 url,
+                config,
                 config
             ).then((response) => {
                 if (response.data === 'Success') {
